@@ -13,7 +13,7 @@ void getMinMax(int numbers[], int size, int* min, int* max){
 
 int main(){
 
-    system ("clear");
+    system ("clear"); // clear console on macos
     
     int numbers[5] = {3,6,2,8,10};
     int min = numbers[0];
