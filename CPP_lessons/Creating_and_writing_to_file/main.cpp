@@ -10,6 +10,7 @@ int main(){
 
     fprintf(pFile, "sum\n"); 
     fclose(pFile);
- 
+    
+    system("pause");
     return 0;
 } 
