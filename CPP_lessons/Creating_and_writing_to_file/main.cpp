@@ -1,10 +1,15 @@
 #include <iostream>
 
+int add(int x, int y);
+
 int main(){
 
-    FILE *pfile = fopen("test.txt", "W");
-    
-    fprintf(pfile, "Hello World");
-    fclose(pfile);
+    FILE *pFile = fopen("sum.txt", "w");
+
+    std::cout << add(5,5) << std::endl;
+
+    fprintf(pFile, "sum\n"); 
+    fclose(pFile);
+ 
     return 0;
 } 
