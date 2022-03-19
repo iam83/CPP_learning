@@ -1,13 +1,13 @@
 #include <iostream>
 
 
-void getMinMax(int numbers[], int size, int* min, int* max){
+void getMinMax(int numbers[], int size, int* minPtr, int* maxPtr){
     for (int i=1; i < size; i++){
-        if (numbers[i] < *min) //using dereference of address of &min
-            *min = numbers[i];
+        if (numbers[i] < *minPtr) //using dereference of address of &min
+            *minPtr = numbers[i];
 
-        if (numbers[i] > *max)
-            *max = numbers[i];
+        if (numbers[i] > *maxPtr)
+            *maxPtr = numbers[i];
     }    
 }
 
