@@ -3,7 +3,6 @@
 
 
 using namespace std;
-using namespace std;
 
 //creating base class
 class Vehicle {
