@@ -18,3 +18,4 @@ typedef int status_t; //typedef позволяет создавать псевд
 status_t editDate();
 
 using status_t = int; //позволяет создавать псевдонимы для типов данных.
+
