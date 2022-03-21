@@ -18,6 +18,7 @@ int main() {
 	Days day = Days::Sun;
 
 	if (day == Days::Sat || day == Days::Sun) {
+
 		std::cout << "It's weekend" << std::endl;
 	}
 	else {
