@@ -65,10 +65,6 @@ int main(){
 
     printArray(pArray, amount);
 
-    // for (int count = 0; count < amount; count++)
-    //     std::cout << std::setprecision(2) << ptrarray[count] << " ";
-    // std::cout << std::endl;
-
     delete [] pArray;            // высвобождение памяти
     //system("pause");             // windows console pause
 
