@@ -6,3 +6,4 @@ x64
 .dSYM
 .exe
 dSYM
+*.dSYM/*
