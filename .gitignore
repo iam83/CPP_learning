@@ -3,6 +3,6 @@ x64
 .vs
 .vscode
 .DS_Store
-.dSYM/
-.o
+.dSYM
 .exe
+dSYM
