@@ -37,13 +37,13 @@ int main(){
     while(iteration < amount){
 
         bool swapped = false;
-        std::cout << "iteration " << iteration + 1 << std::endl;
+        std::cout << "iteration " << iteration + 1;
 
         for (int j = 0; j < amount - 1 - iteration; ++j)
         {
             if (pArray[j] > pArray[j+1]){
-                std::cout << pArray[j] << "   " << pArray[j+1] << '\n';
-                std::swap(pArray[j], pArray[j+1]);
+                //std::cout << pArray[j] << "   " << pArray[j+1] << '\n';
+                //std::swap(pArray[j], pArray[j+1]);
                 swapped = true;
             }
         }
