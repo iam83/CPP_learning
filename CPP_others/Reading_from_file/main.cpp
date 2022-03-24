@@ -1,23 +1,25 @@
-//пример использования FILE
- 
-#include <cstdio>
+// reading a text file
+#include <iostream>
+#include <fstream>
+#include <string>
 
-int main()
-{
-   char buffer[100];
- 
-   FILE * ptrFile = fopen("file.txt" , "r");
- 
-   if (ptrFile == NULL) perror ("Error");
-   else
-   {
-     while ( !feof(ptrFile) )                               // пока не конец файла
-     {
-       if ( fgets(buffer , 100 , ptrFile) != NULL )         // считать символы из файла
-         fputs(buffer, stdout);                           // вывод на экран
-     }
- 
-     fclose (ptrFile);                                      // закрыть файл
-   }
-   return 0;
+int main () {
+    
+  std::string line;
+  std::ifstream myfile ("example.txt");
+  
+
+  if (myfile.is_open())
+    {
+      while ( getline (myfile,line) )
+      {
+        std::cout << line << '\n';
+      }
+      myfile.close();
+    } else { 
+      std::cout << "Unable to open file"; 
+    }
+
+
+  return 0;
 }
