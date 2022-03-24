@@ -9,11 +9,12 @@
 #include <iomanip> // в заголовочном файле <iomanip> содержится прототип функции setprecision()
 
 
-void printArray(float* pArray, int amount){
-    for (int count = 0; count < amount; count++)
-        std::cout << std::setprecision(2) << pArray[count] << " ";
-    std::cout << std::endl;
-}
+void printArray(float* pArray, int amount) //передаем указатель на массив
+    {
+        for (int count = 0; count < amount; count++)
+            std::cout << std::setprecision(2) << pArray[count] << " ";
+        std::cout << std::endl;
+    }
 
 int main(){
 
