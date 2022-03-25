@@ -4,6 +4,8 @@
 #include <string>
 #include <cstring>
 
+//trying to read text from a text file and then use with strtok function
+
 int main () {
     
     system("cls");
