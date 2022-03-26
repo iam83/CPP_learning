@@ -24,9 +24,11 @@ int main(){
         debt = debt - (monthPay - ((debt*1.5)/100));
         //std::cout << std::setprecision(2) << debt << std::endl;
         std::cout << "Month " << totalMonth << " ";
+
         std::cout.setf(std::ios::fixed);
         std::cout.setf(std::ios::showpoint);
-        std::cout.precision(2);
+        std::cout.precision(2); //used for formatting cout output
+
         std::cout << " debt $" << debt << std::endl;
         if (debt <= 50)
             break;
