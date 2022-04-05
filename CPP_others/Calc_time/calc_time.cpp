@@ -6,10 +6,11 @@
 
 
 void PrintResult(int time, int frameAmount){
-
+	
 	double min_overall = (time*frameAmount)/60.0f;
 	int hour = min_overall/60;
 	int min = ((time*frameAmount)/60) % 60;
+	int days{0};
 
 	HANDLE  hConsole;
   	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -20,6 +21,20 @@ void PrintResult(int time, int frameAmount){
 	//std::cout << std::endl;
 	SetConsoleTextAttribute(hConsole, 13); //set console color purple
 	std::cout << "Approximate render time: ";
+
+	std::cout << "int (hour) " << hour << std::endl;
+
+	if (hour > 24){
+
+		hour = hour % 24;
+		days = std::abs(hour / 24);
+
+		SetConsoleTextAttribute(hConsole, 10); //set console color font green
+		std::cout << days;
+
+		SetConsoleTextAttribute(hConsole, 7); //set console color font white
+		std::cout << " days ";
+	}
 
 	SetConsoleTextAttribute(hConsole, 10); //set console color font green
 	std::cout << std::abs(hour);
