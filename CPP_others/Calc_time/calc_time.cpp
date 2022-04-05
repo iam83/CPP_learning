@@ -7,8 +7,8 @@
 
 void PrintResult(int time, int frameAmount){
 	
-	double min_overall = (time*frameAmount)/60.0f;
-	int hour = static_cast<int>(min_overall)/60;
+	int min_overall = (time*frameAmount)/60.0f;
+	int hour = min_overall/60;
 	int min = ((time*frameAmount)/60) % 60;
 	int days{0};
 
@@ -22,18 +22,16 @@ void PrintResult(int time, int frameAmount){
 	SetConsoleTextAttribute(hConsole, 13); //set console color purple
 	std::cout << "Approximate render time: ";
 
-	std::cout << "int (hour) " << hour << std::endl;
-
 	if (hour > 24){
 
 		hour = hour % 24;
-		days = (hour / 24);
+		days = std::abs(((min_overall)/60) / 24);
 
 		SetConsoleTextAttribute(hConsole, 10); //set console color font green
 		std::cout << days;
 
 		SetConsoleTextAttribute(hConsole, 7); //set console color font white
-		std::cout << " days ";
+		std::cout << " day ";
 	}
 
 	SetConsoleTextAttribute(hConsole, 10); //set console color font green
@@ -66,8 +64,8 @@ int main(){
 		if (count > 0) //check if it's a first run, if not then add a new line. this is just for better output
 			std::cout << std::endl;
 
-		double time = EnterValues(0);
-		int frameAmount = static_cast<int>(EnterValues(1));
+		int time = EnterValues(0);
+		int frameAmount = (EnterValues(1));
 
 		PrintResult(time, frameAmount);
 

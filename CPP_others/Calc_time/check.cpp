@@ -4,14 +4,14 @@
 
 //function definition 
 
-double EnterValues(int option){
+int EnterValues(int option){
 
     HANDLE  hConsole;
   	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	//проверерям корректность ввода, если будут не DOUBLE, то ввод не состоится
+	//проверерям корректность ввода, если будут не INT, то ввод не состоится
     int count{0};
-	double number = 0;
+	int number = 0;
 	do {
 
         SetConsoleTextAttribute(hConsole, 3); //set console color font bluish
@@ -24,6 +24,8 @@ double EnterValues(int option){
         SetConsoleTextAttribute(hConsole, 7); //set console color font white
 		std::cin >> number;
 
+        std::cout << number << std::endl;
+        
 		if (std::cin.fail()) // если предыдущее извлечение оказалось неудачным,
         {
             std::cin.clear(); // то возвращаем cin в 'обычный' режим работы

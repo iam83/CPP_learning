@@ -1,3 +1,3 @@
 #pragma once
 
-double EnterValues(int); //function protoype declaration
+int EnterValues(int); //function protoype declaration
