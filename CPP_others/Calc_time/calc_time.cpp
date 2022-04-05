@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <windows.h> //for changing color in console
-#include "check.h"
-#include <conio.h>
+#include <conio.h> //for getch() function. used for reading key pressing
+#include "check.h" //my header file. splitted for learning purpose. used for checking inputs.
 
 
 void PrintResult(int time, int frameAmount){
@@ -15,7 +15,7 @@ void PrintResult(int time, int frameAmount){
   	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	std::cout << std::fixed << std::showpoint;
-	std::cout << std::setprecision(2); //set 
+	std::cout << std::setprecision(1); //set 
 
 	std::cout << std::endl;
 	SetConsoleTextAttribute(hConsole, 13); //set console color purple
