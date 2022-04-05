@@ -15,11 +15,11 @@ void PrintResult(int time, int frameAmount){
   	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	std::cout << std::fixed << std::showpoint;
-	std::cout << std::setprecision(1); //set 
+	std::cout << std::setprecision(1); //amount of digits of floating numbers
 
-	std::cout << std::endl;
+	//std::cout << std::endl;
 	SetConsoleTextAttribute(hConsole, 13); //set console color purple
-	std::cout << "Approximate render time is: ";
+	std::cout << "Approximate render time: ";
 
 	SetConsoleTextAttribute(hConsole, 10); //set console color font green
 	std::cout << std::abs(hour);
@@ -56,6 +56,7 @@ int main(){
 
 		PrintResult(time, frameAmount);
 
+		std::cout << std::endl;
 		std::cout << "Once again? y/n: ";
 
 		answer = getch();
