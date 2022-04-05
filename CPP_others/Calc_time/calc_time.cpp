@@ -12,8 +12,8 @@
 void PrintResult(int time, int frameAmount){
 	
 	int min_overall = (time*frameAmount)/60.0f;
-	int hour = min_overall/60;
-	int min = ((time*frameAmount)/60) % 60;
+	int hour = min_overall / 60;
+	int min = min_overall % 60;
 	int days{0};
 
 	HANDLE  hConsole;
@@ -28,8 +28,9 @@ void PrintResult(int time, int frameAmount){
 
 	if (hour > 24){
 
+		
+		days = std::abs(hour / 24);
 		hour = hour % 24;
-		days = std::abs(((min_overall)/60) / 24);
 
 		SetConsoleTextAttribute(hConsole, 10); //set console color font green
 		std::cout << days;
