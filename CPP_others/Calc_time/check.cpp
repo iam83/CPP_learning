@@ -17,14 +17,12 @@ int EnterValues(int option){
         SetConsoleTextAttribute(hConsole, 3); //set console color font bluish
 
         if (option == 0) // check which message to show
-		    std::cout << "Enter time per frame in seconds: ";
+		    std::cout << "Enter render time per frame (sec): ";
         else
-            std::cout << "Enter frame amount: ";
+            std::cout << "Enter frames amount: ";
 
         SetConsoleTextAttribute(hConsole, 7); //set console color font white
 		std::cin >> number;
-
-        std::cout << number << std::endl;
         
 		if (std::cin.fail()) // если предыдущее извлечение оказалось неудачным,
         {

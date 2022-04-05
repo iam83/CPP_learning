@@ -1,3 +1,9 @@
+/*
+
+	this program calculates total render time
+
+*/
+
 #include <iostream>
 #include <iomanip>
 #include <windows.h> //for changing color in console
@@ -31,20 +37,20 @@ void PrintResult(int time, int frameAmount){
 		std::cout << days;
 
 		SetConsoleTextAttribute(hConsole, 7); //set console color font white
-		std::cout << " day ";
+		std::cout << " day(s) ";
 	}
 
 	SetConsoleTextAttribute(hConsole, 10); //set console color font green
 	std::cout << std::abs(hour);
 
 	SetConsoleTextAttribute(hConsole, 7); //set console color font white
-	std::cout << " hour ";
+	std::cout << " hour(s) ";
 
 	SetConsoleTextAttribute(hConsole, 10); //set console color font green
 	std::cout << min;
 
 	SetConsoleTextAttribute(hConsole, 7); //set console color font white
-	std::cout << " min (";
+	std::cout << " min (~";
 
 	SetConsoleTextAttribute(hConsole, 14); //set console color font yellow
 	std::cout << min_overall;
