@@ -1,7 +1,5 @@
 /*
-
 	this program calculates total render time
-
 */
 
 #include <iostream>
