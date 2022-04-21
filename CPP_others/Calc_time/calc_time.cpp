@@ -69,8 +69,8 @@ int main(){
 		if (count > 0) //check if it's a first run, if not then add a new line. this is just for better output
 			std::cout << std::endl;
 
-		int time = EnterValues(0);
-		int frameAmount = (EnterValues(1));
+		int time = EnterValues(0); // check which message to show 0 - for seconds
+		int frameAmount = (EnterValues(1)); // // check which message to show 1 - for frames
 
 		PrintResult(time, frameAmount);
 
