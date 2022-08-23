@@ -31,6 +31,7 @@ private:
 	double maxSpeed;
 
 public:
+
 	//class constructor
 	Car(string type, string _carName, string _carColor)
 		: Vehicle(type)//using base class to construct base class members
@@ -47,6 +48,12 @@ public:
 	void SetColor(string _color) {
 		carColor = _color;
 	}
+
+	//operator overloading
+	void operator ++ (){
+			++maxSpeed;
+	}
+
 
 	//method
 	void GetInfo() {
@@ -78,6 +85,12 @@ int main() {
 	audi.GetInfo();
 	bmw.GetInfo();
 
+	++audi; // it increases maxSpeed by 1
+	++bmw; // it increases maxSpeed by 1
+
+	audi.GetInfo();
+	bmw.GetInfo();
 
 	return 0;
+
 }
