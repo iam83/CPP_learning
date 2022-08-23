@@ -10,11 +10,11 @@ int main(){
         //place header info
 
         image << "P3" << std::endl;
-        image << "250 250" << std::endl;
+        image << "350 350" << std::endl;
         image << "255" << std::endl;
 
-        for (int y = 0; y < 250; y++){
-            for (int x = 0; x < 250; x++){
+        for (int y = 0; y < 350; y++){
+            for (int x = 0; x < 350; x++){
                 image << y << " " << x << " " << x << std::endl;
             }
         }
