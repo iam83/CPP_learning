@@ -31,8 +31,5 @@ int main()
     std::cout << std::endl;
 
     std::cout << "this is value of &a taken by '*': " << *&a << "\n";
-    
-    
-
     return 0;
 }
