@@ -10,7 +10,7 @@ int main(int argc, char** argv )
    struct stat fileInfo;
 
    if (argc < 2) {
-      std::cout << "Usage: fileinfo <file name>\n";
+      std::cout << "Usage: get_file_info <file name>\n";
       return(EXIT_FAILURE);
    }
 
