@@ -180,10 +180,9 @@ void shuffleDeck(std::array<Card, 52> &deck){
 void printWinner(int winner){
 
     std::cout << std::endl;
-    std::cout << std::endl;
 
     if (winner == 0){
-        std::cout << "*** You won! ***\n" << std::endl;
+        std::cout << "***** You won! *****" << std::endl;
 
     }else{
         std::cout << "Dealer won!\n" << std::endl;
@@ -206,7 +205,7 @@ bool playBlackjack(std::array<Card, 52> &deck){
     // Настраиваем стартовый режим игры
     cardSpawn(deck);
     shuffleDeck(deck);
-    printDeck(deck);
+    //printDeck(deck);
 
     Card *cardPtr = &deck[0];
 
@@ -230,10 +229,9 @@ bool playBlackjack(std::array<Card, 52> &deck){
 
     // Игрок начинает
     while (1) {
-        std::cout << "You got " << p_cardHolder << "and have: " << playerTotal << '\n' << std::endl;
+        std::cout << "You got " << p_cardHolder << "and have: " << playerTotal << '\n';
             
         if (playerTotal == 21) {
-            std::cout << std::endl;
             std::cout << "***** BLACKJACK *****";
             return true;
         }
