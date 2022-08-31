@@ -184,108 +184,92 @@ void shuffleDeck(std::array<Card, 52> &deck){
         }
     }
 
-void printWinner(int winner, int playerResult, int dealerResult){
+void printWinner(int winner){
    
     std::cout << std::endl;
     std::cout << "___________________" << std::endl;
      std::cout << std::endl;
     if (winner == 0){
         std::cout << "*** You won! ***\n" << std::endl;
-        std::cout << "Your result: " << playerResult << std::endl;
-        std::cout << "Dealer result: " << dealerResult << std::endl;
+
     }else{
         std::cout << "Dealer won!\n" << std::endl;
-        std::cout << "Dealer result: " << dealerResult << std::endl;
-        std::cout << "Your result: " << playerResult << std::endl;
+
     }
+}
+
+bool playerChoice(){
+    char answer = ' ';
+    std::cout << "Your move. Press y to Hit or n to Stand: ";
+    std::cin >> answer;
+    if (answer == 'y')
+        return true;
+    else
+        return false;
+}
+
+bool playBlackjack(std::array<Card, 52> &deck){
+        // Настраиваем стартовый режим игры
+
+    cardSpawn(deck);
+    shuffleDeck(deck);
+    Card *cardPtr = &deck[0];
+
+    int playerTotal = 0;
+    int dealerTotal = 0;
+
+    // Дилер получает одну карту
+    dealerTotal += getCardValue(*cardPtr++);
+    std::cout << "The dealer is showing: " << dealerTotal << '\n';
+    // Игрок получает две карты
+    playerTotal += getCardValue(*cardPtr++);
+    playerTotal += getCardValue(*cardPtr++);
+    // Игрок начинает
+    while (1) {
+        std::cout << "You have: " << playerTotal << '\n';
+            // Смотрим, не больше ли 21 очка у игрока
+        if (playerTotal > 21) return false;
+        if (playerChoice())
+            break;
+        playerTotal += getCardValue(*cardPtr++);
+        }
+
+    // Если игрок не проиграл и у него не больше 21 очка, то тогда
+    //дилер получает карты до тех пор, пока у него не получится в сумме 17 очков
+
+    while (dealerTotal < 17) {
+            dealerTotal += getCardValue(*cardPtr++);
+            std::cout << "The dealer now has: " << dealerTotal << '\n';
+        }
+    // Если у дилера больше 21 очка, то игрок победил
+    if (dealerTotal > 21) return true;
+
+    return (playerTotal > dealerTotal);
+
 }
 
 int main(){
 
     srand(static_cast<unsigned int>(time(0)));
-    
-
-    bool playBlackjack = true;
-    do{
-
-    int p_counter{0}, d_counter{0}; //for counting cards during moves
-    int playerResult{0};
-    int dealerResult{0};
-    Card *cardPtr;
-    
-    Card player;
-    Card dealer;
-
     std::array<Card, 52> deck;
-    cardSpawn(deck);
-    shuffleDeck(deck);
-    //printDeck(deck);
+    bool play = true;
 
-    cardPtr = &deck[0];
+    do{
+        
+        if (playBlackjack(deck))
+            printWinner(0);
+        else
+            printWinner(1);
 
-    dealerResult += getCardValue(*cardPtr++);
-    d_counter++; //adding card
-    playerResult += getCardValue(*cardPtr++);
-    p_counter++;
-    playerResult += getCardValue(*cardPtr++);
-    p_counter++;
-
-    if (playerResult == 21){
-        printWinner(0, playerResult, dealerResult);
-        return 0;
-    }
-
-    while(1){
-
+        char playAgain = ' ';
         std::cout << std::endl;
 
-        char answer = ' ';
-        //std::cout << "Dealer's got " << d_counter << " cards. " << dealerResult << " points." << std::endl;
-        std::cout << "You've got " << p_counter << " cards. " << playerResult << " points." << std::endl << std::endl;
-        
-        std::cout << "Your move. Press y to Hit or n to Stand: ";
-        std::cin >> answer;
+        std::cout << "Play again y/n: ";
+        std::cin >> playAgain;
+        if (playAgain == 'n')
+            play = false;
 
-        if (answer == 'y'){
-            playerResult += getCardValue(*cardPtr++);
-            p_counter++;
-
-            if (playerResult == 21){
-                printWinner(0, playerResult, dealerResult);
-                break;
-            }
-            if (playerResult > 21){
-                printWinner(1, playerResult, dealerResult);
-                break;
-            }
-
-
-        }else{
-            std::cout << "You skipped. Dealer got 1 card" << std::endl;
-            dealerResult += getCardValue(*cardPtr++);
-            d_counter++;
-            if (dealerResult == 21){
-                printWinner(1, playerResult, dealerResult);
-                break;
-            }
-            if (dealerResult > 21){
-                printWinner(0, playerResult, dealerResult);
-                break;
-            }
-        }
-
-
-    }
-
-    char playAgain = ' ';
-    std::cout << std::endl;
-
-    std::cout << "Play again y/n: ";
-    std::cin >> playAgain;
-    if (playAgain == 'n')
-        playBlackjack = false;
-
-    }while(playBlackjack);
+    }while(play);
 
     return 0;
 }
