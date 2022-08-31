@@ -15,6 +15,7 @@
 #include <array>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 
 enum Suit{
 
@@ -49,28 +50,8 @@ struct Card{
     Suit suit;
 };
 
-int getCardValue(Card &card){
+void printCard(const Card &card){
 
-    switch(card.rank)
-    {
-        case RANK_2: return 2;
-        case RANK_3: return 3;
-        case RANK_4: return 4;
-        case RANK_5: return 5;
-        case RANK_6: return 6;
-        case RANK_7: return 7;
-        case RANK_8: return 8;
-        case RANK_9: return 9;
-        case RANK_10: return 10;
-        case JACK: return 10;
-        case QUEEN: return 10;
-        case KING: return 10;
-        case ACE: return 11;
-    }
-}
-
-void printCard(const Card &card)
-{
     switch (card.rank)
     {
         case RANK_2: std::cout << "2"; break;
@@ -89,10 +70,63 @@ void printCard(const Card &card)
     }
     switch (card.suit)
     {
-        case CLUBS: std::cout << "C"; break;
-        case DIAMONDS: std::cout << "D"; break;
-        case HEARTS: std::cout << "H"; break;
-        case SPADE: std::cout << "S"; break;
+        case CLUBS: std::cout << "♣️"; break;
+        case DIAMONDS: std::cout << "♦️"; break;
+        case HEARTS: std::cout << "❤️"; break;
+        case SPADE: std::cout << "♠️"; break;
+    }
+}
+
+std::string getCard(const Card &card){
+
+    std::string current;
+
+    switch (card.rank)
+    {
+        case RANK_2: current = "2"; break;
+        case RANK_3: current = "3"; break;
+        case RANK_4: current = "4"; break;
+        case RANK_5: current = "5"; break;
+        case RANK_6: current = "6"; break;
+        case RANK_7: current = "7"; break;
+        case RANK_8: current = "8"; break;
+        case RANK_9: current = "9"; break;
+        case RANK_10: current = "10"; break;
+        case JACK: current = "J"; break;
+        case QUEEN: current = "Q"; break;
+        case KING: current = "K"; break;
+        case ACE: current = "A"; break;
+    }
+    switch (card.suit)
+    {
+        case CLUBS: current += "♣️"; break;
+        case DIAMONDS: current += "♦️"; break;
+        case HEARTS: current += "❤️"; break;
+        case SPADE: current += "♠️"; break;
+    }
+    return current;
+}
+
+
+int getCardValue(Card &card){
+
+    //printCard(card);
+
+    switch(card.rank)
+    {
+        case RANK_2: return 2;
+        case RANK_3: return 3;
+        case RANK_4: return 4;
+        case RANK_5: return 5;
+        case RANK_6: return 6;
+        case RANK_7: return 7;
+        case RANK_8: return 8;
+        case RANK_9: return 9;
+        case RANK_10: return 10;
+        case JACK: return 10;
+        case QUEEN: return 10;
+        case KING: return 10;
+        case ACE: return 11;
     }
 }
 
@@ -158,8 +192,9 @@ void printWinner(int winner){
 
 bool playerChoice(){
     char answer = ' ';
-    std::cout << "Your move. Press y to Hit or n to Stand: ";
+    std::cout << "Your move. Press (y) to Hit or (n) to Stand: ";
     std::cin >> answer;
+    std::cout << std::endl;
     if (answer == 'y')
         return true;
     else
@@ -171,39 +206,53 @@ bool playBlackjack(std::array<Card, 52> &deck){
     // Настраиваем стартовый режим игры
     cardSpawn(deck);
     shuffleDeck(deck);
+    printDeck(deck);
+
     Card *cardPtr = &deck[0];
 
     int playerTotal = 0;
     int dealerTotal = 0;
 
+    std::string d_cardHolder = getCard(*cardPtr) + " ";
+    std::string p_cardHolder;
+
     // Дилер получает одну карту
     dealerTotal += getCardValue(*cardPtr++);
-    std::cout << "The dealer is showing: " << dealerTotal << '\n';
+
+    std::cout << "The dealer got " << d_cardHolder << "and is showing: " << dealerTotal << '\n';
 
     // Игрок получает две карты
+    p_cardHolder = getCard(*cardPtr) + " ";
     playerTotal += getCardValue(*cardPtr++);
+    p_cardHolder += getCard(*cardPtr) + " ";
     playerTotal += getCardValue(*cardPtr++);
+
 
     // Игрок начинает
     while (1) {
-        std::cout << "You have: " << playerTotal << '\n';
+        std::cout << "You got " << p_cardHolder << "and have: " << playerTotal << '\n' << std::endl;
             
         if (playerTotal == 21) {
             std::cout << std::endl;
-            std::cout << "***** BLACKJACK *****" << std::endl;
+            std::cout << "***** BLACKJACK *****";
             return true;
         }
-        if (playerTotal > 21) return false;
-        if (!playerChoice()) break;
+        if (playerTotal > 21)
+            return false;
+        if (!playerChoice())
+            break;
 
+        p_cardHolder += getCard(*cardPtr) + " ";
         playerTotal += getCardValue(*cardPtr++);
-        }
+        
+    }
 
     // Если игрок не проиграл и у него не больше 21 очка, то тогда
     //дилер получает карты до тех пор, пока у него не получится в сумме 17 очков
     while (dealerTotal < 17) {
+            d_cardHolder += getCard(*cardPtr) + " ";
             dealerTotal += getCardValue(*cardPtr++);
-            std::cout << "The dealer now has: " << dealerTotal << '\n';
+            std::cout << "The dealer got " << d_cardHolder << "and now has " << dealerTotal << '\n';
         }
     // Если у дилера больше 21 очка, то игрок победил
     if (dealerTotal > 21) return true;
@@ -241,5 +290,6 @@ int main(){
             play = false;
 
     }while(play);
+
     return 0;
 }
