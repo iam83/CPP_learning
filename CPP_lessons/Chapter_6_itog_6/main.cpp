@@ -1,57 +1,15 @@
 /*
-
-            Задание No6
-            Предположим, что мы хотим написать карточную игру.
-
-            a) В колоде карт находятся 52 уникальные карты: 13 достоинств
-                (2, 3, 4, 5, 6, 7, 8, 9, 10, Валет, Дама, Король, Туз)
-                и 4 масти (трефы, бубны, червы, пики). Создайте два перечисления: первое для масти,
-                второе для достоинств карт.
-
-            b) Каждая карта должна быть представлена структурой Card,
-                в которой хранится информация о достоинстве и масти карты
-                (например, 4 бубны, король трефы). Создайте эту структуру.
-
-            c) Создайте функцию printCard(), параметром которой будет константная ссылка
-                типа структуры Card, которая будет выводить значения достоинства и масти
-                определенной карты в виде 2-буквенного кода (например, валет пики будет выводиться
-                как VP).
-
-            d) Для представления целой колоды карт (52 карты) создайте массив
-            deck (используя std::array) и инициализируйте каждый элемент определенной картой.
-
-            е) Напишите функцию printDeck(), которая в качестве параметра принимает
-                константную ссылку на массив deck и выводит все значения (карты). 
-                Используйте цикл foreach.
-
-            f) Напишите функцию swapCard(), которая принимает две карты и меняет местами их значения.
-
-            Подсказка: Добавьте в каждое перечисление еще по одному элементу,
-            который будет обозначать длину этого перечисления.
-
-            Подсказка: Используйте оператор static_cast для конвертации целочисленной
-            переменной в тип перечисления.
-
-            g) Напишите функцию shuffleDeck() для перетасовки колоды карт.
-                Для этого используйте цикл for с итерацией по массиву.
-                Перетасовка карт должна произойти 52 раза.
-
-                В цикле for выберите случайное число от 1 до 52 и вызовите swapCard(),
-                параметрами которой будут текущая карта и карта, выбранная случайным образом.
-                Добавьте в функцию main() возможность перетасовки и вывода уже обновленной
-                (перетасованной) колоды карт.
-            Подсказки:
-                Для генерации случайных чисел смотрите урок No74.
-                Не забудьте в начале функции main() вызвать функцию srand().
-                Если вы используете Visual Studio, то не забудьте перед генерацией
-                случайного числа вызвать один раз функцию rand().
-
-            h) Напишите функцию getCardValue(), которая возвращает значение карты
-            (например, 2 значит 2, 3 значит 3 и т.д., 10, валет, королева или король — это 10,
-            туз — это 11).
-
-
+    Simplifed BlackJack Card Game.
+    Read task.txt for more info  
 */
+
+#ifdef __APPLE__
+    #define CLS "clear"
+#endif
+
+#ifdef _WIN32
+    #define CLS "cls"
+#endif
 
 #include <iostream>
 #include <array>
@@ -172,6 +130,7 @@ void swapCard(Card &a, Card &b){
         b = temp;
     }
 
+// get random number in custom range
 int getRandomNumber(int min, int max){
         static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
         // Равномерно распределяем рандомное число в нашем диапазоне
@@ -185,16 +144,15 @@ void shuffleDeck(std::array<Card, 52> &deck){
     }
 
 void printWinner(int winner){
-   
+
     std::cout << std::endl;
-    std::cout << "___________________" << std::endl;
-     std::cout << std::endl;
+    std::cout << std::endl;
+
     if (winner == 0){
         std::cout << "*** You won! ***\n" << std::endl;
 
     }else{
         std::cout << "Dealer won!\n" << std::endl;
-
     }
 }
 
@@ -209,8 +167,8 @@ bool playerChoice(){
 }
 
 bool playBlackjack(std::array<Card, 52> &deck){
-        // Настраиваем стартовый режим игры
-
+    
+    // Настраиваем стартовый режим игры
     cardSpawn(deck);
     shuffleDeck(deck);
     Card *cardPtr = &deck[0];
@@ -221,22 +179,28 @@ bool playBlackjack(std::array<Card, 52> &deck){
     // Дилер получает одну карту
     dealerTotal += getCardValue(*cardPtr++);
     std::cout << "The dealer is showing: " << dealerTotal << '\n';
+
     // Игрок получает две карты
     playerTotal += getCardValue(*cardPtr++);
     playerTotal += getCardValue(*cardPtr++);
+
     // Игрок начинает
     while (1) {
         std::cout << "You have: " << playerTotal << '\n';
-            // Смотрим, не больше ли 21 очка у игрока
+            
+        if (playerTotal == 21) {
+            std::cout << std::endl;
+            std::cout << "***** BLACKJACK *****" << std::endl;
+            return true;
+        }
         if (playerTotal > 21) return false;
-        if (playerChoice())
-            break;
+        if (!playerChoice()) break;
+
         playerTotal += getCardValue(*cardPtr++);
         }
 
     // Если игрок не проиграл и у него не больше 21 очка, то тогда
     //дилер получает карты до тех пор, пока у него не получится в сумме 17 очков
-
     while (dealerTotal < 17) {
             dealerTotal += getCardValue(*cardPtr++);
             std::cout << "The dealer now has: " << dealerTotal << '\n';
@@ -250,6 +214,12 @@ bool playBlackjack(std::array<Card, 52> &deck){
 
 int main(){
 
+    system(CLS);
+
+    std::cout << "**********************" << std::endl;
+    std::cout << "*** BLACKJACK GAME ***" << std::endl;
+    std::cout << "**********************" << std::endl << std::endl;
+
     srand(static_cast<unsigned int>(time(0)));
     std::array<Card, 52> deck;
     bool play = true;
@@ -262,6 +232,7 @@ int main(){
             printWinner(1);
 
         char playAgain = ' ';
+
         std::cout << std::endl;
 
         std::cout << "Play again y/n: ";
@@ -270,6 +241,5 @@ int main(){
             play = false;
 
     }while(play);
-
     return 0;
 }
