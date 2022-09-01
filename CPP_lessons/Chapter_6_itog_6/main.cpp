@@ -12,7 +12,7 @@
 #endif
 
 #include <iostream>
-#include <array>
+#include <array> 
 #include <cstdlib>
 #include <ctime>
 #include <string>
@@ -29,19 +29,9 @@ enum Suit{
 
 enum Rank{
 
-    RANK_2,
-    RANK_3,
-    RANK_4,
-    RANK_5,
-    RANK_6,
-    RANK_7,
-    RANK_8,
-    RANK_9,
-    RANK_10,
-    JACK,
-    QUEEN,
-    KING,
-    ACE,
+    RANK_2, RANK_3, RANK_4,  RANK_5,
+    RANK_6, RANK_7, RANK_8,  RANK_9,
+    RANK_10, JACK, QUEEN, KING, ACE,
     MAX_RANKS
 };
 
@@ -70,10 +60,10 @@ void printCard(const Card &card){
     }
     switch (card.suit)
     {
-        case CLUBS: std::cout << "♣️"; break;
-        case DIAMONDS: std::cout << "♦️"; break;
-        case HEARTS: std::cout << "❤️"; break;
-        case SPADE: std::cout << "♠️"; break;
+        case CLUBS: std::cout << "C"; break;
+        case DIAMONDS: std::cout << "D"; break;
+        case HEARTS: std::cout << "H"; break;
+        case SPADE: std::cout << "S"; break;
     }
 }
 
@@ -99,10 +89,10 @@ std::string getCard(const Card &card){
     }
     switch (card.suit)
     {
-        case CLUBS: current += "♣️"; break;
-        case DIAMONDS: current += "♦️"; break;
-        case HEARTS: current += "❤️"; break;
-        case SPADE: current += "♠️"; break;
+        case CLUBS: current += "C"; break;
+        case DIAMONDS: current += "D"; break;
+        case HEARTS: current += "H"; break;
+        case SPADE: current += "S"; break;
     }
     return current;
 }
@@ -128,6 +118,7 @@ int getCardValue(Card &card){
         case KING: return 10;
         case ACE: return 11;
     }
+    return 0;
 }
 
 void cardSpawn(std::array<Card, 52> &deck){
@@ -286,6 +277,7 @@ int main(){
         std::cin >> playAgain;
         if (playAgain == 'n')
             play = false;
+        std::cout << std::endl;
 
     }while(play);
 

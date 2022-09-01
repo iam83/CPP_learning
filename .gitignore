@@ -4,7 +4,7 @@ x64
 .vscode
 .DS_Store
 .dSYM
-.exe
+*.exe
 dSYM
 *.dSYM/*
 Info.plist
