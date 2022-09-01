@@ -5,6 +5,7 @@ x64
 .DS_Store
 .dSYM
 *.exe
+.exe
 dSYM
 *.dSYM/*
 Info.plist
