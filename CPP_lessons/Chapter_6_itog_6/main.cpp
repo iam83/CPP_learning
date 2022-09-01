@@ -12,7 +12,7 @@
 #endif
 
 #include <iostream>
-#include <array>
+#include <array> 
 #include <cstdlib>
 #include <ctime>
 #include <string>
@@ -29,19 +29,9 @@ enum Suit{
 
 enum Rank{
 
-    RANK_2,
-    RANK_3,
-    RANK_4,
-    RANK_5,
-    RANK_6,
-    RANK_7,
-    RANK_8,
-    RANK_9,
-    RANK_10,
-    JACK,
-    QUEEN,
-    KING,
-    ACE,
+    RANK_2, RANK_3, RANK_4,  RANK_5,
+    RANK_6, RANK_7, RANK_8,  RANK_9,
+    RANK_10, JACK, QUEEN, KING, ACE,
     MAX_RANKS
 };
 
@@ -287,6 +277,7 @@ int main(){
         std::cin >> playAgain;
         if (playAgain == 'n')
             play = false;
+        std::cout << std::endl;
 
     }while(play);
 
