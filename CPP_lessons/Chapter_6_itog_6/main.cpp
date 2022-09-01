@@ -70,10 +70,10 @@ void printCard(const Card &card){
     }
     switch (card.suit)
     {
-        case CLUBS: std::cout << "♣️"; break;
-        case DIAMONDS: std::cout << "♦️"; break;
-        case HEARTS: std::cout << "❤️"; break;
-        case SPADE: std::cout << "♠️"; break;
+        case CLUBS: std::cout << "C"; break;
+        case DIAMONDS: std::cout << "D"; break;
+        case HEARTS: std::cout << "H"; break;
+        case SPADE: std::cout << "S"; break;
     }
 }
 
@@ -99,10 +99,10 @@ std::string getCard(const Card &card){
     }
     switch (card.suit)
     {
-        case CLUBS: current += "♣️"; break;
-        case DIAMONDS: current += "♦️"; break;
-        case HEARTS: current += "❤️"; break;
-        case SPADE: current += "♠️"; break;
+        case CLUBS: current += "C"; break;
+        case DIAMONDS: current += "D"; break;
+        case HEARTS: current += "H"; break;
+        case SPADE: current += "S"; break;
     }
     return current;
 }
@@ -128,6 +128,7 @@ int getCardValue(Card &card){
         case KING: return 10;
         case ACE: return 11;
     }
+    return 0;
 }
 
 void cardSpawn(std::array<Card, 52> &deck){
