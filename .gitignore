@@ -4,6 +4,7 @@ x64
 .vscode
 .DS_Store
 .dSYM
+*.dSYM
 *.exe
 .exe
 dSYM
