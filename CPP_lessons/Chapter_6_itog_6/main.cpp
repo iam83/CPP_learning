@@ -250,6 +250,32 @@ bool playBlackjack(std::array<Card, 52> &deck){
 
 }
 
+int playAgain(){
+
+	char exit;
+
+	do{
+		std::cout << "Would you like to play again (y/n)?: ";
+		std::cin >> exit;
+
+        if (exit == 'y'){
+			return 1;
+			break;
+		}else if(exit == 'n'){
+			std::cout << "Thank you for playing." << std::endl;
+			return 0;
+			break;
+		}else{
+			std::cin.clear(); // то возвращаем cin в 'обычный' режим работы
+    		std::cin.ignore(32767,'\n'); // и удаляем значения предыдущего ввода из входного буфера
+		}
+
+
+	}while(1);
+
+	std::cout << std::endl;
+}
+
 int main(){
 
     system(CLS);
@@ -260,7 +286,6 @@ int main(){
 
     srand(static_cast<unsigned int>(time(0)));
     std::array<Card, 52> deck;
-    bool play = true;
 
     do{
         
@@ -269,17 +294,7 @@ int main(){
         else
             printWinner(1);
 
-        char playAgain = ' ';
-
-        std::cout << std::endl;
-
-        std::cout << "Play again y/n: ";
-        std::cin >> playAgain;
-        if (playAgain == 'n')
-            play = false;
-        std::cout << std::endl;
-
-    }while(play);
+    }while(playAgain());
 
     return 0;
 }
