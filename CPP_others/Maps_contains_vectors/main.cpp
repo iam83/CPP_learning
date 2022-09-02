@@ -20,6 +20,7 @@ void printMap(std::map<std::vector<int>, std::vector<double>> *p_data);
 void printMapStraight(std::map<std::vector<int>,std::vector<double>> &data);
 void sortVector(std::vector<int>&);
 void sortVectorDouble(std::vector<double>&);
+void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &data);
 
 
 int main(){
@@ -50,7 +51,8 @@ int main(){
     p_data = &data;
 
     //printMap(&data); //by pointer
-    printMapStraight(data); //by ref
+    //printMapStraight(data); //by ref
+    printMapRef_example(data);
 
     uint16_t sortingTime = clock() - startTime;
 
@@ -147,4 +149,15 @@ void sortVectorDouble(std::vector<double> &vec){
 
 void sortVector(std::vector<int> &vec){
     std::sort(vec.begin(), vec.end());
+}
+
+
+void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &data){
+    for(auto& [key, value] : data){
+        for (auto k : key){
+            std::cout << k << " ";
+            }
+            for (auto v : value){
+                std::cout << v << " "; }
+                }
 }
