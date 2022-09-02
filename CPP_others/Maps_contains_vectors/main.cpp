@@ -8,24 +8,26 @@
 // ++i = i+i then cout
 // i++ = cout i, then i+i ??
 
-int COUNT = 1000000;
-
 double getRandomNumberDouble(int, int);
 int getRandomNumber(int, int);
 void fillVectorInt(std::vector<int>&);
 void fillVectorDouble(std::vector<double>&);
 void printVectorInt(const std::vector<int>&);
 void printVectorDouble(const std::vector<double>&);
-void printMap(std::map<std::vector<int>, std::vector<double>> *p_data);
-void printMapStraight(std::map<std::vector<int>,std::vector<double>> &data);
+void printMap(std::map<std::vector<int>, std::vector<double>> *p_data, std::ofstream *file);
+void printMapRef(std::map<std::vector<int>,std::vector<double>> &data);
 void sortVector(std::vector<int>&);
 void sortVectorDouble(std::vector<double>&);
 void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &data);
 
 
+int COUNT = 100;
+
 int main(){
 
     uint16_t startTime = clock();
+
+    std::ofstream file("temp.txt");
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -44,18 +46,20 @@ int main(){
     sortVectorDouble(vectorDouble);
     
     data.insert(std::pair<std::vector<int>, std::vector<double>> (vectorInt, vectorDouble));
-    data.insert(std::pair<std::vector<int>, std::vector<double>> (vectorInt2, vectorDouble2));
+    //data.insert(std::pair<std::vector<int>, std::vector<double>> (vectorInt2, vectorDouble2));
 
     
     std::map<std::vector<int>, std::vector<double>> * p_data;
     p_data = &data;
 
-    //printMap(&data); //by pointer
-    //printMapStraight(data); //by ref
-    printMapRef_example(data);
+    printMap(&data, &file); //by pointer
+    //printMapRef(data); //by ref
+
+    file.close();
+
+    file.close();
 
     uint16_t sortingTime = clock() - startTime;
-
 	std::cout << "\n\nDone!\n" <<
         "Time: " << sortingTime << " ms.\n\n";
 
@@ -103,39 +107,46 @@ void printVectorDouble(const std::vector<double> &vec){
     }
 }
 
-void printMap(std::map<std::vector<int>, std::vector<double>> *p_data){
-    //std::ofstream file("temp.txt");
+void printToFile(auto &data, std::ofstream *file){
+    
+    if (file->is_open())
+            *file << data << " ";
+}
+
+void printMap(std::map<std::vector<int>, std::vector<double>> *p_data, std::ofstream *file){
 
     for(std::map<std::vector<int>, std::vector<double>>::iterator itr = p_data->begin(); itr != p_data->end(); ++itr){
 
         for(auto it = itr->first.begin(); it != itr->first.end(); ++it){
-                //if (file.is_open()) file << *it << " ";
-                std::cout << *it << std::endl;
+                
+                std::cout << *it << " ";
+                printToFile(*it, file);
             }
 
         for(auto it2 = itr->second.begin(); it2 != itr->second.end(); ++it2){
-            //if (file.is_open()) file << *it2 << " ";
-                std::cout << *it2 << std::endl;
+                
+                std::cout << *it2 << " ";
+                printToFile(*it2, file);
             }
 
        std::cout << std::endl;
-       //file.close();
 
     }
 }
 
-void printMapStraight(std::map<std::vector<int>,std::vector<double>> &data){
+void printMapRef(std::map<std::vector<int>,std::vector<double>> &data){
+
     for(std::map<std::vector<int>, std::vector<double>>::iterator itr = data.begin(); itr != data.end(); ++itr){
 
         std::vector<int> tempVecInt = (*itr).first;
         std::vector<double> tempVecDouble = (*itr).second;
 
         for (int i = 0; i < tempVecInt.size(); i++){
-            std::cout << tempVecInt.at(i) << std::endl;
+            std::cout << tempVecInt.at(i) << " ";
         }
 
         for (int j = 0; j < tempVecDouble.size(); j++){
-            std::cout << tempVecDouble.at(j) << std::endl;
+            std::cout << tempVecDouble.at(j) << " ";
         }
 
        std::cout << std::endl;
