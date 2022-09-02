@@ -8,6 +8,8 @@
 // ++i = i+i then cout
 // i++ = cout i, then i+i ??
 
+int COUNT = 1000000;
+
 double getRandomNumberDouble(int, int);
 int getRandomNumber(int, int);
 void fillVectorInt(std::vector<int>&);
@@ -15,11 +17,14 @@ void fillVectorDouble(std::vector<double>&);
 void printVectorInt(const std::vector<int>&);
 void printVectorDouble(const std::vector<double>&);
 void printMap(std::map<std::vector<int>, std::vector<double>> *p_data);
+void printMapStraight(std::map<std::vector<int>,std::vector<double>> &data);
 void sortVector(std::vector<int>&);
 void sortVectorDouble(std::vector<double>&);
 
 
 int main(){
+
+    uint16_t startTime = clock();
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -44,7 +49,13 @@ int main(){
     std::map<std::vector<int>, std::vector<double>> * p_data;
     p_data = &data;
 
-    printMap(p_data);
+    //printMap(&data); //by pointer
+    printMapStraight(data); //by ref
+
+    uint16_t sortingTime = clock() - startTime;
+
+	std::cout << "\n\nDone!\n" <<
+        "Time: " << sortingTime << " ms.\n\n";
 
     return 0;
 }
@@ -67,13 +78,13 @@ void printMap(const std::map<int, int> &data){
 }
 
 void fillVectorInt(std::vector<int> &vec){
-    for(int i = 0; i <= 10000; ++i){
+    for(int i = 0; i <= COUNT; ++i){
         vec.push_back(getRandomNumber(0, 10));
     }
 }
 
 void fillVectorDouble(std::vector<double> &vec){
-        for(int i = 0; i <= 10000; ++i){
+        for(int i = 0; i <= COUNT; ++i){
             vec.push_back(getRandomNumberDouble(0.01, 0.1));
         }
 }
@@ -91,22 +102,41 @@ void printVectorDouble(const std::vector<double> &vec){
 }
 
 void printMap(std::map<std::vector<int>, std::vector<double>> *p_data){
-    std::ofstream file("temp.txt");
+    //std::ofstream file("temp.txt");
 
     for(std::map<std::vector<int>, std::vector<double>>::iterator itr = p_data->begin(); itr != p_data->end(); ++itr){
 
         for(auto it = itr->first.begin(); it != itr->first.end(); ++it){
-                if (file.is_open()) file << *it << " ";
+                //if (file.is_open()) file << *it << " ";
                 std::cout << *it << std::endl;
             }
 
         for(auto it2 = itr->second.begin(); it2 != itr->second.end(); ++it2){
-            if (file.is_open()) file << *it2 << " ";
+            //if (file.is_open()) file << *it2 << " ";
                 std::cout << *it2 << std::endl;
             }
 
        std::cout << std::endl;
-       file.close();
+       //file.close();
+
+    }
+}
+
+void printMapStraight(std::map<std::vector<int>,std::vector<double>> &data){
+    for(std::map<std::vector<int>, std::vector<double>>::iterator itr = data.begin(); itr != data.end(); ++itr){
+
+        std::vector<int> tempVecInt = (*itr).first;
+        std::vector<double> tempVecDouble = (*itr).second;
+
+        for (int i = 0; i < tempVecInt.size(); i++){
+            std::cout << tempVecInt.at(i) << std::endl;
+        }
+
+        for (int j = 0; j < tempVecDouble.size(); j++){
+            std::cout << tempVecDouble.at(j) << std::endl;
+        }
+
+       std::cout << std::endl;
 
     }
 }

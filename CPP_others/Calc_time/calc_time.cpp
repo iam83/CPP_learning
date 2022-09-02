@@ -4,8 +4,10 @@
 
 #include <iostream>
 #include <iomanip>
-#include <windows.h> //for changing color in console
-#include <conio.h> //for getch() function. used for reading key pressing
+#ifdef _WIN32
+	#include <windows.h> //for changing color in console
+	#include <conio.h> //for getch() function. used for reading key pressing
+#endif
 #include "check.h" //my header file. splitted for learning purpose. used for checking inputs.
 
 
