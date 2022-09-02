@@ -5,9 +5,9 @@
 //  Created by Anton U on 19.06.2021.
 //
 
-#ifndef romb_h
-#define romb_h
+#ifndef ROMB_H
+#define ROMB_H
 
 void printRomb(int length);
 
-#endif /* romb_h */
+#endif /* ROMB_H */

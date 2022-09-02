@@ -19,6 +19,6 @@
 
 int main()
 {
-    printRomb(10);
+    printRomb(7);
     return 0;
 }

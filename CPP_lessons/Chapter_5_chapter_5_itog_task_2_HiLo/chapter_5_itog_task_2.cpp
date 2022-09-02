@@ -21,6 +21,14 @@
 
 */
 
+#ifdef _WIN32
+	#define CLS "cls"
+#endif
+
+#ifdef _APPLE_
+	#define CLS "clear"
+#endif
+
 #include <iostream>
 #include <cstdlib> // для функций rand() и srand()
 #include <ctime> // для функции time()
@@ -92,7 +100,7 @@ int main(){
 	srand(static_cast<unsigned int>(time(0)));
 
 	do{
-			system("clear");			
+			system(CLS);			
 			cout << "Let's play a game." << endl;
 			cout << "I'm thinking of a number between 1-100. You have 7 tries to guess what it is." << endl;
 
