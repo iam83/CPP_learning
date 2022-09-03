@@ -5,7 +5,7 @@
 #include <iterator>
 #include <algorithm>
 
-int g_COUNTER = 1000;
+int g_COUNTER = 10;
 
 double getRandomNumberDouble(double min, double max){
         static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
