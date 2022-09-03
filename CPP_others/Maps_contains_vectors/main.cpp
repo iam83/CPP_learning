@@ -21,7 +21,7 @@ void sortVectorDouble(std::vector<double>&);
 void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &data);
 
 
-int COUNT = 100;
+int COUNT = 10;
 
 int main(){
 
@@ -48,12 +48,9 @@ int main(){
     data.insert(std::pair<std::vector<int>, std::vector<double>> (vectorInt, vectorDouble));
     //data.insert(std::pair<std::vector<int>, std::vector<double>> (vectorInt2, vectorDouble2));
 
-    
-    std::map<std::vector<int>, std::vector<double>> * p_data;
-    p_data = &data;
-
     printMap(&data, &file); //by pointer
     //printMapRef(data); //by ref
+    printMapRef_example(data);
 
     file.close();
 
@@ -113,6 +110,14 @@ void printToFile(auto &data, std::ofstream *file){
             *file << data << " ";
 }
 
+void sortVectorDouble(std::vector<double> &vec){
+    std::sort(vec.begin(), vec.end());
+}
+
+void sortVector(std::vector<int> &vec){
+    std::sort(vec.begin(), vec.end());
+}
+
 void printMap(std::map<std::vector<int>, std::vector<double>> *p_data, std::ofstream *file){
 
     for(std::map<std::vector<int>, std::vector<double>>::iterator itr = p_data->begin(); itr != p_data->end(); ++itr){
@@ -154,21 +159,14 @@ void printMapRef(std::map<std::vector<int>,std::vector<double>> &data){
     }
 }
 
-void sortVectorDouble(std::vector<double> &vec){
-    std::sort(vec.begin(), vec.end());
-}
-
-void sortVector(std::vector<int> &vec){
-    std::sort(vec.begin(), vec.end());
-}
-
 
 void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &data){
     for(auto& [key, value] : data){
-        for (auto k : key){
-            std::cout << k << " ";
+        for (auto &k : key){
+            std::cout << k << " " << std::endl;
             }
-            for (auto v : value){
-                std::cout << v << " "; }
+            for (auto &v : value){
+                std::cout << v << " " << std::endl;
                 }
+    }
 }
