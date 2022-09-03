@@ -63,11 +63,13 @@ int main(){
     srand(static_cast<unsigned int>(time(0)));
 
     std::vector<std::map<int, double>> vectorMap;
-    std::map<int, double> data;
+    std::map<int, double> data, data2;
 
     fillMap(data);
 
     fillVectorMap(vectorMap, data);
+    fillVectorMap(vectorMap, data2);
+    
     printVectorMap(vectorMap);
 
     std::cout << "min value is " << findMinValue(vectorMap) << std::endl;
