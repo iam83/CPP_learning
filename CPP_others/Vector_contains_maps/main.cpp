@@ -66,10 +66,11 @@ int main(){
     std::map<int, double> data, data2;
 
     fillMap(data);
+    fillMap(data2);
 
     fillVectorMap(vectorMap, data);
     fillVectorMap(vectorMap, data2);
-    
+
     printVectorMap(vectorMap);
 
     std::cout << "min value is " << findMinValue(vectorMap) << std::endl;
