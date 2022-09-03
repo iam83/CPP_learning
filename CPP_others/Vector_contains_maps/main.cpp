@@ -17,7 +17,6 @@ int getRandomNumber(int min, int max){
         return static_cast<int>(rand() * fraction * (max - min + 1) + min);
      }
 
-
 void fillMap(std::map<int, double> &data){
     for (int i = 0; i <= g_COUNTER; ++i){
         int firstValue = i;
@@ -51,7 +50,7 @@ bool compare(std::pair<int, double> const &i, std::pair<int, double> const &j) {
   return i.second < j.second;
 }
 
-double findMin(std::vector<std::map<int, double>> const &vectorMap){
+double findMinValue(std::vector<std::map<int, double>> const &vectorMap){
     std::pair<int, double> min;
     for (auto const &vec : vectorMap){
         min = (*std::min_element(vec.begin(), vec.end(), compare));
@@ -71,7 +70,7 @@ int main(){
     fillVectorMap(vectorMap, data);
     printVectorMap(vectorMap);
 
-    std::cout << "min value is " << findMin(vectorMap) << std::endl;
+    std::cout << "min value is " << findMinValue(vectorMap) << std::endl;
 
     //std::pair<int, double> min = (*std::min_element(data.begin(), data.end(), compare));
     //std::cout << "min value is " << min.second << std::endl;
