@@ -33,9 +33,9 @@ void printMap(std::map<int, double> const &data){
 
 void printVectorMap(auto const &vectorMap){
      int count{0};
-     for (const auto &item : vectorMap){
+     for (const auto &vec : vectorMap){ 
         std::cout << "vector " << count++ << std::endl;
-        for (const auto &value : item){
+        for (const auto &value : vec){
             std::cout << "first value: " << value.first << " second value: " << value.second << std::endl;
         }
         std::cout << "\n";
