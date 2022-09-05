@@ -4,11 +4,12 @@
 #include <string>
 #include <algorithm>
 
-
 #ifdef _WIN32
-    #define CLS "cls"
+#define CLS "cls"
+#include <iomanip>
+
 #else
-    #define CLS "clear"
+#define CLS "clear"
 #endif
 
 void printVector(std::vector<std::string> const &words){
@@ -33,8 +34,8 @@ void printCertainWords(std::vector<std::string> const &words, const char &first_
             ++count;
         }
     }
-    std::cout << std::endl;
-    std::cout << std::setw(0) << "Found " << count << " words beginning with " << first_letter << std::endl;
+    std::cout << std::endl << std::endl;
+    std::cout << std::setw(0) << "Found " << count << " words beginning with " << "\"" << first_letter << "\"" << "." << std::endl;
 }
 
 void printVectorSize(std::vector<std::string> const &words){
@@ -66,7 +67,6 @@ void findCertainWord(std::vector<std::string> const &words, std::vector<std::str
     std::cout << "Type the word you want to find: ";
     std::cin >> search_word;
     first_letter = search_word[0];
-    std::cout << "First letter is: " << first_letter << std::endl;
 
     printCertainWords(words, first_letter, &temp_words);
 
@@ -99,6 +99,7 @@ int main (){
     std::cout << "Choose what you want to do:\n";
     std::cout << "1. Print words list.\n";
     std::cout << "2. Find a certain word.\n";
+    std::cout << "Your choice:> ";
 
     std::cin >> choice;
 
