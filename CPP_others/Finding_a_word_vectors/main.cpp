@@ -25,10 +25,11 @@ void printVector(std::vector<std::string> const &words){
 
 void printCertainWords(std::vector<std::string> const &words, const char &first_letter, std::vector<std::string> *temp_words){
     int count{1};
+    std::cout << std::endl;
     for (auto const &word : words){
         if(word[0] == first_letter){
-            std::cout << word;
             std::cout << std::left << std::setw(15); //using for formatting output
+            std::cout << word;
             if (count % 5 == 0) std::cout << std::endl; //output in columns
             temp_words->push_back(word);
             ++count;
