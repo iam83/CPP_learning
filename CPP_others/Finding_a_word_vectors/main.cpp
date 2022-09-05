@@ -4,6 +4,7 @@
 #include <string>
 #include <algorithm>
 
+
 #ifdef _WIN32
     #define CLS "cls"
 #else
@@ -22,7 +23,7 @@ void printVector(std::vector<std::string> const &words){
 }
 
 void printCertainWords(std::vector<std::string> const &words, const char &first_letter, std::vector<std::string> *temp_words){
-    int count{0};
+    int count{1};
     for (auto const &word : words){
         if(word[0] == first_letter){
             std::cout << word;
