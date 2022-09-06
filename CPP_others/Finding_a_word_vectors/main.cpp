@@ -5,13 +5,11 @@
 #include <algorithm>
 
 #ifdef _WIN32
-#define CLS "cls"
-#include <iomanip>
-
+    #define CLS "cls"
+    #include <iomanip>
 #else
-#define CLS "clear"
+    #define CLS "clear"
 #endif
-
 
 
 void printVectorSize(std::vector<std::string> const &words){
@@ -106,82 +104,101 @@ void findCertainWord(std::vector<std::string> const &words){
     if (std::find(words.begin(), words.end(), search_word) != words.end()){
         std::cout << "\nFound. The word \"" << search_word << "\" is in the list.\n" << std::endl;
     }else{
-        std::cout << "Nothing found.\n" << std::endl;
+        std::cout << "\"" << search_word << "\" is not in the list.\n" << std::endl;
 
-        //if found nothing print all the words beginning with the first letter of the search word
+        //if found nothing then print all the words beginning with the first letter of the search word
         std::cout << "But there are other words beginning with " << search_word[0] << ".\n";
         printCertainWords(words, search_word);
     }
     
 }
 
-bool playAgain(){
+void printMenu(){
+    std::cout << "Choose what you want to do:\n\n";
+    std::cout << "1. Print words list.\n";
+    std::cout << "2. Find a certain word.\n";
+    std::cout << "3. List words beginning with specific letter.\n";
+    std::cout << "4. Exit\n\n";
+    std::cout << "Your choice:> ";
+}
 
-	char exit;
+//use for correct input
+int getChoice(){
 
-	do{
-		std::cout << "Would you like to run again (y/n)?: ";
-		std::cin >> exit;
+	int choice{0};
 
-        if (exit == 'y'){
-			return true;
-			break;
-		}else if(exit == 'n'){
-			std::cout << "Thank you. Good buy." << std::endl;
-			return false;
-			break;
-		}else{
-			std::cin.clear(); // то возвращаем cin в 'обычный' режим работы
-    		std::cin.ignore(32767,'\n'); // и удаляем значения предыдущего ввода из входного буфера
-		}
-	}while(1);
+	do {
+		std::cin >> choice;
 
-	std::cout << std::endl;
+		if (std::cin.fail()) // если предыдущее извлечение оказалось неудачным,
+        {
+            std::cin.clear(); // то возвращаем cin в 'обычный' режим работы
+            std::cin.ignore(32767,'\n'); // и удаляем значения предыдущего ввода из входного буфера
+            std::cout << "Only numbers please" << std::endl;
+            std::cout << "Choose from 1 - 4" << std::endl;
+        }
+        else
+        {
+            std::cin.ignore(32767,'\n'); // удаляем лишние значения
+ 
+            	if (choice < 1 || choice > 4){
+					std::cout << "Choose from 1 - 4" << std::endl;
+					continue;
+				}else{
+					break;
+				}
+        }
+	} while(1);
+
+	return choice;
+}
+
+bool getWordsFromFile(std::vector<std::string> &words){
+
+        std::string temp;
+        std::ifstream file("words.txt");
+        if(file.is_open()){
+            while(getline (file, temp))
+                words.push_back(temp);
+            file.close();
+            return true;
+        }else{
+            std::cout << "File not found" << std::endl;
+            return false;
+        }
 }
 
 int main (){
 
     system(CLS);
 
-    std::ifstream file("words.txt");
     std::vector<std::string> words, temp_words;
-    std::string temp, search_word;
+    std::string search_word;
+
+    if (!getWordsFromFile(words))
+        return -1;
     
-    int choice{0};
-
+    printMenu();
+    bool exit = true;
     do {
-        if(file.is_open()){
-            while(getline (file, temp))
-                words.push_back(temp);
-        }else{
-            std::cout << "File not found" << std::endl;
-            return -1;
-        }
-
-        std::cout << "Choose what you want to do:\n\n";
-        std::cout << "1. Print words list.\n";
-        std::cout << "2. Find a certain word.\n";
-        std::cout << "3. List words beginning with specific letter.\n\n";
-        std::cout << "Your choice:> ";
-
-        std::cin >> choice;
-
-        switch (choice){
+        switch (getChoice()){
             case 1:
                 printVector(words);
                 printMinMax(&words);
+                printMenu();
                 break;
             case 2:
                 findCertainWord(words);
+                printMenu();
                 break;
             case 3:
                 printCertainWords(words, "");
+                printMenu();
+                break;
+            case 4:
+                exit = false;
                 break;
         }
-
-    } while(playAgain());
-
-        file.close();
-
+    } while(exit);
     return 0;
 }
