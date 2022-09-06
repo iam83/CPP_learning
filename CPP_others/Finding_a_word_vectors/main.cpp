@@ -98,10 +98,10 @@ void printCertainWords(std::vector<std::string> const &words, std::string const 
 }
 
 void findCertainWord(std::vector<std::string> const &words){
-
+    
     std::string search_word;
-    std::cout << "Type the word you want to find: ";
-    std::cin >> search_word;
+	std::cout << "Type the word you want to find: ";
+	std::cin >> search_word;
 
     if (std::find(words.begin(), words.end(), search_word) != words.end()){
         std::cout << "\nFound. The word \"" << search_word << "\" is in the list.\n" << std::endl;
