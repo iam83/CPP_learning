@@ -5,9 +5,7 @@
 
 #ifdef __APPLE__
     #define CLS "clear"
-#endif
-
-#ifdef _WIN32
+#elif _WIN32
     #define CLS "cls"
 #endif
 
