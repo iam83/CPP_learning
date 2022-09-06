@@ -6,7 +6,7 @@ x64
 .dSYM
 *.dSYM
 *.exe
-.exe
-dSYM
+*.o
+*.dSYM
 *.dSYM/*
 Info.plist
