@@ -23,6 +23,8 @@ void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &d
 
 int COUNT = 10;
 
+//typedef std::map<std::vector<int>,std::vector<double>> mapVecIntDouble;
+
 int main(){
 
     uint16_t startTime = clock();
@@ -51,8 +53,6 @@ int main(){
     printMap(&data, &file); //by pointer
     //printMapRef(data); //by ref
     printMapRef_example(data);
-
-    file.close();
 
     file.close();
 
@@ -139,7 +139,7 @@ void printMap(std::map<std::vector<int>, std::vector<double>> *p_data, std::ofst
     }
 }
 
-void printMapRef(std::map<std::vector<int>,std::vector<double>> &data){
+void printMapRef(std::map<std::vector<int>, std::vector<double>> &data){
 
     for(std::map<std::vector<int>, std::vector<double>>::iterator itr = data.begin(); itr != data.end(); ++itr){
 
@@ -160,7 +160,7 @@ void printMapRef(std::map<std::vector<int>,std::vector<double>> &data){
 }
 
 
-void printMapRef_example(std::map<std::vector<int>,std::vector<double>> const &data){
+void printMapRef_example(std::map<std::vector<int>, std::vector<double>> const &data){
     for(auto& [key, value] : data){
         for (auto &k : key){
             std::cout << k << " " << std::endl;
