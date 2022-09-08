@@ -209,19 +209,56 @@ int main(){
 
     printField(field);
 
-    const int y[] = { -1, -1, -1,  1, 1, 1,  0, 0 };// 8 shifts to neighbors
-    const int x[] = { -1,  0,  1, -1, 0, 1, -1, 1 };// used in functions 
+    const int y[] = { -1, -1, -1,  1, 1, 1, 0, 0 };// 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
 
-    for(int row = 1; row < field.size()-1; ++row){
-        for(int col = 1; col < field.size()-1; ++col){
-            for(int i=0; i<8; ++i) { // visit the 8 spaces around it
-                if (field.at(row).at(col) == 0){
+    const int y_first[] = {1, 0, 1};
+    const int x_first[] = {1, 1, 0};
+    const int x_last[]  = {-1, 0, -1};
+    const int y_last[]  = {-1, -1, 0};
+
+    const int x_first_2[] = {1, 0, -1};
+
+    //check in boundary
+
+    for(int row = 0; row < field.size(); ++row){
+        for(int col = 0; col < field.size(); ++col){
+
+            if (field.at(row).at(col) == 0){
+
+                if(row == 0 && col > 0 && col < 9){
+                    for(int f = 0; f < 3; ++f) { // looking around cell
+                        if(field.at(row+y_first[f]).at(col+x_first[f]) == 1)
+                            field.at(row).at(col) = 8;
+                    }
+                }else if (col == 0 && row > 0 && row < 9){
+                    for(int f = 0; f < 3; ++f) { // looking around cell
+                        if(field.at(row+y_first[f]).at(col+x_first[f]) == 1)
+                            field.at(row).at(col) = 8;
+                    }
+
+                }else if(row == 9 && col > 0 && col < 9){
+                    for(int l = 0; l < 3; ++l) { // looking around cell
+                        if(field.at(row+y_last[l]).at(col+x_last[l]) == 1)
+                            field.at(row).at(col) = 8;
+                    }
+
+                }else if(col == 9 && row > 0 && row < 9){
+                    for(int l = 0; l < 3; ++l) { // looking around cell
+                        if(field.at(row+y_last[l]).at(col+x_last[l]) == 1)
+                            field.at(row).at(col) = 8;
+                    }
+                }else if(row > 0 && col > 0 && row < 9 && col < 9){
+                for(int i=0; i < 8; ++i) { // looking around cell
                     if(field.at(row+y[i]).at(col+x[i]) == 1)
-                        field.at(row).at(col) = 8;
-                }
+                            field.at(row).at(col) = 8;
+                            }
+                    }
             }
         }
     }
+
+      //row 0 row 10 col 0 col 10
 
     std::cout << std::endl;
 
