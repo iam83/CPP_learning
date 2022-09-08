@@ -209,14 +209,25 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
     }
 }
 
-bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint){
+bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship){
+    int count{0};
+
     for (int row = 0; row < field.size(); ++row){
         for (int col = 0; col < field.size(); ++col){
-            if(field.at(row).at(col) != startPoint)
-                return true;
-            else return false;
+            if(field.at(row).at(col) != startPoint){
+                for(int s = 0; s < ship; ++s){
+                    if (row + ship <= 9 && col + ship <= 9){
+                        if (field.at(row).at(col+s) != 1 && field.at(row).at(col+s) != 8)
+                            ++count;
+                        else if(field.at(row+1).at(col) !=1 && field.at(row+s).at(col) != 8)
+                            ++count;
+                        else return false;
+                    }else return false;
+                }
+            }
         }
     }
+    return (count > 0) ? 1 : 0;
 }
 
 void generateShips2(std::array<std::array<int, 12>, 12> &field, int ship){
@@ -250,39 +261,19 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
         offset = getRandomNumber(0, 9);
         dir = getRandomNumber(0, 1);
 
-    //deb(startPoint, rowOffset);
-    } while (checkPlace(field, startPoint));
+    } while (checkPlace(field, startPoint, offset, ship));
 
     if (offset + ship >= 9) offset = 4;
     
     for (int i = 0; i < ship; ++i){
         if (dir == 0) //horizontal location
-            if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
+            //if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
                 field.at(startPoint).at(i+offset) = 1;
         else //vertical
-        if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
+        //if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
             field.at(startPoint+i).at(offset) = 1;
         }
-
-}
-
-void checkFieldNew(std::array<std::array<int, 10>, 10> &field){
-
-    for(int row = 1; row < field.size()-1; ++row){
-        for(int col = 1; col < field.size()-1; ++col){
-            int n = 0;
-			if (field[row][col] == 1) continue;
-			if (field[row+1][col] == 1) n++;
-			if (field[row][col+1] == 1) n++;
-			if (field[row-1][col] == 1) n++;
-			if (field[row][col-1] == 1) n++;
-			if (field[row+1][col+1] == 1) n++;
-			if (field[row-1][col-1] == 1) n++;
-			if (field[row-1][col+1] == 1) n++;
-			if (field[row+1][col-1] == 1) n++;
-			field[row][col] = n;
-            }
-    }
+    checkField(field);
 }
 
 int main(){
