@@ -126,29 +126,44 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
     std::cout << std::endl;
 
      for (int row = 0; row < field.size(); ++row){
-        SetConsoleTextAttribute(hConsole, 7);
+        #ifdef _WIN32
+            SetConsoleTextAttribute(hConsole, 7);
+        #endif
         std::cout << row << "  ";
         for (int col = 0; col < field.size(); ++col){
             if (field.at(row).at(col) == 1){
+                #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
-                std::cout << field.at(row).at(col) << " ";
+                #endif
+                std::cout << "1" << " ";
+                #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
+                #endif
             }
             else if (field.at(row).at(col) == 8){
+                #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 10); //set console color font green 10, yellow 14
-                std::cout << field.at(row).at(col) << " ";
+                #endif
+                std::cout << "8" << " ";
+                #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
+                #endif
             }
             else{
+                #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
-                std::cout << field.at(row).at(col) << " ";
+                #endif
+                std::cout << "-" << " ";
+                #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
+                #endif
             }
         }
         std::cout << std::endl;
     }
-    
+    #ifdef _WIN32
     SetConsoleTextAttribute(hConsole, 7); //set console color font white 7,
+    #endif
     std::cout << std::endl;
 }
 
