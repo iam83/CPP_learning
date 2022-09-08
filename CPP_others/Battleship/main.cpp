@@ -4,10 +4,21 @@
 #include <array>
 #include <ctime>
 
-
+// A simplified version of Battleship game. An attemp to make it from scratch without looking at other examples.
+//
 // create 10x10 field
 // fill cells with values
 // create game loop
+//      print your field
+//      print enemy's field
+//      ask user to enter coords to shot
+//      check if user hits succsefully
+//          if yes then update enemy's field
+//          else let enemy to hit
+//      choose random coord to shoot
+//      check if enemy hits succsefully
+//      if yes then update user's field
+//      else ask user to eneter coords to shot
 
 
 int getRandomNumber(int min, int max){
