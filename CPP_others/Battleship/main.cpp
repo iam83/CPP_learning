@@ -258,7 +258,7 @@ int main(){
         }
     }
 
-      //row 0 row 10 col 0 col 10
+    //row 0 row 10 col 0 col 10
 
     std::cout << std::endl;
 
