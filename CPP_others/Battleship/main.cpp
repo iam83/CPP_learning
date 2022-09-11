@@ -305,12 +305,8 @@ int main(){
 
     setShips(field, 4);
 
-<<<<<<< HEAD
     printField(field);
     //checkField(field);
-
-=======
->>>>>>> 30772adddb391dce00ee6ab8b965d3a682e4144c
     std::cout << std::endl;
 
 
