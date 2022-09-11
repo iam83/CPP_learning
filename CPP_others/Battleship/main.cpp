@@ -175,11 +175,40 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
     checkField(field);
 }
 
+void setShips(std::array<std::array<int, 10>, 10> &field, int ship){
+
+    int startPoint_row = getRandomNumber(0, 9);
+    int startPoint_col = getRandomNumber(0, 9);
+
+    const int y[] = { -1, -1, -1,  1, 1, 1, 0, 0 };// 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
+
+    std::cout << "startPoint_row = " << startPoint_row << std::endl;
+    std::cout << "startPoint_col = " << startPoint_col << std::endl;
+    
+    field.at(startPoint_row).at(startPoint_col) = 1;
+
+    int count {0};
+
+    for (int row = startPoint_row; row < field.size(); ++row){        
+        for (int col = startPoint_col; col < field.size(); ++col){ 
+            if (field.at(row).at(col) == 0){
+                for(int i=0; i < 8; ++i) { // looking around cell
+                    if (inField(row+y[i], col+x[i])){
+                        if(field.at(row+y[i]).at(col+x[i]) == 0)
+                            ++count;
+                    }
+                }
+            }
+        }
+    }
+    std::cout << "count " << count << "\n";
+}
+
 int main(){
 
     std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
-    std::array<std::array<int, 12>, 12> field2;
     std::array<std::array<int, 10>, 10> field;
 
     createField(field);
@@ -197,23 +226,13 @@ int main(){
     //           {0,0,0,0,0,0,1,0,0,0}
     //         }};
 
-    generateShips(field, 4);
-    generateShips(field, 3);
-    generateShips(field, 3);
-    generateShips(field, 2);
-    generateShips(field, 2);
-    generateShips(field, 2);
-    generateShips(field, 1);
-    generateShips(field, 1);
-    generateShips(field, 1);
-    generateShips(field, 1);
+    setShips(field, 4);
 
     printField(field);
-    checkField(field);
+    //checkField(field);
 
     std::cout << std::endl;
 
-    printField(field);
 
     return 0;
 }
