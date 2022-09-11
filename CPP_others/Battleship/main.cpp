@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <ctime>
+#include <map>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -73,7 +74,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 10); //set console color font green 10, yellow 14
                 #endif
-                std::cout << field.at(row).at(col) << " ";
+                std::cout << "*" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -82,7 +83,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
                 #endif
-                std::cout << field.at(row).at(col) << " ";
+                std::cout << "." << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -175,6 +176,30 @@ bool checkCells2(std::array<std::array<int, 10>, 10> &field, int row, int col, i
     }
 }
 
+void isPossible(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<int, int>> &temp){
+
+    //data.insert(std::pair<int, int> (firstValue, secondValue));
+    int count {0};
+    for (int row = 0; row < 10; ++row){        
+        for (int col = 0; col < 10; ++col){
+            if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
+                    if (count == 0)
+                        temp.push_back(std::pair<int, int>(row, col));
+                    if (count == 4){
+                        temp.push_back(std::pair<int, int>(row, col));
+                        count = 0;
+                        }
+                    count++;
+                }
+            }
+    
+        }
+
+    for(auto m : temp){
+        std::cout << m.first << " - " << m.second << " / "; 
+    }
+}
+
 
 bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship, int dir){
 
@@ -243,14 +268,39 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
     
     for (int i = 0; i < ship; ++i){
         if (dir == 0) //horizontal location
-            //if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
             field.at(startPoint).at(i+offset) = 1;
         else //vertical
-        //if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
             field.at(startPoint+i).at(offset) = 1;
         }
     checkField(field);
 }
+
+void generateShips2(std::array<std::array<int, 10>, 10> &field, int ship){
+
+    checkField(field);
+
+    int startPoint{0}, offset{0}, dir{0};
+
+    do{
+    
+        startPoint = getRandomNumber(0, 9);
+        offset = getRandomNumber(0, 9);
+        dir = getRandomNumber(0, 1);
+
+
+    } while (1);
+
+    if ((offset + ship) >= 9) offset = 4;
+    
+    for (int i = 0; i < ship; ++i){
+        if (dir == 0) //horizontal location
+            field.at(startPoint).at(i+offset) = 1;
+        else //vertical
+            field.at(startPoint+i).at(offset) = 1;
+        }
+    checkField(field);
+}
+
 
 void setShips(std::array<std::array<int, 10>, 10> &field, int ship){
 
@@ -282,11 +332,13 @@ void setShips(std::array<std::array<int, 10>, 10> &field, int ship){
     std::cout << "count " << count << "\n";
 }
 
+
 int main(){
 
     std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
     std::array<std::array<int, 10>, 10> field;
+    std::vector<std::pair<int, int>> vec;
 
     createField(field);
     
@@ -303,9 +355,12 @@ int main(){
     //           {0,0,0,0,0,0,1,0,0,0}
     //         }};
 
-    setShips(field, 4);
+    generateShips(field, 4);
+    generateShips(field, 3);
+    generateShips(field, 3);
 
     printField(field);
+    isPossible(field, vec);
     //checkField(field);
     std::cout << std::endl;
 
