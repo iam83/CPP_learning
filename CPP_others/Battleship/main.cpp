@@ -30,14 +30,6 @@
 //      if yes then update user's field
 //      else ask user to eneter coords to shot
 
-enum class Direction{
-    Horizontal,
-    Vertical
-};
-
-void deb(int deb, int deb2){
-    std::cout << "Debug: " << "< " << deb << " " << deb2 << " >" << "  ";
-}
 
 int getRandomNumber(int min, int max){
         static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
