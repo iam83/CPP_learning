@@ -31,10 +31,6 @@
 //      else ask user to eneter coords to shot
 
 
-void deb(int deb, int deb2){
-    std::cout << "Debug: " << "< " << deb << " " << deb2 << " >" << "  ";
-}
-
 int getRandomNumber(int min, int max){
         static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
         return static_cast<int>(rand() * fraction * (max - min + 1) + min);
@@ -77,7 +73,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 10); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "." << " ";
+                std::cout << field.at(row).at(col) << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -106,9 +102,10 @@ bool inField( int r, int c)
   if( c < 0 || c >= 9 ) return false;
     return true;
 }
+
 void checkField(std::array<std::array<int, 10>, 10> &field){
 
-    const int y[] = { -1, -1, -1,  1, 1, 1, 0, 0 };// 8 directions
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
 
     //check in boundary
@@ -128,13 +125,90 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
     }
 }
 
-bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship){
-    int count{0};
+bool checkCells(std::array<std::array<int, 10>, 10> &field, int row, int col, int ship, int dir){
 
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
+
+    for (int s = 0; s < ship; ++s){
+        if (dir == 0){
+            for(int i=0; i < 8; ++i) {
+                if (inField(row+y[i], col+x[i]+s)){
+                    if(field.at(row+y[i]).at(col+x[i]+s) == 1 || field.at(row+y[i]).at(col+x[i]+s) == 8)
+                        std::cout << "checkCells: FALSE\n";
+                        return false;
+                    }
+                    else{
+                        std::cout << "checkCells: TRUE\n";
+                        return true;
+                    }
+            }
+        }else{
+            for(int i=0; i < 8; ++i) {
+                if (inField(row+y[i]+s, col+x[i])){
+                    if(field.at(row+y[i]+s).at(col+x[i]) == 1 || field.at(row+y[i]+s).at(col+x[i]) == 8)
+                        std::cout << "checkCells: FALSE\n";
+                        return false;
+                    }
+                    else{
+                        std::cout << "checkCells: TRUE\n";
+                        return true;
+                    }
+            }
+        }
+    }
+}
+
+bool checkCells2(std::array<std::array<int, 10>, 10> &field, int row, int col, int ship, int dir){
+
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
+    for(int i=0; i < 8; ++i) {
+     if (inField(row+y[i], col+x[i])){
+        if(field.at(row+y[i]).at(col+x[i]) == 1 || field.at(row+y[i]).at(col+x[i]) == 8)
+            std::cout << "checkCells: FALSE\n";
+                return false;
+            }else{
+                std::cout << "checkCells: TRUE\n";
+                return true;
+                }
+    }
+}
+
+
+bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship, int dir){
+
+    int count{0};
+    std::string temp_dir;
+
+    if (dir == 0)
+        temp_dir = "horizontal";
+    else
+        temp_dir = "vertical";
+
+
+    std::cout << "ship = " << ship << std::endl;
+    std::cout << "startPoint = " << startPoint << std::endl;
+    std::cout << "offset = " << offset << std::endl;
+    std::cout << "direction = " << temp_dir << std::endl;
+
+
+    if (field.at(startPoint).at(offset) != 1 && field.at(startPoint).at(offset) != 8 && (startPoint+ship) < 9 && (offset+ship) < 9){
+            std::cout << "TRUE \n\n";
+            return true;
+    }else{
+        std::cout << "FALSE \n\n";
+        return false;
+    }
+/*
     for (int row = 0; row < field.size(); ++row){
         for (int col = 0; col < field.size(); ++col){
+
+            //check if startPoint not equal to existing
             if(field.at(row).at(col) != startPoint){
+
                 for(int s = 0; s < ship; ++s){
+
                     if (row + ship <= 9 && col + ship <= 9){
                         if (field.at(row).at(col+s) != 1 && field.at(row).at(col+s) != 8)
                             ++count;
@@ -147,11 +221,13 @@ bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int 
         }
     }
     return (count > 0) ? 1 : 0;
+    */
 }
 
 void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
 
     checkField(field);
+
     int startPoint{0}, offset{0}, dir{0};
 
     do{
@@ -160,14 +236,15 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
         offset = getRandomNumber(0, 9);
         dir = getRandomNumber(0, 1);
 
-    } while (checkPlace(field, startPoint, offset, ship));
 
-    if (offset + ship >= 9) offset = 4;
+    } while (!checkPlace(field, startPoint, offset, ship, dir));
+
+    if ((offset + ship) >= 9) offset = 4;
     
     for (int i = 0; i < ship; ++i){
         if (dir == 0) //horizontal location
             //if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
-                field.at(startPoint).at(i+offset) = 1;
+            field.at(startPoint).at(i+offset) = 1;
         else //vertical
         //if (field.at(startPoint).at(i+offset) != 1 && field.at(startPoint).at(i+offset) != 8)
             field.at(startPoint+i).at(offset) = 1;
@@ -228,9 +305,12 @@ int main(){
 
     setShips(field, 4);
 
+<<<<<<< HEAD
     printField(field);
     //checkField(field);
 
+=======
+>>>>>>> 30772adddb391dce00ee6ab8b965d3a682e4144c
     std::cout << std::endl;
 
 
