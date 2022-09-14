@@ -31,6 +31,7 @@
 //      if yes then update user's field
 //      else ask user to eneter coords to shot
 
+typedef std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> Coord;
 
 int getRandomNumber(int min, int max){
         static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
@@ -48,7 +49,8 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
 
-    std::string letters = "ABCDEFGHKL";
+    //std::string letters = "ABCDEFGHKL";
+    std::string letters = "0123456789";
     std::cout << "   ";
     for (auto const &lett : letters){
         std::cout << lett << " ";
@@ -65,7 +67,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
-                std::cout << field.at(row).at(col) << " ";
+                std::cout << "1" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -74,7 +76,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 10); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "*" << " ";
+                std::cout << "." << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -97,10 +99,18 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
     std::cout << std::endl;
 }
 
-bool inField( int r, int c)
+void printVec(std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec){
+    for(auto const &v : vec){
+        std::cout << v.first.first << "." << v.first.second << " - " << v.second.first << "." << v.second.second << " / ";
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
+}
+
+bool inField(int r, int c)
 {
-  if( r < 0 || r >= 9 ) return false;
-  if( c < 0 || c >= 9 ) return false;
+  if( r < 0 || r > 9 ) return false;
+  if( c < 0 || c > 9 ) return false;
     return true;
 }
 
@@ -113,7 +123,6 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
 
     for(int row = 0; row < field.size(); ++row){
         for(int col = 0; col < field.size(); ++col){
-
             if (field.at(row).at(col) == 0){
                 for(int i=0; i < 8; ++i) { // looking around cell
                     if (inField(row+y[i], col+x[i])){
@@ -126,84 +135,93 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
     }
 }
 
-bool checkCells(std::array<std::array<int, 10>, 10> &field, int row, int col, int ship, int dir){
+bool checkCell(std::array<std::array<int, 10>, 10> field, int row, int col, int &dir, int ship){
 
-    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
-    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
-
-    for (int s = 0; s < ship; ++s){
-        if (dir == 0){
-            for(int i=0; i < 8; ++i) {
-                if (inField(row+y[i], col+x[i]+s)){
-                    if(field.at(row+y[i]).at(col+x[i]+s) == 1 || field.at(row+y[i]).at(col+x[i]+s) == 8)
-                        std::cout << "checkCells: FALSE\n";
-                        return false;
-                    }
-                    else{
-                        std::cout << "checkCells: TRUE\n";
-                        return true;
-                    }
-            }
-        }else{
-            for(int i=0; i < 8; ++i) {
-                if (inField(row+y[i]+s, col+x[i])){
-                    if(field.at(row+y[i]+s).at(col+x[i]) == 1 || field.at(row+y[i]+s).at(col+x[i]) == 8)
-                        std::cout << "checkCells: FALSE\n";
-                        return false;
-                    }
-                    else{
-                        std::cout << "checkCells: TRUE\n";
-                        return true;
-                    }
-            }
-        }
-    }
-}
-
-bool checkCells2(std::array<std::array<int, 10>, 10> &field, int row, int col, int ship, int dir){
-
-    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
-    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
-    for(int i=0; i < 8; ++i) {
-     if (inField(row+y[i], col+x[i])){
-        if(field.at(row+y[i]).at(col+x[i]) == 1 || field.at(row+y[i]).at(col+x[i]) == 8)
-            std::cout << "checkCells: FALSE\n";
-                return false;
-            }else{
-                std::cout << "checkCells: TRUE\n";
-                return true;
-                }
-    }
-}
-
-void isPossible(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<int, int>> &temp){
-
-    //data.insert(std::pair<int, int> (firstValue, secondValue));
-    int count {0};
-    for (int row = 0; row < 10; ++row){        
-        for (int col = 0; col < 10; ++col){
-            if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
-                    if (count == 0)
-                        temp.push_back(std::pair<int, int>(row, col));
-                    if (count == 4){
-                        temp.push_back(std::pair<int, int>(row, col));
-                        count = 0;
-                        }
-                    count++;
-                }
-            }
     
-        }
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
 
-    for(auto m : temp){
-        std::cout << m.first << " - " << m.second << " / "; 
-    }
+    //check in boundary
+    if(dir == 0){
+        for(int i=0; i < 8; ++i) { // looking around cell
+            if (inField(row+y[i], col+x[i])){
+                if(field.at(row+y[i]).at(col+x[i]) == 1 || field.at(row+y[i]).at(col+x[i]) == 8)
+                    return false;
+                else
+                    return true;
+            }
+        }
+    }else{
+        for(int i=0; i < 8; ++i) { // looking around cell
+            if (inField(row+y[i], col+x[i])){
+                if(field.at(row+y[i]).at(col+x[i]) == 1 || field.at(row+y[i]).at(col+x[i]) == 8)
+                    return false;
+                else
+                    return true;
+                }
+            }
+        }
 }
 
+//making vector of coords possible ships setup
+void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int dir, int ship){
+    
+    //dir = getRandomNumber(0, 1);
+
+    int count {0}, temp_row{0}, temp_col{0};
+    vec.clear();
+
+    if (dir == 0){
+        //horizontal check
+        for (int row = 0; row < field.size(); ++row){        
+            for (int col = 0; col < field.size(); ++col){
+                if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
+                    //if(!checkCell(field, row, col, dir, ship))
+                        if (count == 0){
+                            temp_col = col;
+                            temp_row = row;
+                        }
+                        count++;
+                        if (col == 9 && count < ship){
+                            count = 0;
+                            }
+                        if (count == ship){
+                            vec.push_back(std::make_pair(std::make_pair(temp_row, temp_col), std::make_pair(row, col)));
+                            count = 0;
+                            }
+                }else{
+                        count = 0;
+                    }
+            }
+        }
+    }else{
+        //vertical check
+        for (int col = 0; col < field.size(); ++col){        
+            for (int row = 0; row < field.size(); ++row){
+                if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
+                    //if(!checkCell(field, row, col, dir, ship))
+                        if (count == 0){
+                            temp_col = col;
+                            temp_row = row;
+                        }
+                        count++;
+                        if (row == 9 && count < ship){
+                            count = 0;
+                            }
+                        if (count == ship){
+                            vec.push_back(std::make_pair(std::make_pair(temp_row, temp_col), std::make_pair(row, col)));
+                            count = 0;
+                            }
+                }else{
+                        count = 0;
+                    }
+            }
+        }
+    }
+}
 
 bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship, int dir){
 
-    int count{0};
     std::string temp_dir;
 
     if (dir == 0)
@@ -272,78 +290,43 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
         else //vertical
             field.at(startPoint+i).at(offset) = 1;
         }
-    checkField(field);
+    //checkField(field);
 }
 
-void generateShips2(std::array<std::array<int, 10>, 10> &field, int ship){
-
+void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int dir, int ship){
+    
     checkField(field);
+    getPossibles(field, vec, dir, ship);
+    printVec(vec);
 
-    int startPoint{0}, offset{0}, dir{0};
+    int i = rand() % vec.size();
+    int startPoint = vec[i].first.first;
+    int offset = vec[i].first.second;
 
-    do{
-    
-        startPoint = getRandomNumber(0, 9);
-        offset = getRandomNumber(0, 9);
-        dir = getRandomNumber(0, 1);
-
-
-    } while (1);
-
-    if ((offset + ship) >= 9) offset = 4;
-    
     for (int i = 0; i < ship; ++i){
-        if (dir == 0) //horizontal location
-            field.at(startPoint).at(i+offset) = 1;
-        else //vertical
-            field.at(startPoint+i).at(offset) = 1;
-        }
-    checkField(field);
-}
-
-
-void setShips(std::array<std::array<int, 10>, 10> &field, int ship){
-
-    int startPoint_row = getRandomNumber(0, 9);
-    int startPoint_col = getRandomNumber(0, 9);
-
-    const int y[] = { -1, -1, -1,  1, 1, 1, 0, 0 };// 8 directions
-    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
-
-    std::cout << "startPoint_row = " << startPoint_row << std::endl;
-    std::cout << "startPoint_col = " << startPoint_col << std::endl;
-    
-    field.at(startPoint_row).at(startPoint_col) = 1;
-
-    int count {0};
-
-    for (int row = startPoint_row; row < field.size(); ++row){        
-        for (int col = startPoint_col; col < field.size(); ++col){ 
-            if (field.at(row).at(col) == 0){
-                for(int i=0; i < 8; ++i) { // looking around cell
-                    if (inField(row+y[i], col+x[i])){
-                        if(field.at(row+y[i]).at(col+x[i]) == 0)
-                            ++count;
-                    }
-                }
-            }
-        }
+        if (dir == 0)
+            field.at(startPoint).at(offset+i) = 1;
+        else
+            field.at(offset+i).at(startPoint) = 1;
     }
-    std::cout << "count " << count << "\n";
+    checkField(field);
+    std::cout << "ship " << ship << std::endl;
+    printField(field);
 }
-
 
 int main(){
 
     std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
+
     std::array<std::array<int, 10>, 10> field;
-    std::vector<std::pair<int, int>> vec;
+    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> vec;
+    int dir{0};
 
     createField(field);
     
     // field = {{
-    //           {0,0,1,0,0,0,0,0,0,0},
+    //           {1,0,1,0,0,0,0,0,0,0},
     //           {0,0,1,0,0,0,0,0,0,0},
     //           {0,0,0,0,0,0,0,0,0,0},
     //           {0,0,0,0,0,0,0,0,0,0},
@@ -351,19 +334,33 @@ int main(){
     //           {0,1,1,1,0,0,0,0,0,0},
     //           {0,0,0,0,0,0,1,0,0,0},
     //           {0,0,0,0,0,0,1,0,0,0},
-    //           {0,0,0,0,0,0,1,0,0,0},
-    //           {0,0,0,0,0,0,1,0,0,0}
+    //           {0,0,0,0,0,0,0,0,0,0},
+    //           {1,1,1,1,0,0,0,0,0,1}
     //         }};
 
     generateShips(field, 4);
-    generateShips(field, 3);
-    generateShips(field, 3);
+    setShips(field, vec, 0, 3);
+    setShips(field, vec, 0, 3);
+    setShips(field, vec, 0, 2);
+    setShips(field, vec, 0, 2);
+    setShips(field, vec, 0, 2);
+    setShips(field, vec, 0, 1);
+    setShips(field, vec, 0, 1);
+    setShips(field, vec, 0, 1);
+    setShips(field, vec, 0, 1);
 
     printField(field);
-    isPossible(field, vec);
+    // getPossibles(field, vec, 0, 4);
+    // std::cout << "horizontal\n";
+    // printVec(vec);
+    // std::cout << std::endl;
+    // getPossibles(field, vec, 1, 4);
+    // std::cout << "vertical\n";
+    // printVec(vec);
+    
     //checkField(field);
     std::cout << std::endl;
-
+    std::cout << "size = " << vec.size() << std::endl;
 
     return 0;
 }
