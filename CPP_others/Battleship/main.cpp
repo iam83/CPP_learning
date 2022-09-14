@@ -49,8 +49,8 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
 
-    //std::string letters = "ABCDEFGHKL";
-    std::string letters = "0123456789";
+    std::string letters = "ABCDEFGHKL";
+    //std::string letters = "0123456789";
     std::cout << "   ";
     for (auto const &lett : letters){
         std::cout << lett << " ";
