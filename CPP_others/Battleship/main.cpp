@@ -221,26 +221,9 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<
 }
 
 bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship, int dir){
-
-    std::string temp_dir;
-
-    if (dir == 0)
-        temp_dir = "horizontal";
-    else
-        temp_dir = "vertical";
-
-
-    std::cout << "ship = " << ship << std::endl;
-    std::cout << "startPoint = " << startPoint << std::endl;
-    std::cout << "offset = " << offset << std::endl;
-    std::cout << "direction = " << temp_dir << std::endl;
-
-
     if (field.at(startPoint).at(offset) != 1 && field.at(startPoint).at(offset) != 8 && (startPoint+ship) < 9 && (offset+ship) < 9){
-            std::cout << "TRUE \n\n";
             return true;
     }else{
-        std::cout << "FALSE \n\n";
         return false;
     }
 /*
