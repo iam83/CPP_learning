@@ -164,9 +164,9 @@ bool checkCell(std::array<std::array<int, 10>, 10> field, int row, int col, int 
 }
 
 //making vector of coords possible ships setup
-void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int dir, int ship){
+void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
     
-    //dir = getRandomNumber(0, 1);
+    dir = getRandomNumber(0, 1);
 
     int count {0}, temp_row{0}, temp_col{0};
     vec.clear();
@@ -293,11 +293,10 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
     //checkField(field);
 }
 
-void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int dir, int ship){
+void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
     
     checkField(field);
     getPossibles(field, vec, dir, ship);
-    printVec(vec);
 
     int i = rand() % vec.size();
     int startPoint = vec[i].first.first;
@@ -307,11 +306,8 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<
         if (dir == 0)
             field.at(startPoint).at(offset+i) = 1;
         else
-            field.at(offset+i).at(startPoint) = 1;
+            field.at(startPoint+i).at(offset) = 1;
     }
-    checkField(field);
-    std::cout << "ship " << ship << std::endl;
-    printField(field);
 }
 
 int main(){
@@ -339,15 +335,15 @@ int main(){
     //         }};
 
     generateShips(field, 4);
-    setShips(field, vec, 0, 3);
-    setShips(field, vec, 0, 3);
-    setShips(field, vec, 0, 2);
-    setShips(field, vec, 0, 2);
-    setShips(field, vec, 0, 2);
-    setShips(field, vec, 0, 1);
-    setShips(field, vec, 0, 1);
-    setShips(field, vec, 0, 1);
-    setShips(field, vec, 0, 1);
+    setShips(field, vec, dir, 3);
+    setShips(field, vec, dir, 3);
+    setShips(field, vec, dir, 2);
+    setShips(field, vec, dir, 2);
+    setShips(field, vec, dir, 2);
+    setShips(field, vec, dir, 1);
+    setShips(field, vec, dir, 1);
+    setShips(field, vec, dir, 1);
+    setShips(field, vec, dir, 1);
 
     printField(field);
     // getPossibles(field, vec, 0, 4);
