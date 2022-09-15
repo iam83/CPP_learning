@@ -274,25 +274,23 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<
 void generateFirstShip(std::array<std::array<int, 10>, 10> &field){
 
     checkField(field);
-    int startPoint{0}, offset{0}, dir{0};
-
-    do{
+    int row{0}, col{0}, dir{0};
     
-        startPoint = getRandomNumber(0, 9);
-        offset = getRandomNumber(0, 9);
+    do{ //iterate while coords are not good enough
+        row = getRandomNumber(0, 9);
+        col = getRandomNumber(0, 9);
         dir = getRandomNumber(0, 1);
 
-    } while (!(field.at(startPoint).at(offset) != 1 && field.at(startPoint).at(offset) != 8 && (startPoint+4) < 9 && (offset+4) < 9));
+    } while (!(field.at(row).at(col) != 1 && field.at(row).at(col) != 8 && (row+4) < 9 && (col+4) < 9));
 
-    if ((offset + 4) >= 9) offset = 4;
+    if ((col + 4) >= 9) col = 4;
     
     for (int i = 0; i < 4; ++i){
         if (dir == 0) //horizontal location
-            field.at(startPoint).at(i+offset) = 1;
+            field.at(row).at(col+i) = 1;
         else //vertical
-            field.at(startPoint+i).at(offset) = 1;
+            field.at(row+i).at(col) = 1;
         }
-
 }
 
 void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
@@ -300,15 +298,15 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<
     checkField(field);
     getPossibles(field, vec, dir, ship);
 
-    int i = rand() % vec.size();
-    int startPoint = vec[i].first.first;
-    int offset = vec[i].first.second;
+    int i = rand() % vec.size(); //choose random ship position that can be definitely installed
+    int row = vec[i].first.first;
+    int col = vec[i].first.second;
 
     for (int i = 0; i < ship; ++i){
         if (dir == 0)
-            field.at(startPoint).at(offset+i) = 1;
+            field.at(row).at(col+i) = 1;
         else
-            field.at(startPoint+i).at(offset) = 1;
+            field.at(row+i).at(col) = 1;
     }
 }
 
