@@ -20,7 +20,6 @@
 
 */
 
-
 // A simplified version of Battleship game. An attemp to make it from scratch without looking at other examples.
 //
 // create 10x10 field_pc
@@ -45,16 +44,17 @@
 
 typedef std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> Coord;
 
-enum class Owner{
+enum class Player{
     User,
     Pc
 };
 
 enum class FieldStates{
-    Hit,
-    Miss,
-    Border,
-    Ship
+    Ship = 1,
+    Hit = 2,
+    Miss = 3,
+    BorderHit = 7,
+    Border = 8
 };
 
 int getRandomNumber(int min, int max){
@@ -66,7 +66,8 @@ void createField(std::array<std::array<int, 10>, 10> &field){
     field.fill({0,0});
 }
 
-void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
+//print fields, make it colorful on windows
+void printField(std::array<std::array<int, 10>, 10> const &field, Player player){
     
     #ifdef _WIN32
     HANDLE  hConsole;
@@ -74,7 +75,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
     #endif
 
     std::string letters = "ABCDEFGHIJ";
-    //std::string letters = "0123456789";
+    //std::string letters = "0123456789"; //for debugging
     std::cout << "   ";
     for (auto const &lett : letters){
         std::cout << lett << " ";
@@ -88,14 +89,14 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
         std::cout << row << "  ";
         for (int col = 0; col < field.size(); ++col){
             //if cells are taken by ships
-            if (field.at(row).at(col) == 1){
+            if (field.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
                 #ifdef _WIN32
                 if(owner == Owner::User)
                     SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 else
                     SetConsoleTextAttribute(hConsole, 13); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
                 #endif
-                if (owner == Owner::User)
+                if (player == Player::User)
                     std::cout << "#" << " ";
                 else
                     std::cout << "." << " ";
@@ -104,7 +105,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #endif
             }
             //border around ship
-            else if (field.at(row).at(col) == 8){
+            else if (field.at(row).at(col) == static_cast<int>(FieldStates::Border)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
@@ -114,7 +115,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #endif
             }
             //ship is hit
-            else if (field.at(row).at(col) == 2){
+            else if (field.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //set console color font green 10, yellow 14
                 #endif
@@ -124,7 +125,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #endif
             }
             //border around hitted ship
-            else if (field.at(row).at(col) == 7){
+            else if (field.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
@@ -134,7 +135,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #endif
             }
             //missed hit
-            else if (field.at(row).at(col) == 3){
+            else if (field.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 1); //set console color font green 10, yellow 14
                 #endif
@@ -143,7 +144,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
             }
-            //just field
+            //just empty field
             else{
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
@@ -177,6 +178,7 @@ bool inField(int r, int c)
     return true;
 }
 
+//checking field's cells and fill borders around ships
 void checkField(std::array<std::array<int, 10>, 10> &field){
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
@@ -214,7 +216,7 @@ void checkHitField(std::array<std::array<int, 10>, 10> &field, int row, int col)
     }
 }
 
-//making vector of coords possible ships setup
+//making vector of coords possible ships to be setup on field
 void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
     
     dir = getRandomNumber(0, 1);
@@ -325,7 +327,7 @@ void createGameField(std::array<std::array<int, 10>, 10> &field, std::vector<std
     setShips(field, vec, dir, 1);
 }
 
-bool checkInput(std::string &coord){
+bool isInputValid(std::string &coord){ //check if user makes correct input
     if(coord.size() > 2){
         std::cout << "Wrong coordinates! Try again.\n";
         return false;
@@ -362,7 +364,7 @@ bool checkInput(std::string &coord){
 
 int main(){
 
-    //system(CLS);
+    system(CLS);
     std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
 
@@ -387,11 +389,11 @@ int main(){
     createGameField(field_pc, vec, dir);
     createGameField(field_user, vec, dir);
     checkField(field_pc);
-    printField(field_pc, Owner::Pc);
-    printField(field_user, Owner::User);
+    printField(field_pc, Player::Pc);
+    printField(field_user, Player::User);
     
     int row, col;
-    std::string coord, message;
+    std::string coord, message,lastMove;
 
     //game loop
     while(1){
@@ -401,12 +403,14 @@ int main(){
             std::cin >> coord;
             coord[0] = std::toupper(coord[0]);
             if (coord == "N"){
+                std::cout << "See you, bye!\n\n";
                 return 0;
             }
             
-        } while(!checkInput(coord));
+        } while(!isInputValid(coord));
 
         system(CLS);
+        lastMove = coord;
 
         switch(coord[0]){
             case 'A':
@@ -473,27 +477,27 @@ int main(){
                 row = 9;
                 break;
         }
+
         checkField(field_pc);
 
-        if (field_pc.at(row).at(col) == 1){
-            //std::cout << "Got it!\n\n" ;
-            message = "*** Got it! ***";
-            field_pc.at(row).at(col) = 2;
+        if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+            message = "*** Nice shot! ***";
+            field_pc.at(row).at(col) = static_cast<int>(FieldStates::Hit);
             //checkHitField(field_pc, row, col);
         }
         else{
-            if(field_pc.at(row).at(col) != 2 || field_pc.at(row).at(col) != 3){
-                //std::cout << "Missed!\n\n";
-                message = "Missed!";
-                field_pc.at(row).at(col) = 3;
+            if(field_pc.at(row).at(col) != static_cast<int>(FieldStates::Hit) &&
+               field_pc.at(row).at(col) != static_cast<int>(FieldStates::Miss)) {
+                message = "--- Missed! ---";
+                field_pc.at(row).at(col) = static_cast<int>(FieldStates::Miss);
             }
         }
 
-        //system(CLS);
-        printField(field_pc, Owner::Pc);
-        printField(field_user, Owner::User);
-        std::cout << message << std::endl << std::endl;
+        printField(field_pc, Player::Pc);
+        printField(field_user, Player::User);
 
+        std::cout << message << std::endl;
+        std::cout << "Last move: " << lastMove << std::endl << std::endl;
     }
 
     std::cout << std::endl;
