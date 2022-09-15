@@ -470,7 +470,7 @@ int main(){
                 field_pc.at(row).at(col) = 3;
             }
         }
-
+        
         //system(CLS);
         printField(field_pc, Owner::pc);
         printField(field_user, Owner::user);
