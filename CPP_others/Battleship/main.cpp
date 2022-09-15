@@ -66,6 +66,20 @@ void createField(std::array<std::array<int, 10>, 10> &field){
     field.fill({0,0});
 }
 
+
+void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user){
+
+    std::string letters = "ABCDEFGHIJ";
+    std::cout << "   ";
+    for (auto const &lett : letters){
+        std::cout << lett << " ";
+    }
+
+    std::cout << "          ";
+    for (auto const &lett : letters){
+        std::cout << lett << " ";
+    }
+}
 //print fields, make it colorful on windows
 void printField(std::array<std::array<int, 10>, 10> const &field, Player player){
     
@@ -408,6 +422,7 @@ int main(){
         } while(!isInputValid(coord));
 
         system(CLS);
+        //printTwoFields(field_pc, field_user);
         std::string lastMove = coord;
 
         switch(coord[0]){
@@ -501,5 +516,7 @@ int main(){
     }
 
     std::cout << std::endl;
+    
+
     return 0;
 }
