@@ -6,12 +6,17 @@
 #include <map>
 
 #ifdef _WIN32
+#define CLS "cls"
 #include <windows.h>
 #endif
+#ifdef _APPLE
+#define CLS "clear"
+#endif
+
 
 // A simplified version of Battleship game. An attemp to make it from scratch without looking at other examples.
 //
-// create 10x10 field
+// create 10x10 field_pc
 // fill cells with random located ships.
 //
 // 4* ships - 1
@@ -20,18 +25,23 @@
 // 1* ships - 4
 //
 // create game loop
-//      print your field
-//      print enemy's field
+//      print your field_pc
+//      print enemy's field_pc
 //      ask user to enter coords to shot
 //      check if user hits succsefully
-//          if yes then update enemy's field
+//          if yes then update enemy's field_pc
 //          else let enemy to hit
 //      choose random coord to shoot
 //      check if enemy hits succsefully
-//      if yes then update user's field
+//      if yes then update user's field_pc
 //      else ask user to eneter coords to shot
 
 typedef std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> Coord;
+
+enum class Owner{
+    user,
+    pc
+};
 
 int getRandomNumber(int min, int max){
         static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
@@ -42,7 +52,7 @@ void createField(std::array<std::array<int, 10>, 10> &field){
     field.fill({0,0});
 }
 
-void printField(std::array<std::array<int, 10>, 10> const &field){
+void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
     
     #ifdef _WIN32
     HANDLE  hConsole;
@@ -65,18 +75,39 @@ void printField(std::array<std::array<int, 10>, 10> const &field){
         for (int col = 0; col < field.size(); ++col){
             if (field.at(row).at(col) == 1){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
+                if(owner == Owner::user)
+                    SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
+                else
+                    SetConsoleTextAttribute(hConsole, 13); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
                 #endif
-                std::cout << "1" << " ";
+                std::cout << "#" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
             }
             else if (field.at(row).at(col) == 8){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 10); //set console color font green 10, yellow 14
+                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
                 std::cout << "." << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            else if (field.at(row).at(col) == 2){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 12); //set console color font green 10, yellow 14
+                #endif
+                std::cout << "X" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            else if (field.at(row).at(col) == 3){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 1); //set console color font green 10, yellow 14
+                #endif
+                std::cout << "-" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -135,34 +166,6 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
     }
 }
 
-bool checkCell(std::array<std::array<int, 10>, 10> field, int row, int col, int &dir, int ship){
-
-    
-    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
-    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
-
-    //check in boundary
-    if(dir == 0){
-        for(int i=0; i < 8; ++i) { // looking around cell
-            if (inField(row+y[i], col+x[i])){
-                if(field.at(row+y[i]).at(col+x[i]) == 1 || field.at(row+y[i]).at(col+x[i]) == 8)
-                    return false;
-                else
-                    return true;
-            }
-        }
-    }else{
-        for(int i=0; i < 8; ++i) { // looking around cell
-            if (inField(row+y[i], col+x[i])){
-                if(field.at(row+y[i]).at(col+x[i]) == 1 || field.at(row+y[i]).at(col+x[i]) == 8)
-                    return false;
-                else
-                    return true;
-                }
-            }
-        }
-}
-
 //making vector of coords possible ships setup
 void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
     
@@ -176,7 +179,6 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<
         for (int row = 0; row < field.size(); ++row){        
             for (int col = 0; col < field.size(); ++col){
                 if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
-                    //if(!checkCell(field, row, col, dir, ship))
                         if (count == 0){
                             temp_col = col;
                             temp_row = row;
@@ -199,7 +201,6 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<
         for (int col = 0; col < field.size(); ++col){        
             for (int row = 0; row < field.size(); ++row){
                 if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
-                    //if(!checkCell(field, row, col, dir, ship))
                         if (count == 0){
                             temp_col = col;
                             temp_row = row;
@@ -220,40 +221,9 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<
     }
 }
 
-bool checkPlace(std::array<std::array<int, 10>, 10> &field, int startPoint, int offset, int ship, int dir){
-    if (field.at(startPoint).at(offset) != 1 && field.at(startPoint).at(offset) != 8 && (startPoint+ship) < 9 && (offset+ship) < 9){
-            return true;
-    }else{
-        return false;
-    }
-/*
-    for (int row = 0; row < field.size(); ++row){
-        for (int col = 0; col < field.size(); ++col){
-
-            //check if startPoint not equal to existing
-            if(field.at(row).at(col) != startPoint){
-
-                for(int s = 0; s < ship; ++s){
-
-                    if (row + ship <= 9 && col + ship <= 9){
-                        if (field.at(row).at(col+s) != 1 && field.at(row).at(col+s) != 8)
-                            ++count;
-                        else if(field.at(row+1).at(col) !=1 && field.at(row+s).at(col) != 8)
-                            ++count;
-                        else return false;
-                    }else return false;
-                }
-            }
-        }
-    }
-    return (count > 0) ? 1 : 0;
-    */
-}
-
-void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
+void generateFirstShip(std::array<std::array<int, 10>, 10> &field){
 
     checkField(field);
-
     int startPoint{0}, offset{0}, dir{0};
 
     do{
@@ -262,18 +232,17 @@ void generateShips(std::array<std::array<int, 10>, 10> &field, int ship){
         offset = getRandomNumber(0, 9);
         dir = getRandomNumber(0, 1);
 
+    } while (!(field.at(startPoint).at(offset) != 1 && field.at(startPoint).at(offset) != 8 && (startPoint+4) < 9 && (offset+4) < 9));
 
-    } while (!checkPlace(field, startPoint, offset, ship, dir));
-
-    if ((offset + ship) >= 9) offset = 4;
+    if ((offset + 4) >= 9) offset = 4;
     
-    for (int i = 0; i < ship; ++i){
+    for (int i = 0; i < 4; ++i){
         if (dir == 0) //horizontal location
             field.at(startPoint).at(i+offset) = 1;
         else //vertical
             field.at(startPoint+i).at(offset) = 1;
         }
-    //checkField(field);
+
 }
 
 void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
@@ -293,18 +262,35 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<
     }
 }
 
+void createGameField(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir){
+
+    createField(field);
+    generateFirstShip(field);
+    setShips(field, vec, dir, 3);
+    setShips(field, vec, dir, 3);
+    setShips(field, vec, dir, 2);
+    setShips(field, vec, dir, 2);
+    setShips(field, vec, dir, 2);
+    setShips(field, vec, dir, 1);
+    setShips(field, vec, dir, 1);
+    setShips(field, vec, dir, 1);
+    setShips(field, vec, dir, 1);
+}
+
+
+
 int main(){
 
+    system(CLS);
     std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
 
-    std::array<std::array<int, 10>, 10> field;
+    std::array<std::array<int, 10>, 10> field_user;
+    std::array<std::array<int, 10>, 10> field_pc;
     std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> vec;
     int dir{0};
-
-    createField(field);
     
-    // field = {{
+    // field_pc = {{
     //           {1,0,1,0,0,0,0,0,0,0},
     //           {0,0,1,0,0,0,0,0,0,0},
     //           {0,0,0,0,0,0,0,0,0,0},
@@ -317,29 +303,38 @@ int main(){
     //           {1,1,1,1,0,0,0,0,0,1}
     //         }};
 
-    generateShips(field, 4);
-    setShips(field, vec, dir, 3);
-    setShips(field, vec, dir, 3);
-    setShips(field, vec, dir, 2);
-    setShips(field, vec, dir, 2);
-    setShips(field, vec, dir, 2);
-    setShips(field, vec, dir, 1);
-    setShips(field, vec, dir, 1);
-    setShips(field, vec, dir, 1);
-    setShips(field, vec, dir, 1);
+    createGameField(field_pc, vec, dir);
+    createGameField(field_user, vec, dir);
 
-    printField(field);
-    // getPossibles(field, vec, 0, 4);
-    // std::cout << "horizontal\n";
-    // printVec(vec);
-    // std::cout << std::endl;
-    // getPossibles(field, vec, 1, 4);
-    // std::cout << "vertical\n";
-    // printVec(vec);
+    printField(field_pc, Owner::pc);
+    printField(field_user, Owner::user);
     
-    //checkField(field);
-    std::cout << std::endl;
-    std::cout << "size = " << vec.size() << std::endl;
+    int row, col;
+    std::string coord;
 
+    //game loop
+    while(1){
+
+        do{
+            std::cout << "Enter row and column: ";
+            std::cin >> coord;
+            std::cout << coord.size();
+        } while(coord.size() == 2);
+
+        if (field_pc.at(row).at(col) == 1){
+            std::cout << "Hit!\n" ;
+            field_pc.at(row).at(col) = 2;
+        }
+        else{
+            std::cout << "Missed!\n";
+            field_pc.at(row).at(col) = 3;
+        }
+        system(CLS);
+        printField(field_pc, Owner::pc);
+        printField(field_user, Owner::user);
+
+    }
+
+    std::cout << std::endl;
     return 0;
 }
