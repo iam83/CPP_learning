@@ -91,7 +91,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
-                std::cout << field.at(row).at(col) << " ";
+                std::cout << "." << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -101,7 +101,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //set console color font green 10, yellow 14
                 #endif
-                std::cout << field.at(row).at(col) << " ";
+                std::cout << "X" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -111,7 +111,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
-                std::cout << field.at(row).at(col) << " ";
+                std::cout << "-" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -313,7 +313,10 @@ void createGameField(std::array<std::array<int, 10>, 10> &field, std::vector<std
 }
 
 bool checkInput(std::string &coord){
-
+    if(coord.size() > 2){
+        std::cout << "Wrong coordinates! Try again.\n";
+        return false;
+    }
     if ((coord[0] == 'A' ||
          coord[0] == 'B' ||
          coord[0] == 'C' ||
@@ -338,7 +341,7 @@ bool checkInput(std::string &coord){
             return true;
          }
     else{
-        std::cout << "WRONG COORDS\n";
+        std::cout << "Wrong coordinates! Try again.\n";
         return false;
     }
     return false;
@@ -384,10 +387,11 @@ int main(){
             std::cout << "Enter row and column (eg. A0 or a0): ";
             std::cin >> coord;
             coord[0] = std::toupper(coord[0]);
-            checkInput(coord);
             
-        } while(coord.size() > 2 || !checkInput(coord));
-        
+        } while(!checkInput(coord));
+
+        system(CLS);
+
         switch(coord[0]){
             case 'A':
                 col = 0;
