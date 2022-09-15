@@ -393,7 +393,7 @@ int main(){
     printField(field_user, Player::User);
     
     int row, col;
-    std::string coord, message,lastMove;
+    std::string coord;
 
     //game loop
     while(1){
@@ -410,7 +410,7 @@ int main(){
         } while(!isInputValid(coord));
 
         system(CLS);
-        lastMove = coord;
+        std::string lastMove = coord;
 
         switch(coord[0]){
             case 'A':
@@ -479,6 +479,8 @@ int main(){
         }
 
         checkField(field_pc);
+
+        std::string message;
 
         if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
             message = "*** Nice shot! ***";
