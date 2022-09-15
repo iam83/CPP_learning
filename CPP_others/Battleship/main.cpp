@@ -195,21 +195,17 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
     }
 }
 
-void checkHitField(std::array<std::array<int, 10>, 10> &field){
+void checkHitField(std::array<std::array<int, 10>, 10> &field, int row, int col){
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
 
     //check in boundary
-    for(int row = 0; row < field.size(); ++row){
-        for(int col = 0; col < field.size(); ++col){
-            if (field.at(row).at(col) == 8){
-                for(int i=0; i < 8; ++i) { // looking around cell
-                    if (inField(row+y[i], col+x[i])){
-                        //if(field.at(row+y[i]).at(col+x[i]) == 8)
-                            field.at(row).at(col) = 7;
-                    }
-                }
+    if (field.at(row).at(col) == 2){
+        for(int i=0; i < 8; ++i) { // looking around cell
+            if (inField(row+y[i], col+x[i])){
+                if(field.at(row+y[i]).at(col+x[i]) == 2)
+                    field.at(row).at(col) = 7;
             }
         }
     }
@@ -404,7 +400,7 @@ int main(){
             
         } while(!checkInput(coord));
 
-        system(CLS);
+        //system(CLS);
 
         switch(coord[0]){
             case 'A':
@@ -476,7 +472,7 @@ int main(){
         if (field_pc.at(row).at(col) == 1){
             std::cout << "Got it!\n\n" ;
             field_pc.at(row).at(col) = 2;
-            //checkHitField(field_pc);
+            checkHitField(field_pc, row, col);
         }
         else{
             if(field_pc.at(row).at(col) != 2 || field_pc.at(row).at(col) != 3){
