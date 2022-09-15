@@ -39,8 +39,15 @@
 typedef std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> Coord;
 
 enum class Owner{
-    user,
-    pc
+    User,
+    Pc
+};
+
+enum class FieldStates{
+    Hit,
+    Miss,
+    Border,
+    Ship
 };
 
 int getRandomNumber(int min, int max){
@@ -76,7 +83,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
             //if cells are taken by ships
             if (field.at(row).at(col) == 1){
                 #ifdef _WIN32
-                if(owner == Owner::user)
+                if(owner == Owner::User)
                     SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 else
                     SetConsoleTextAttribute(hConsole, 13); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
@@ -189,10 +196,10 @@ void checkHitField(std::array<std::array<int, 10>, 10> &field){
     //check in boundary
     for(int row = 0; row < field.size(); ++row){
         for(int col = 0; col < field.size(); ++col){
-            if (field.at(row).at(col) == 0 || field.at(row).at(col) == 8 || field.at(row).at(col) == 3){
+            if (field.at(row).at(col) == 2){
                 for(int i=0; i < 8; ++i) { // looking around cell
                     if (inField(row+y[i], col+x[i])){
-                        if(field.at(row+y[i]).at(col+x[i]) == 2)
+                        if(field.at(row+y[i]).at(col+x[i]) == 8)
                             field.at(row).at(col) = 7;
                     }
                 }
@@ -374,8 +381,8 @@ int main(){
     createGameField(field_pc, vec, dir);
     createGameField(field_user, vec, dir);
     checkField(field_pc);
-    printField(field_pc, Owner::pc);
-    printField(field_user, Owner::user);
+    printField(field_pc, Owner::Pc);
+    printField(field_user, Owner::User);
     
     int row, col;
     std::string coord;
@@ -460,9 +467,9 @@ int main(){
         checkField(field_pc);
 
         if (field_pc.at(row).at(col) == 1){
-            std::cout << "Hit!\n" ;
+            std::cout << "Got it!\n\n" ;
             field_pc.at(row).at(col) = 2;
-            checkHitField(field_pc);
+            //checkHitField(field_pc);
         }
         else{
             if(field_pc.at(row).at(col) != 2 || field_pc.at(row).at(col) != 3){
@@ -470,10 +477,10 @@ int main(){
                 field_pc.at(row).at(col) = 3;
             }
         }
-        
+
         //system(CLS);
-        printField(field_pc, Owner::pc);
-        printField(field_user, Owner::user);
+        printField(field_pc, Owner::Pc);
+        printField(field_user, Owner::User);
         
 
     }
