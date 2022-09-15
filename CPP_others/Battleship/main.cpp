@@ -73,6 +73,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
         #endif
         std::cout << row << "  ";
         for (int col = 0; col < field.size(); ++col){
+            //if cells are taken by ships
             if (field.at(row).at(col) == 1){
                 #ifdef _WIN32
                 if(owner == Owner::user)
@@ -85,24 +86,37 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
             }
+            //border around ship
             else if (field.at(row).at(col) == 8){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "." << " ";
+                std::cout << field.at(row).at(col) << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
             }
+            //ship is hit
             else if (field.at(row).at(col) == 2){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "X" << " ";
+                std::cout << field.at(row).at(col) << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
             }
+            //border around hitted ship
+            else if (field.at(row).at(col) == 7){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
+                #endif
+                std::cout << field.at(row).at(col) << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //missed hit
             else if (field.at(row).at(col) == 3){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 1); //set console color font green 10, yellow 14
@@ -112,6 +126,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
             }
+            //just field
             else{
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
@@ -159,6 +174,26 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
                     if (inField(row+y[i], col+x[i])){
                         if(field.at(row+y[i]).at(col+x[i]) == 1)
                             field.at(row).at(col) = 8;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void checkHitField(std::array<std::array<int, 10>, 10> &field){
+
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
+
+    //check in boundary
+    for(int row = 0; row < field.size(); ++row){
+        for(int col = 0; col < field.size(); ++col){
+            if (field.at(row).at(col) == 0 || field.at(row).at(col) == 8 || field.at(row).at(col) == 3){
+                for(int i=0; i < 8; ++i) { // looking around cell
+                    if (inField(row+y[i], col+x[i])){
+                        if(field.at(row+y[i]).at(col+x[i]) == 2)
+                            field.at(row).at(col) = 7;
                     }
                 }
             }
@@ -311,7 +346,7 @@ bool checkInput(std::string &coord){
 
 int main(){
 
-    system(CLS);
+    //system(CLS);
     std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
 
@@ -328,14 +363,14 @@ int main(){
     //           {0,0,0,0,0,0,0,0,0,0},
     //           {0,1,1,1,0,0,0,0,0,0},
     //           {0,0,0,0,0,0,1,0,0,0},
-    //           {0,0,0,0,0,0,1,0,0,0},
+    //           {0,0,0,0,2,0,1,0,0,0},
     //           {0,0,0,0,0,0,0,0,0,0},
     //           {1,1,1,1,0,0,0,0,0,1}
     //         }};
 
     createGameField(field_pc, vec, dir);
     createGameField(field_user, vec, dir);
-
+    checkField(field_pc);
     printField(field_pc, Owner::pc);
     printField(field_user, Owner::user);
     
@@ -346,12 +381,12 @@ int main(){
     while(1){
 
         do{
-            std::cout << "Enter row and column: ";
+            std::cout << "Enter row and column (eg. A0 or a0): ";
             std::cin >> coord;
             coord[0] = std::toupper(coord[0]);
             checkInput(coord);
             
-        } while(coord.size() > 2 && !checkInput(coord));
+        } while(coord.size() > 2 || !checkInput(coord));
         
         switch(coord[0]){
             case 'A':
@@ -418,17 +453,21 @@ int main(){
                 row = 9;
                 break;
         }
+        checkField(field_pc);
 
         if (field_pc.at(row).at(col) == 1){
             std::cout << "Hit!\n" ;
             field_pc.at(row).at(col) = 2;
+            checkHitField(field_pc);
         }
         else{
-            std::cout << "Missed!\n";
-            field_pc.at(row).at(col) = 3;
+            if(field_pc.at(row).at(col) != 2 || field_pc.at(row).at(col) != 3){
+                std::cout << "Missed!\n";
+                field_pc.at(row).at(col) = 3;
+            }
         }
 
-        system(CLS);
+        //system(CLS);
         printField(field_pc, Owner::pc);
         printField(field_user, Owner::user);
         
