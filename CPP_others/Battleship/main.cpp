@@ -13,6 +13,13 @@
 #define CLS "clear"
 #endif
 
+/*
+
+    TODO:
+        1. Update checkHitField()
+
+*/
+
 
 // A simplified version of Battleship game. An attemp to make it from scratch without looking at other examples.
 //
@@ -196,10 +203,10 @@ void checkHitField(std::array<std::array<int, 10>, 10> &field){
     //check in boundary
     for(int row = 0; row < field.size(); ++row){
         for(int col = 0; col < field.size(); ++col){
-            if (field.at(row).at(col) == 2){
+            if (field.at(row).at(col) == 8){
                 for(int i=0; i < 8; ++i) { // looking around cell
                     if (inField(row+y[i], col+x[i])){
-                        if(field.at(row+y[i]).at(col+x[i]) == 8)
+                        //if(field.at(row+y[i]).at(col+x[i]) == 8)
                             field.at(row).at(col) = 7;
                     }
                 }
