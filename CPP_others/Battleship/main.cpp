@@ -9,7 +9,7 @@
 #define CLS "cls"
 #include <windows.h>
 #endif
-#ifdef _APPLE
+#ifdef __APPLE__
 #define CLS "clear"
 #endif
 
@@ -319,7 +319,10 @@ int main(){
             std::cout << "Enter row and column: ";
             std::cin >> coord;
             std::cout << coord.size();
-        } while(coord.size() == 2);
+
+        } while(coord.size() > 2);
+
+        
 
         if (field_pc.at(row).at(col) == 1){
             std::cout << "Hit!\n" ;
