@@ -59,7 +59,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
 
-    std::string letters = "ABCDEFGHKL";
+    std::string letters = "ABCDEFGHIJ";
     //std::string letters = "0123456789";
     std::cout << "   ";
     for (auto const &lett : letters){
@@ -107,7 +107,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 1); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "-" << " ";
+                std::cout << "m" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -277,7 +277,37 @@ void createGameField(std::array<std::array<int, 10>, 10> &field, std::vector<std
     setShips(field, vec, dir, 1);
 }
 
+bool checkInput(std::string &coord){
 
+    if ((coord[0] == 'A' ||
+         coord[0] == 'B' ||
+         coord[0] == 'C' ||
+         coord[0] == 'D' ||
+         coord[0] == 'E' ||
+         coord[0] == 'F' ||
+         coord[0] == 'G' ||
+         coord[0] == 'H' ||
+         coord[0] == 'I' ||
+         coord[0] == 'J') &&
+
+        (coord[1] == '0' ||
+         coord[1] == '1' ||
+         coord[1] == '2' ||
+         coord[1] == '3' ||
+         coord[1] == '4' ||
+         coord[1] == '5' ||
+         coord[1] == '6' || 
+         coord[1] == '7' ||
+         coord[1] == '8' ||
+         coord[1] == '9')){
+            return true;
+         }
+    else{
+        std::cout << "WRONG COORDS\n";
+        return false;
+    }
+    return false;
+}
 
 int main(){
 
@@ -318,11 +348,76 @@ int main(){
         do{
             std::cout << "Enter row and column: ";
             std::cin >> coord;
-            std::cout << coord.size();
-
-        } while(coord.size() > 2);
-
+            coord[0] = std::toupper(coord[0]);
+            checkInput(coord);
+            
+        } while(coord.size() > 2 && !checkInput(coord));
         
+        switch(coord[0]){
+            case 'A':
+                col = 0;
+                break;
+            case 'B':
+                col = 1;
+                break;
+            case 'C':
+                col = 2;
+                break;
+            case 'D':
+                col = 3;
+                break;
+            case 'E':
+                col = 4;
+                break;
+            case 'F':
+                col = 5;
+                break;
+            case 'G':
+                col = 6;
+                break;
+            case 'H':
+                col = 7;
+                break;
+            case 'I':
+                col = 8;
+                break;
+            case 'J':
+                col = 9;
+                break;
+        }
+
+        switch(coord[1]){
+            case '0':
+                row = 0;
+                break;
+            case '1':
+                row = 1;
+                break;
+            case '2':
+                row = 2;
+                break;
+            case '3':
+                row = 3;
+                break;
+            case '4':
+                row = 4;
+                break;
+            case '5':
+                row = 5;
+                break;
+            case '6':
+                row = 6;
+                break;
+            case '7':
+                row = 7;
+                break;
+            case '8':
+                row = 8;
+                break;
+            case '9':
+                row = 9;
+                break;
+        }
 
         if (field_pc.at(row).at(col) == 1){
             std::cout << "Hit!\n" ;
@@ -332,9 +427,11 @@ int main(){
             std::cout << "Missed!\n";
             field_pc.at(row).at(col) = 3;
         }
+
         system(CLS);
         printField(field_pc, Owner::pc);
         printField(field_user, Owner::user);
+        
 
     }
 
