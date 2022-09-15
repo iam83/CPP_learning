@@ -95,7 +95,10 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Owner owner){
                 else
                     SetConsoleTextAttribute(hConsole, 13); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
                 #endif
-                std::cout << "#" << " ";
+                if (owner == Owner::User)
+                    std::cout << "#" << " ";
+                else
+                    std::cout << "." << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -336,8 +339,8 @@ bool checkInput(std::string &coord){
          coord[0] == 'G' ||
          coord[0] == 'H' ||
          coord[0] == 'I' ||
-         coord[0] == 'J') &&
-
+         coord[0] == 'J')
+         &&
         (coord[1] == '0' ||
          coord[1] == '1' ||
          coord[1] == '2' ||
@@ -388,19 +391,22 @@ int main(){
     printField(field_user, Owner::User);
     
     int row, col;
-    std::string coord;
+    std::string coord, message;
 
     //game loop
     while(1){
 
         do{
-            std::cout << "Enter row and column (eg. A0 or a0): ";
+            std::cout << "Enter row and column (eg. A0 or a0, or type 'n' to exit): ";
             std::cin >> coord;
             coord[0] = std::toupper(coord[0]);
+            if (coord == "N"){
+                return 0;
+            }
             
         } while(!checkInput(coord));
 
-        //system(CLS);
+        system(CLS);
 
         switch(coord[0]){
             case 'A':
@@ -470,13 +476,15 @@ int main(){
         checkField(field_pc);
 
         if (field_pc.at(row).at(col) == 1){
-            std::cout << "Got it!\n\n" ;
+            //std::cout << "Got it!\n\n" ;
+            message = "*** Got it! ***";
             field_pc.at(row).at(col) = 2;
-            checkHitField(field_pc, row, col);
+            //checkHitField(field_pc, row, col);
         }
         else{
             if(field_pc.at(row).at(col) != 2 || field_pc.at(row).at(col) != 3){
-                std::cout << "Missed!\n";
+                //std::cout << "Missed!\n\n";
+                message = "Missed!";
                 field_pc.at(row).at(col) = 3;
             }
         }
@@ -484,7 +492,7 @@ int main(){
         //system(CLS);
         printField(field_pc, Owner::Pc);
         printField(field_user, Owner::User);
-        
+        std::cout << message << std::endl << std::endl;
 
     }
 
