@@ -66,7 +66,7 @@ void createField(std::array<std::array<int, 10>, 10> &field){
     field.fill({0,0});
 }
 
-
+//print both fields, make it colorful on windows
 void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user){
 
     #ifdef _WIN32
@@ -138,7 +138,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
             //missed hit
             else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 11); //light blue
+                SetConsoleTextAttribute(hConsole, 4); //light blue 11
                 #endif
                 std::cout << "-" << " ";
                 #ifdef _WIN32
@@ -205,7 +205,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
             //missed hit
             else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 11); //light blue
+                SetConsoleTextAttribute(hConsole, 4); //light blue 11
                 #endif
                 std::cout << "-" << " ";
                 #ifdef _WIN32
@@ -232,7 +232,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
     std::cout << std::endl;
 }
 
-//print fields, make it colorful on windows
+//print one field
 void printField(std::array<std::array<int, 10>, 10> const &field, Player player){
     
     #ifdef _WIN32
