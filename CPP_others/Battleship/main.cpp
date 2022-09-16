@@ -17,6 +17,8 @@
     TODO:
         1. Add PC moves and hits
         2. Update checkHitField()
+    FEATURES:
+        1. Make TCP/IP client-server
 
 */
 
