@@ -15,7 +15,8 @@
 /*
 
     TODO:
-        1. Update checkHitField()
+        1. Add PC moves and hits
+        2. Update checkHitField()
 
 */
 
