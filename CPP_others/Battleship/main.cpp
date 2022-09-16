@@ -72,10 +72,10 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
-
+    std::cout << std::endl;
     std::string letters = "ABCDEFGHIJ";
-    std::string separator = "          ";
-    std::cout << "   ";
+    std::string separator = "        ";
+    std::cout << "      ";
 
     for (auto const &lett : letters){
         std::cout << lett << " ";
@@ -90,7 +90,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
     std::cout << std::endl;
 
     for (int row = 0; row < field_pc.size(); ++row){
-        std::cout << row << "  "; //row number
+        std::cout << "   " << row << "  "; //row number
         
         for (int col = 0; col < field_pc.size(); ++col){// user field
             //std::cout << field_user.at(row).at(col) << " ";
@@ -562,7 +562,7 @@ int main(){
     while(1){
 
         do{
-            std::cout << "Enter row and column (eg. A0 or a0, or type 'n' to exit): ";
+            std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
             std::cin >> coord;
             coord[0] = std::toupper(coord[0]);
             if (coord == "N"){
@@ -647,14 +647,14 @@ int main(){
         std::string message;
 
         if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
-            message = "*** Nice shot! ***";
+            message = "   *** Nice shot! ***";
             field_pc.at(row).at(col) = static_cast<int>(FieldStates::Hit);
             //checkHitField(field_pc, row, col);
         }
         else{
             if(field_pc.at(row).at(col) != static_cast<int>(FieldStates::Hit) &&
                field_pc.at(row).at(col) != static_cast<int>(FieldStates::Miss)) {
-                message = "--- Missed! ---";
+                message = "   --- Missed! ---";
                 field_pc.at(row).at(col) = static_cast<int>(FieldStates::Miss);
             }
         }
@@ -665,7 +665,7 @@ int main(){
         printTwoFields(field_pc, field_user);
 
         std::cout << message << std::endl;
-        std::cout << "Last move: " << lastMove << std::endl << std::endl;
+        std::cout << "   Your last move: " << lastMove << std::endl << std::endl;
     }
 
     std::cout << std::endl;
