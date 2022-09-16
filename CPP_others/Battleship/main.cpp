@@ -51,7 +51,7 @@ enum class Player{
     Pc
 };
 
-enum class FieldStates{
+enum class FieldCellStates{
     Ship = 1,
     Hit = 2,
     Miss = 3,
@@ -97,7 +97,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
         
         for (int col = 0; col < field_pc.size(); ++col){// user field
             //std::cout << field_user.at(row).at(col) << " ";
-             if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+             if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
                 #ifdef _WIN32
                     SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                
@@ -108,7 +108,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //border around ship
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Border)){
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
@@ -118,7 +118,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //ship is hit
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //red
                 #endif
@@ -128,7 +128,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //border around hitted ship
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); 
                 #endif
@@ -138,7 +138,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //missed hit
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 4); //light blue 11
                 #endif
@@ -165,7 +165,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
         for (int col = 0; col < field_pc.size(); ++col){ // pc field
             //std::cout << field_pc.at(row).at(col) << " ";
             
-            if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+            if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
                 #endif
@@ -175,7 +175,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //border around ship
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Border)){
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
@@ -185,7 +185,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //ship is hit
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //red
                 #endif
@@ -195,7 +195,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //border around hitted ship
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); 
                 #endif
@@ -205,7 +205,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #endif
             }
             //missed hit
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 4); //light blue 11
                 #endif
@@ -257,7 +257,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
         std::cout << row << "  ";
         for (int col = 0; col < field.size(); ++col){
             //if cells are taken by ships
-            if (field.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
                 #ifdef _WIN32
                 if(player == Player::User)
                     SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
@@ -273,7 +273,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
                 #endif
             }
             //border around ship
-            else if (field.at(row).at(col) == static_cast<int>(FieldStates::Border)){
+            else if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
@@ -283,7 +283,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
                 #endif
             }
             //ship is hit
-            else if (field.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
+            else if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //red
                 #endif
@@ -293,7 +293,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
                 #endif
             }
             //border around hitted ship
-            else if (field.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
+            else if (field.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); 
                 #endif
@@ -303,7 +303,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
                 #endif
             }
             //missed hit
-            else if (field.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
+            else if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)){
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 11); //light blue
                 #endif
@@ -649,16 +649,16 @@ int main(){
 
         std::string message;
 
-        if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+        if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
             message = "   *** Nice shot! ***";
-            field_pc.at(row).at(col) = static_cast<int>(FieldStates::Hit);
+            field_pc.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
             //checkHitField(field_pc, row, col);
         }
         else{
-            if(field_pc.at(row).at(col) != static_cast<int>(FieldStates::Hit) &&
-               field_pc.at(row).at(col) != static_cast<int>(FieldStates::Miss)) {
+            if(field_pc.at(row).at(col) != static_cast<int>(FieldCellStates::Hit) &&
+               field_pc.at(row).at(col) != static_cast<int>(FieldCellStates::Miss)) {
                 message = "   --- Missed! ---";
-                field_pc.at(row).at(col) = static_cast<int>(FieldStates::Miss);
+                field_pc.at(row).at(col) = static_cast<int>(FieldCellStates::Miss);
             }
         }
 
