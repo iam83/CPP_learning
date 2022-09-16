@@ -3,7 +3,6 @@
 #include <vector>
 #include <array>
 #include <ctime>
-#include <map>
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -69,17 +68,169 @@ void createField(std::array<std::array<int, 10>, 10> &field){
 
 void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user){
 
+    #ifdef _WIN32
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    #endif
+
     std::string letters = "ABCDEFGHIJ";
+    std::string separator = "          ";
     std::cout << "   ";
+
     for (auto const &lett : letters){
         std::cout << lett << " ";
     }
 
-    std::cout << "          ";
+    std::cout << separator + "   ";
+
     for (auto const &lett : letters){
         std::cout << lett << " ";
     }
+
+    std::cout << std::endl;
+
+    for (int row = 0; row < field_pc.size(); ++row){
+        std::cout << row << "  "; //row number
+        
+        for (int col = 0; col < field_pc.size(); ++col){// user field
+            //std::cout << field_user.at(row).at(col) << " ";
+             if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+                #ifdef _WIN32
+                    SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
+               
+                #endif
+                std::cout << "#" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //border around ship
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Border)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
+                #endif
+                std::cout << "." << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //ship is hit
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 12); //red
+                #endif
+                std::cout << "X" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //border around hitted ship
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); 
+                #endif
+                std::cout << "-" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //missed hit
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 11); //light blue
+                #endif
+                std::cout << "-" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //just empty field
+            else{
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
+                #endif
+                std::cout << "." << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+                }
+            }
+
+        std::cout << separator;
+        std::cout << row << "  ";
+
+        for (int col = 0; col < field_pc.size(); ++col){ // pc field
+            //std::cout << field_pc.at(row).at(col) << " ";
+            
+            if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
+                #endif
+                std::cout << "." << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //border around ship
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Border)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
+                #endif
+                std::cout << "." << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //ship is hit
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 12); //red
+                #endif
+                std::cout << "X" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //border around hitted ship
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); 
+                #endif
+                std::cout << "-" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //missed hit
+            else if (field_pc.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 11); //light blue
+                #endif
+                std::cout << "-" << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //just empty field
+            else{
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
+                #endif
+                std::cout << "." << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+                }
+        }
+        std::cout << std::endl;
+    }
+    
+    #ifdef _WIN32
+    SetConsoleTextAttribute(hConsole, 7); //set console color font white 7,
+    #endif
+    std::cout << std::endl;
 }
+
 //print fields, make it colorful on windows
 void printField(std::array<std::array<int, 10>, 10> const &field, Player player){
     
@@ -105,10 +256,10 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
             //if cells are taken by ships
             if (field.at(row).at(col) == static_cast<int>(FieldStates::Ship)){
                 #ifdef _WIN32
-                if(owner == Owner::User)
+                if(player == Player::User)
                     SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 else
-                    SetConsoleTextAttribute(hConsole, 13); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
+                    SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
                 #endif
                 if (player == Player::User)
                     std::cout << "#" << " ";
@@ -131,7 +282,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
             //ship is hit
             else if (field.at(row).at(col) == static_cast<int>(FieldStates::Hit)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 12); //set console color font green 10, yellow 14
+                SetConsoleTextAttribute(hConsole, 12); //red
                 #endif
                 std::cout << "X" << " ";
                 #ifdef _WIN32
@@ -141,7 +292,7 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
             //border around hitted ship
             else if (field.at(row).at(col) == static_cast<int>(FieldStates::BorderHit)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
+                SetConsoleTextAttribute(hConsole, 8); 
                 #endif
                 std::cout << "-" << " ";
                 #ifdef _WIN32
@@ -151,9 +302,9 @@ void printField(std::array<std::array<int, 10>, 10> const &field, Player player)
             //missed hit
             else if (field.at(row).at(col) == static_cast<int>(FieldStates::Miss)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 1); //set console color font green 10, yellow 14
+                SetConsoleTextAttribute(hConsole, 11); //light blue
                 #endif
-                std::cout << "m" << " ";
+                std::cout << "-" << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -377,7 +528,6 @@ bool isInputValid(std::string &coord){ //check if user makes correct input
 int main(){
 
     system(CLS);
-    std::cout << std::endl << std::endl;
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user;
@@ -401,8 +551,9 @@ int main(){
     createGameField(field_pc, vec, dir);
     createGameField(field_user, vec, dir);
     checkField(field_pc);
-    printField(field_pc, Player::Pc);
-    printField(field_user, Player::User);
+    //printField(field_pc, Player::Pc);
+    //printField(field_user, Player::User);
+    printTwoFields(field_pc, field_user);
     
     int row, col;
     std::string coord;
@@ -422,7 +573,7 @@ int main(){
         } while(!isInputValid(coord));
 
         system(CLS);
-        //printTwoFields(field_pc, field_user);
+
         std::string lastMove = coord;
 
         switch(coord[0]){
@@ -508,15 +659,16 @@ int main(){
             }
         }
 
-        printField(field_pc, Player::Pc);
-        printField(field_user, Player::User);
+        //printField(field_pc, Player::Pc);
+        //printField(field_user, Player::User);
+
+        printTwoFields(field_pc, field_user);
 
         std::cout << message << std::endl;
         std::cout << "Last move: " << lastMove << std::endl << std::endl;
     }
 
     std::cout << std::endl;
-    
 
     return 0;
 }
