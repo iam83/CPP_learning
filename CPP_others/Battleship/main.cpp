@@ -646,7 +646,7 @@ int main(){
 
         printUpdateMessage(message, userLastMove);
 
-        //pc move to be REFACTORED
+        //pc move
         if (pcMove(field_user, pc_moves, pcLastMove)){
             message = "   !!! You got hit !!!";
         }else{
@@ -657,9 +657,6 @@ int main(){
         printTwoFields(field_pc, field_user);
 
         printUpdateMessage(message, userLastMove, pcLastMove);
-        
-
-        std::cout << std::endl;
 
     }
 
