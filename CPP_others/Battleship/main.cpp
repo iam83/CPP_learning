@@ -528,6 +528,16 @@ bool isInputValid(std::string &coord){ //check if user makes correct input
     return false;
 }
 
+bool pcMove(std::array<std::array<int, 10>, 10> const &field_user){
+
+    int row = getRandomNumber(0, 9);
+    int col = getRandomNumber(0, 9);
+    if (field_user.at(row).at(col) == 1){
+        return true;
+    }
+    return false;
+}
+
 int main(){
 
     system(CLS);
@@ -669,6 +679,9 @@ int main(){
 
         std::cout << message << std::endl;
         std::cout << "   Your last move: " << lastMove << std::endl << std::endl;
+
+        //pc move
+
     }
 
     std::cout << std::endl;
