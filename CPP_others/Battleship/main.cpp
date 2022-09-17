@@ -557,6 +557,11 @@ void printPcMoveTable(std::vector<std::string> &pc_moves){
     }
 }
 
+void printUpdateMessage(std::string message, std::string userLastMove){
+        std::cout << message << std::endl;
+        std::cout << "   Your last move: " << userLastMove << std::endl;
+}
+
 int main(){
 
     system(CLS);
@@ -633,8 +638,7 @@ int main(){
 
         printTwoFields(field_pc, field_user);
 
-        std::cout << message << std::endl;
-        std::cout << "   Your last move: " << userLastMove << std::endl;
+        printUpdateMessage(message, userLastMove);
 
         //pc move to be REFACTORED
         if (pcMove(field_user, pc_moves, pcLastMove)){
@@ -646,8 +650,7 @@ int main(){
         system(CLS);
         printTwoFields(field_pc, field_user);
 
-        std::cout << message << std::endl;
-        std::cout << "   Your last move: " << userLastMove << std::endl;
+        printUpdateMessage(message, userLastMove);
         std::cout << "     PC last move: " << pcLastMove << std::endl << std::endl;
 
         std::cout << std::endl;
