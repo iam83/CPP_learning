@@ -3,6 +3,8 @@
 #include <vector>
 #include <array>
 #include <ctime>
+#include <thread>
+#include <chrono>
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -430,41 +432,6 @@ bool isInputValid(std::string &coord){ //check if user makes correct input
     return false;
 }
 
-bool pcMove(std::array<std::array<int, 10>, 10> &field_user, std::string &pcLastMove){
-
-    std::cout << std::endl;
-    std::cout << "   PC is hitting";
-
-    for (int c = 0; c < 3; ++c){
-        std::cout << ".";
-        Sleep(800);
-    }
-
-    int row = getRandomNumber(0, 9);
-    int col = getRandomNumber(0, 9);
-
-    std::string letters = "ABCDEFGHIJ";
-
-    std::cout << letters[row] << col;
-
-    pcLastMove = letters[row] + std::to_string(col);
-
-    Sleep(1250);
-
-    if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
-            field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
-            return true;
-    }else{
-            if(field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Hit) &&
-               field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Miss)) {
-                field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Miss);
-            }
-            
-        }
-
-        return false;
-}
-
 void decodeCoords(std::string coord, int &row, int &col){
     switch(coord[0]){
             case 'A':
@@ -533,48 +500,62 @@ void decodeCoords(std::string coord, int &row, int &col){
         }
 }
 
-void test(){
+bool pcMove(std::array<std::array<int, 10>, 10> &field_user, std::vector<std::string> &pc_moves, std::string &pcLastMove){
 
-    std::vector<std::pair<int, int>> pc_moves;
+
+
+    if (pc_moves.size() > 0){
+
+        std::cout << std::endl;
+        std::cout << "   PC is hitting";
+        for (int c = 0; c < 3; ++c){
+            std::cout << ".";
+            std::this_thread::sleep_for(std::chrono::milliseconds(400));
+        }
+        int move = rand() % pc_moves.size();
+        std::string letters = "ABCDEFGHIJ";
+
+        std::cout << pc_moves.at(move) << std::endl;
+        pcLastMove = pc_moves.at(move);
+        pc_moves.erase(pc_moves.begin() + move);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        int row, col;
+        decodeCoords(pcLastMove, row, col);
+
+        if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
+                field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
+                return true;
+        }else{
+                if(field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Hit) &&
+                field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Miss)) {
+                    field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Miss);
+                }
+                
+            }     
+    }
+    return false;
+}
+
+void createPcMoveTable(std::vector<std::string> &pc_moves){
+    std::string letters = "ABCDEFGHIJ";
 
     for (int i = 0; i <= 9; ++i){
         for(int j = 0; j <= 9; ++j){
-            pc_moves.push_back(std::make_pair(i, j));
+            pc_moves.push_back(letters[i]+std::to_string(j));
         }
     }
-
-    int c = 0;
-    for (auto const &v : pc_moves){
-            std::cout << v.first << "." << v.second << " ";
-            ++c;
-            if (c % 10 == 0) std::cout << std::endl;
-        }
-
-    std::cout << std::endl;
-
-    std::cout << "pc_moves: " << pc_moves.at(5).second << std::endl;
-
-    std::cout << std::endl;
-
-    int t_row = rand() % 9;
-    int t_col = rand() % 9;
-    std::cout << "t_row " << t_row << "  t_col " << t_col << std::endl;
-
-    std::cout << pc_moves[t_row].second << ".";
-    std::cout << pc_moves[t_col].second << std::endl;
-
-    pc_moves.erase(pc_moves.begin() + t_row);
-
-
-
-    c = 0;
-    for (auto const &v : pc_moves){
-            std::cout << v.first << "." << v.second << " ";
-            ++c;
-            if (c % 10 == 0) std::cout << std::endl;
-        }
 }
 
+void printPcMoveTable(std::vector<std::string> &pc_moves){
+    int c{0};
+    for (auto const &m : pc_moves){
+        std::cout << m << " ";
+        ++c;
+        if(c % 10 == 0) std::cout << std::endl;
+    }
+}
 
 int main(){
 
@@ -584,8 +565,7 @@ int main(){
     std::array<std::array<int, 10>, 10> field_user;
     std::array<std::array<int, 10>, 10> field_pc;
     std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> vec;
-    
-    //test();
+    std::vector<std::string> pc_moves;
 
     int dir{0};
     
@@ -606,10 +586,10 @@ int main(){
     createGameField(field_user, vec, dir);
     checkField(field_pc);
     checkField(field_user);
-
+    createPcMoveTable(pc_moves);
     printTwoFields(field_pc, field_user);
     
-    int row, col;
+    int row{0}, col{0};
     std::string coord;
 
     //game loop
@@ -657,9 +637,8 @@ int main(){
         std::cout << "   Your last move: " << userLastMove << std::endl;
 
         //pc move to be REFACTORED
-        if (pcMove(field_user, pcLastMove)){
+        if (pcMove(field_user, pc_moves, pcLastMove)){
             message = "   !!! You got hit !!!";
-            std::cout << '\a';
         }else{
             message = "    PC missed! ";
         }
@@ -670,6 +649,8 @@ int main(){
         std::cout << message << std::endl;
         std::cout << "   Your last move: " << userLastMove << std::endl;
         std::cout << "     PC last move: " << pcLastMove << std::endl << std::endl;
+
+        std::cout << std::endl;
 
     }
 
