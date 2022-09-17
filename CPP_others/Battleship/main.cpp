@@ -585,7 +585,7 @@ int main(){
     std::array<std::array<int, 10>, 10> field_pc;
     std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> vec;
     
-    test();
+    //test();
 
     int dir{0};
     
