@@ -562,6 +562,12 @@ void printUpdateMessage(std::string message, std::string userLastMove){
         std::cout << "   Your last move: " << userLastMove << std::endl;
 }
 
+void printUpdateMessage(std::string message, std::string userLastMove, std::string pcLastMove){
+        std::cout << message << std::endl;
+        std::cout << "   Your last move: " << userLastMove << std::endl;
+        std::cout << "     PC last move: " << pcLastMove << std::endl << std::endl;
+}
+
 int main(){
 
     system(CLS);
@@ -650,8 +656,8 @@ int main(){
         system(CLS);
         printTwoFields(field_pc, field_user);
 
-        printUpdateMessage(message, userLastMove);
-        std::cout << "     PC last move: " << pcLastMove << std::endl << std::endl;
+        printUpdateMessage(message, userLastMove, pcLastMove);
+        
 
         std::cout << std::endl;
 
