@@ -168,7 +168,8 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
         for (int col = 0; col < field_pc.size(); ++col){            
             if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected                    
+                //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
+                SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
                 std::cout << "." << " ";
                 #ifdef _WIN32
@@ -289,7 +290,8 @@ void checkHitField(std::array<std::array<int, 10>, 10> &field, int row, int col)
 }
 
 //making vector of coords possible ships to be setup on field
-void getPossibles(std::array<std::array<int, 10>, 10> const &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
+void getPossibles(std::array<std::array<int, 10>, 10> const &field,
+                  std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
     
     dir = getRandomNumber(0, 1);
 
@@ -365,7 +367,8 @@ void generateFirstShip(std::array<std::array<int, 10>, 10> &field){
         }
 }
 
-void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
+void setShips(std::array<std::array<int, 10>, 10> &field,
+              std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
     
     checkField(field);
     getPossibles(field, vec, dir, ship);
@@ -382,7 +385,8 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<
     }
 }
 
-void createGameField(std::array<std::array<int, 10>, 10> &field, std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir){
+void createGameField(std::array<std::array<int, 10>, 10> &field,
+                     std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir){
 
     createField(field);
     generateFirstShip(field);
@@ -502,8 +506,6 @@ void decodeCoords(std::string coord, int &row, int &col){
 
 bool pcMove(std::array<std::array<int, 10>, 10> &field_user, std::vector<std::string> &pc_moves, std::string &pcLastMove){
 
-
-
     if (pc_moves.size() > 0){
 
         std::cout << std::endl;
@@ -532,7 +534,6 @@ bool pcMove(std::array<std::array<int, 10>, 10> &field_user, std::vector<std::st
                 field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Miss)) {
                     field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Miss);
                 }
-                
             }     
     }
     return false;
@@ -659,7 +660,6 @@ int main(){
         printUpdateMessage(message, userLastMove, pcLastMove);
 
     }
-
     std::cout << std::endl;
     return 0;
 }
