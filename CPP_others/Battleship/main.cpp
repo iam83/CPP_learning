@@ -586,6 +586,7 @@ struct Ship{
     std::vector<std::pair<int, int>> coord;
 };
 
+
 int main(){
 
     system(CLS);
@@ -593,13 +594,12 @@ int main(){
 
 
     // test
-    Ship ship4;
+
+    Ship ship4, ship3_2, ship3_1, ship2_1, ship2_2, ship2_1, ship1_1, ship1_2, ship1_3, ship1_3, ship1_4;
+
     ship4.length = 4;
     ship4.coord = {{0,0}, {0,1}, {0,2}, {0,3}, {0,4}};
 
-    Ship ship3;
-    ship3.length = 3;
-    ship3.coord = {{0,0}, {0,1}, {0,2}, {0,3}};
 
     //
     
