@@ -46,7 +46,7 @@
 //      if yes then update user's field_pc
 //      else ask user to eneter coords to shot
 
-typedef std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> Coord;
+typedef std::vector<std::pair<int, int>> Coord;
 
 enum class Player{
     User,
@@ -195,7 +195,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
             //ship is hit
             else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 12); //red
+                SetConsoleTextAttribute(hConsole, 10); //red
                 #endif
                 std::cout << c_HIT << " ";
                 #ifdef _WIN32
@@ -297,7 +297,7 @@ void checkHitField(std::array<std::array<int, 10>, 10> &field, int row, int col)
 
 //making vector of coords possible ships to be setup on field
 void getPossibles(std::array<std::array<int, 10>, 10> const &field,
-                  std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
+                  std::vector<std::pair<int, int>> &vec, int &dir, int ship){
     
     dir = getRandomNumber(0, 1);
 
@@ -318,7 +318,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
                             count = 0;
                             }
                         if (count == ship){
-                            vec.push_back(std::make_pair(std::make_pair(temp_row, temp_col), std::make_pair(row, col)));
+                            vec.push_back(std::make_pair(temp_row, temp_col));
                             count = 0;
                             }
                 }else{
@@ -340,7 +340,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
                             count = 0;
                             }
                         if (count == ship){
-                            vec.push_back(std::make_pair(std::make_pair(temp_row, temp_col), std::make_pair(row, col)));
+                            vec.push_back(std::make_pair(temp_row, temp_col));
                             count = 0;
                             }
                 }else{
@@ -374,14 +374,14 @@ void generateFirstShip(std::array<std::array<int, 10>, 10> &field){
 }
 
 void setShips(std::array<std::array<int, 10>, 10> &field,
-              std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir, int ship){
+              std::vector<std::pair<int, int>> &vec, int &dir, int ship){
     
     checkField(field);
     getPossibles(field, vec, dir, ship);
 
     int i = rand() % vec.size(); //choose random ship position that can be definitely installed
-    int row = vec[i].first.first;
-    int col = vec[i].first.second;
+    int row = vec[i].first;
+    int col = vec[i].second;
 
     for (int i = 0; i < ship; ++i){
         if (dir == 0)
@@ -392,7 +392,7 @@ void setShips(std::array<std::array<int, 10>, 10> &field,
 }
 
 void createGameField(std::array<std::array<int, 10>, 10> &field,
-                     std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> &vec, int &dir){
+                     std::vector<std::pair<int, int>> &vec, int &dir){
 
     createField(field);
     generateFirstShip(field);
@@ -591,9 +591,21 @@ int main(){
     system(CLS);
     srand(static_cast<unsigned int>(time(0)));
 
+
+    // test
+    Ship ship4;
+    ship4.length = 4;
+    ship4.coord = {{0,0}, {0,1}, {0,2}, {0,3}, {0,4}};
+
+    Ship ship3;
+    ship3.length = 3;
+    ship3.coord = {{0,0}, {0,1}, {0,2}, {0,3}};
+
+    //
+    
     std::array<std::array<int, 10>, 10> field_user;
     std::array<std::array<int, 10>, 10> field_pc;
-    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> vec;
+    std::vector<std::pair<int, int>> vec;
     std::vector<std::string> pc_moves;
 
     int dir{0};
