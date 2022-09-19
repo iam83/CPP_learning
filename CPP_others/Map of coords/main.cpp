@@ -12,7 +12,8 @@ int main(){
     
     std::map<std::string, std::vector<std::pair<int, int>>> map;
 
-    map = {  {"ship4", {{4,1}, {4,2}, {4,3}, {4,4}}}, {"ship3_1", {{3,1}, {3,2}, {3,3}}}};
+    map = {  {"ship4", {{4,1}, {4,2}, {4,3}, {4,4}}},
+             {"ship3_1", {{3,1}, {3,2}, {3,3}}}};
 
     for (int i = 0; i < 3; ++i){
         map.insert({"ship2_" + std::to_string(i), {{i,2}, {i,3}, {i,4}}});
