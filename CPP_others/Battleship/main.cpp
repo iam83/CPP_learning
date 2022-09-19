@@ -581,6 +581,11 @@ void printUpdateMessage(std::string message, std::string userLastMove, std::stri
         std::cout << "     PC last move: " << pcLastMove << std::endl << std::endl;
 }
 
+struct Ship{
+    int length;
+    std::vector<std::pair<int, int>> coord;
+};
+
 int main(){
 
     system(CLS);
