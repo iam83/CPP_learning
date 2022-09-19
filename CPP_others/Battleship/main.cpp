@@ -82,6 +82,12 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
     std::string separator = "        ";
     std::cout << "      ";
 
+    const char c_SHIP = '#';
+    const char c_HIT = 'X';
+    const char c_MISS = '~';
+    const char c_FIELD = '.';
+    const char c_BORDER = '-';
+
     for (int c = 0; c < 10; ++c){
         std::cout << c << " ";
     }
@@ -104,7 +110,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                     SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                
                 #endif
-                std::cout << "#" << " ";
+                std::cout << c_SHIP << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -114,7 +120,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "." << " ";
+                std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -124,7 +130,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //red
                 #endif
-                std::cout << "X" << " ";
+                std::cout << c_HIT << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -134,7 +140,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); 
                 #endif
-                std::cout << "-" << " ";
+                std::cout << c_BORDER << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -144,7 +150,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 4); //light blue 11
                 #endif
-                std::cout << "-" << " ";
+                std::cout << c_MISS << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -154,7 +160,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
                 #endif
-                std::cout << "." << " ";
+                std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -171,7 +177,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
-                std::cout << "." << " ";
+                std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -181,7 +187,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
                 #endif
-                std::cout << "." << " ";
+                std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -191,7 +197,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 12); //red
                 #endif
-                std::cout << "X" << " ";
+                std::cout << c_HIT << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -201,7 +207,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); 
                 #endif
-                std::cout << "-" << " ";
+                std::cout << c_BORDER << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -211,7 +217,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 4); //light blue 11
                 #endif
-                std::cout << "-" << " ";
+                std::cout << c_MISS << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -221,7 +227,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
                 #endif
-                std::cout << "." << " ";
+                std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -401,7 +407,13 @@ void createGameField(std::array<std::array<int, 10>, 10> &field,
     setShips(field, vec, dir, 1);
 }
 
-bool isInputValid(std::string &coord){ //check if user makes correct input
+bool isInputValid(std::string &coord, std::string userLastMove){ //check if user makes correct input
+    
+    if (coord == userLastMove){
+        std::cout << "You've already hit there! Try again.\n";
+        return false;
+    }
+
     if(coord.size() > 2){
         std::cout << "Wrong coordinates! Try again.\n";
         return false;
@@ -509,7 +521,7 @@ bool pcMove(std::array<std::array<int, 10>, 10> &field_user, std::vector<std::st
     if (pc_moves.size() > 0){
 
         std::cout << std::endl;
-        std::cout << "   PC is hitting";
+        std::cout << "   PC is shooting";
         for (int c = 0; c < 3; ++c){
             std::cout << ".";
             std::this_thread::sleep_for(std::chrono::milliseconds(400));
@@ -602,7 +614,8 @@ int main(){
     printTwoFields(field_pc, field_user);
     
     int row{0}, col{0};
-    std::string coord;
+    std::string coord = "";
+    std::string userLastMove = "";
 
     //game loop
     while(1){
@@ -616,11 +629,11 @@ int main(){
                 return 0;
             }
             
-        } while(!isInputValid(coord));
+        } while(!isInputValid(coord, userLastMove));
 
         system(CLS);
 
-        std::string userLastMove = coord;
+        userLastMove = coord;
         std::string pcLastMove;
 
         decodeCoords(coord, row, col);
