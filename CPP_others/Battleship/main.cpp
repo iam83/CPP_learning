@@ -188,7 +188,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
-                std::cout << c_FIELD << " ";
+                std::cout << c_SHIP << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
