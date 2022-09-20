@@ -431,21 +431,32 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                 }
 
                 if (value.empty()){
-                    if (player == Player::User)
+                    if (player == Player::User){
                         message = "  Wow! You sank a ship!";
+                        checkHitField(field);
+                    }
                     else
                         message = "  PC sank your ship!";
-                    checkHitField(field);
                     map.erase(key);
                 }
             }
     }
+
     if(map.empty()){
         return true;
     }
     return false;
 }
 
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> &map){
+    for(auto& [key, value] : map){
+            std::cout << key << ": ";
+            for (int i = 0; i<value.size(); ++i){
+                std::cout << value[i].first << "." << value[i].second << " ";
+                }
+                std::cout << std::endl;
+        }
+}
 void createGameField(std::array<std::array<int, 10>, 10> &field,
                      std::vector<std::pair<int, int>> &vec, int &dir,
                      std::map<std::string, std::vector<std::pair<int, int>>> &map){
@@ -759,7 +770,6 @@ int main(){
                     printTwoFields(field_pc, field_user);
                     printCongrats(Player::Pc);
             }
-            message_pc = "  PC got hit your ship!";
         }else{
             message_pc = "  PC missed.";
         }
@@ -767,14 +777,6 @@ int main(){
         system(CLS);
         printTwoFields(field_pc, field_user);
         printUpdateMessage(message_user, message_pc, userLastMove, pcLastMove);
-
-        for(auto& [key, value] : map_user){
-            std::cout << key << ": ";
-            for (int i = 0; i<value.size(); ++i){
-                std::cout << value[i].first << "." << value[i].second << " ";
-                }
-                std::cout << std::endl;
-        }
     }
     std::cout << std::endl;
     return 0;
