@@ -631,7 +631,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
             }
     }
     if(map.empty()){
-        std::cout << "CONGRATULATIONS! YOU WON!!!\n";
+        //std::cout << "CONGRATULATIONS! YOU WON!!!\n";
         return true;
     }
     return false;
@@ -708,12 +708,18 @@ int main(){
         std::string message;
 
         if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)){
+            
             message = "   *** Nice shot! ***";
+            field_pc.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
+
             if(checkMap(map_pc, row, col, message)){
+                    system(CLS);
+                    //checkField(field_pc);
                     printTwoFields(field_pc, field_user);
+                    std::cout << "CONGRATULATIONS! YOU WON!!!\n";
                     return 0;
             }
-            field_pc.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
+            
             //checkHitField(field_pc, row, col);
         }
         else{
@@ -737,7 +743,7 @@ int main(){
         system(CLS);
         printTwoFields(field_pc, field_user);
         printUpdateMessage(message, userLastMove, pcLastMove);
-        
+
     }
 
     std::cout << std::endl;
