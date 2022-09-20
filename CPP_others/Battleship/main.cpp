@@ -5,6 +5,7 @@
 #include <ctime>
 #include <thread>
 #include <chrono>
+#include <map>
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -351,11 +352,13 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
     }
 }
 
-void generateFirstShip(std::array<std::array<int, 10>, 10> &field){
+void generateFirstShip(std::array<std::array<int, 10>, 10> &field, std::map<std::string, std::vector<std::pair<int, int>>> &map){
 
     checkField(field);
     int row{0}, col{0}, dir{0};
-    
+    std::string ship = "ship4";
+    std::vector<std::pair<int, int>> temp_vec;
+
     do{ //iterate while coords are not good enough
         row = getRandomNumber(0, 9);
         col = getRandomNumber(0, 9);
@@ -366,45 +369,60 @@ void generateFirstShip(std::array<std::array<int, 10>, 10> &field){
     if ((col + 4) >= 9) col = 4;
     
     for (int i = 0; i < 4; ++i){
-        if (dir == 0) //horizontal location
+        if (dir == 0){ //horizontal location
             field.at(row).at(col+i) = 1;
-        else //vertical
-            field.at(row+i).at(col) = 1;
+            temp_vec.emplace_back(row, col);
         }
+        else{ //vertical
+            field.at(row+i).at(col) = 1;
+            temp_vec.emplace_back(row, col);
+        }
+        }
+
+        map.emplace(ship, temp_vec);
 }
 
-void setShips(std::array<std::array<int, 10>, 10> &field,
-              std::vector<std::pair<int, int>> &vec, int &dir, int ship){
+void setShips(std::array<std::array<int, 10>, 10> &field, std::map<std::string, std::vector<std::pair<int, int>>> &map, std::vector<std::pair<int, int>> &vec, int &dir, int ship){
     
     checkField(field);
     getPossibles(field, vec, dir, ship);
+    std::vector<std::pair<int, int>> temp_vec;
+
+    std::string ship_name = "ship" + std::to_string(ship);
 
     int i = rand() % vec.size(); //choose random ship position that can be definitely installed
     int row = vec[i].first;
     int col = vec[i].second;
 
     for (int i = 0; i < ship; ++i){
-        if (dir == 0)
+        if (dir == 0){
             field.at(row).at(col+i) = 1;
-        else
+            temp_vec.emplace_back(row, col);
+        }
+        else{
             field.at(row+i).at(col) = 1;
+            temp_vec.emplace_back(row, col);
+        }
     }
+
+    map.emplace(ship_name, temp_vec);
 }
 
 void createGameField(std::array<std::array<int, 10>, 10> &field,
-                     std::vector<std::pair<int, int>> &vec, int &dir){
+                     std::vector<std::pair<int, int>> &vec, int &dir,
+                     std::map<std::string, std::vector<std::pair<int, int>>> &map){
 
     createField(field);
-    generateFirstShip(field);
-    setShips(field, vec, dir, 3);
-    setShips(field, vec, dir, 3);
-    setShips(field, vec, dir, 2);
-    setShips(field, vec, dir, 2);
-    setShips(field, vec, dir, 2);
-    setShips(field, vec, dir, 1);
-    setShips(field, vec, dir, 1);
-    setShips(field, vec, dir, 1);
-    setShips(field, vec, dir, 1);
+    generateFirstShip(field, map);
+    setShips(field, map, vec, dir, 3);
+    setShips(field, map, vec, dir, 3);
+    setShips(field, map, vec, dir, 2);
+    setShips(field, map, vec, dir, 2);
+    setShips(field, map, vec, dir, 2);
+    setShips(field, map, vec, dir, 1);
+    setShips(field, map, vec, dir, 1);
+    setShips(field, map, vec, dir, 1);
+    setShips(field, map, vec, dir, 1);
 }
 
 bool isInputValid(std::string &coord, std::string userLastMove){ //check if user makes correct input
@@ -581,25 +599,30 @@ void printUpdateMessage(std::string message, std::string userLastMove, std::stri
         std::cout << "     PC last move: " << pcLastMove << std::endl << std::endl;
 }
 
-struct Ship{
-    int length;
-    std::vector<std::pair<int, int>> coord;
-};
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map){
+    for(auto& [key, value] : map){
+        std::cout << key << " ";
+            for (auto &v : value){
+                std::cout << v.first << "." << v.second << " ";
+            }
+        std::cout << "size " << value.size() << std::endl;
 
+    }
+    std::cout << std::endl; 
+}
 
 int main(){
 
     system(CLS);
     srand(static_cast<unsigned int>(time(0)));
 
+    
+
 
     // test
 
-    Ship ship4, ship3_2, ship3_1, ship2_1, ship2_2, ship2_1, ship1_1, ship1_2, ship1_3, ship1_3, ship1_4;
-
-    ship4.length = 4;
-    ship4.coord = {{0,0}, {0,1}, {0,2}, {0,3}, {0,4}};
-
+    std::map<std::string, std::vector<std::pair<int, int>>> map_user;
+    std::map<std::string, std::vector<std::pair<int, int>>> map_pc;
 
     //
     
@@ -623,8 +646,8 @@ int main(){
     //           {1,1,1,1,0,0,0,0,0,1}
     //         }};
 
-    createGameField(field_pc, vec, dir);
-    createGameField(field_user, vec, dir);
+    createGameField(field_pc, vec, dir, map_pc);
+    createGameField(field_user, vec, dir, map_user);
     checkField(field_pc);
     checkField(field_user);
     createPcMoveTable(pc_moves);
@@ -688,8 +711,10 @@ int main(){
         printTwoFields(field_pc, field_user);
 
         printUpdateMessage(message, userLastMove, pcLastMove);
-
+        printMap(map_user);
+        //printMap(map_pc);
     }
+
     std::cout << std::endl;
     return 0;
 }
