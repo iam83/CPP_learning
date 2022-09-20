@@ -55,12 +55,10 @@ enum class Player{
 };
 
 enum class Ship{
-
     Submarine = 1,
     Cruiser	= 2,
 	Battleship = 3,
     Carrier	= 4
-
 };
 enum class FieldCellStates{
     Ship = 1,
