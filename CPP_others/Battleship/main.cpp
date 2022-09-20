@@ -18,8 +18,7 @@
 /*
 
     TODO:
-        1. Add PC moves and hits
-        2. Update checkHitField()
+        1. CHeck for errors
     FEATURES:
         1. Make TCP/IP client-server
 
@@ -58,7 +57,7 @@ enum class Ship{
 
     Submarine = 1,
     Cruiser	= 2,
-	Battleship = 3,
+    Battleship = 3,
     Carrier	= 4
 
 };
