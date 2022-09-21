@@ -47,7 +47,7 @@
 //      if yes then update user's field_pc
 //      else ask user to eneter coords to shot
 
-typedef std::vector<std::pair<int, int>> Coord;
+typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
 enum class Player{
     User,
@@ -81,7 +81,7 @@ void createField(std::array<std::array<int, 10>, 10> &field){
 }
 
 //print both fields, make it colorful on windows
-void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user){
+void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user, int visible){
 
     #ifdef _WIN32
     HANDLE  hConsole;
@@ -188,7 +188,10 @@ void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
-                std::cout << c_FIELD << " ";
+                if (visible == 1)
+                    std::cout << c_SHIP << " ";
+                else
+                    std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -713,11 +716,10 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
 
     if (pc_moves.size() > 0){
 
-        std::cout << std::endl;
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c){
             std::cout << ".";
-            //std::this_thread::sleep_for(std::chrono::milliseconds(300)); //400 ms
+            std::this_thread::sleep_for(std::chrono::milliseconds(300)); //400 ms
         }
 
         if (map_user[keyShipHit].size() == 0){
@@ -746,7 +748,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
         pc_moves.erase(pc_moves.begin() + move);
 
     }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(700)); //700 ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(700)); //700 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
@@ -773,11 +775,16 @@ void createPcMoveTable(std::vector<std::string> &pc_moves){
     }
 }
 
-void printUpdateMessage(std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove){
-        std::cout << "   Your last move: " << userLastMove;
+void printUpdateMessage(Map map_user, Map map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove){
+        std::cout << "       Your ships: " << map_user.size();
         std::cout << "\t\t" << message_user << std::endl;
-        std::cout << "     PC last move: " << pcLastMove;
+
+        std::cout << "         PC ships: " << map_pc.size();
         std::cout << "\t\t" << message_pc << std::endl;
+
+        std::cout << "   Your last move: " << userLastMove << std::endl;
+        std::cout << "     PC last move: " << pcLastMove << std::endl;
+        
         std::cout << std::endl;
 }
 
@@ -801,7 +808,7 @@ void printCongrats(Player player){
 void startMessage(){
 
     system(CLS);
-    std::string ver = "1.0";
+    std::string ver = "1.1";
 
     std::cout << std::endl;
     std::cout << std::endl;
@@ -826,10 +833,9 @@ void printMoveTable(std::vector<std::string> const &pc_moves){
          std::cout << std::endl;
 }
 
-
 int main(){
 
-    //startMessage();
+    startMessage();
     system(CLS);
     srand(static_cast<unsigned int>(time(0)));
     
@@ -848,7 +854,7 @@ int main(){
     createGameField(field_user, vec, dir, map_user);
 
     createPcMoveTable(pc_moves);
-    printFields(field_pc, field_user);
+    printFields(field_pc, field_user, 0);
     
     int row{0}, col{0};
     int pc_row{0}, pc_col{0};
@@ -888,7 +894,7 @@ int main(){
         if(userMove(field_pc, row, col)){
              if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
                     system(CLS);
-                    printFields(field_pc, field_user);
+                    printFields(field_pc, field_user, 1);
                     printCongrats(Player::User);
                     return 0;
             }
@@ -896,31 +902,25 @@ int main(){
             message_user = "  You missed.";
         }
 
-        printFields(field_pc, field_user);
-        printUpdateMessage(message_user, message_pc, userLastMove, pcLastMove);
+        printFields(field_pc, field_user, 0);
+        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
         //pc move
         getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
         if (pcMove(field_user, pc_row, pc_col)){
             if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
                     system(CLS);
-                    printFields(field_pc, field_user);
+                    printFields(field_pc, field_user, 1);
                     printCongrats(Player::Pc);
                     return 0;
             }
         }else{
             message_pc = "  PC missed.";
         }
-        
-        system(CLS);
-        printFields(field_pc, field_user);
-        printUpdateMessage(message_user, message_pc, userLastMove, pcLastMove);
 
-        //printMap(map_pc);
-        //std::cout << std::endl;
-        //printMap(map_user);
-        printMoveTable(pc_moves);
-        std::cout << std::endl;
+        system(CLS);
+        printFields(field_pc, field_user, 0);
+        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
     }
 
