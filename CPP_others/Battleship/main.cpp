@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <map>
+#include <algorithm>
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -415,16 +416,19 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::map<std::string, 
 }
 
 //checking which ship is got hit
-bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string &message, Player player){
+bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string &message, std::string &keyShipHit, Player player){
 
     for(auto& [key, value] : map){
-            for (int i = 0; i<value.size(); ++i){
+
+            for (int i = 0; i < value.size(); ++i){
                 if(value[i].first == row && value[i].second == col){
                     if (value.size() != 1){
                         if (player == Player::User)
                             message = "  You hit a ship!";
-                        else
+                        else{
                             message = "  PC hit your ship!";
+                            keyShipHit = key;
+                        }
                     }
                     value.erase(value.begin()+i);
                 }
@@ -437,6 +441,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                     else{
                         message = "  Oops, PC sank your ship!";
                     }
+
                     map.erase(key);
                 }
             }
@@ -449,7 +454,10 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
     return false;
 }
 
-void printMap(std::map<std::string, std::vector<std::pair<int, int>>> &map){
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map){
+
+    std::cout << "map size " << map.size() << "\n";
+
     for(auto& [key, value] : map){
             std::cout << key << ": ";
             for (int i = 0; i<value.size(); ++i){
@@ -516,6 +524,76 @@ bool isInputValid(std::string &coord, std::string userLastMove){ //check if user
         return false;
     }
     return false;
+}
+
+void encodeCoords(std::string &coord, int row, int col){
+
+    switch(row){
+            case 0:
+                coord = "A";
+                break;
+            case 1:
+                coord = "B";
+                break;
+            case 2:
+                coord = "C";
+                break;
+            case 3:
+                coord = "D";
+                break;
+            case 4:
+                coord = "E";
+                break;
+            case 5:
+                coord = "F";
+                break;
+            case 6:
+                coord = "G";
+                break;
+            case 7:
+                coord = "H";
+                break;
+            case 8:
+                coord = "I";
+                break;
+            case 9:
+                coord = "J";
+                break;
+        }
+
+    switch(col){
+                case 0:
+                    coord += "0";
+                    break;
+                case 1:
+                    coord += "1";
+                    break;
+                case 2:
+                    coord += "2";
+                    break;
+                case 3:
+                    coord += "3";
+                    break;
+                case 4:
+                    coord += "4";
+                    break;
+                case 5:
+                    coord += "5";
+                    break;
+                case 6:
+                    coord += "6";
+                    break;
+                case 7:
+                    coord += "7";
+                    break;
+                case 8:
+                    coord += "8";
+                    break;
+                case 9:
+                    coord += "9";
+                    break;
+            }
+
 }
 
 void decodeCoords(std::string coord, int &row, int &col){
@@ -604,7 +682,13 @@ bool userMove(std::array<std::array<int, 10>, 10> &field_pc, int row, int col){
     return false;
 }
 
-void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std::string> &pc_moves, std::string &pcLastMove, int &pc_row, int &pc_col){
+void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std::string> &pc_moves,
+                std::map<std::string, std::vector<std::pair<int, int>>> map_user, std::string &pcLastMove,
+                int &pc_row, int &pc_col, std::string const &keyShipHit){
+
+    int move{0};
+    std::string temp_pcMove = "";
+    std::vector<std::string>::iterator it;
 
     if (pc_moves.size() > 0){
 
@@ -612,20 +696,36 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c){
             std::cout << ".";
-            std::this_thread::sleep_for(std::chrono::milliseconds(300)); //400 ms
+            //std::this_thread::sleep_for(std::chrono::milliseconds(300)); //400 ms
         }
 
-        int move = rand() % pc_moves.size();
-        std::string letters = "ABCDEFGHIJ";
+        if (map_user[keyShipHit].size() == 0){
+
+            move = rand() % pc_moves.size();
+            pcLastMove = pc_moves.at(move);
+            decodeCoords(pcLastMove, pc_row, pc_col);
+
+        }else{
+
+            pc_row = map_user[keyShipHit][0].first;
+            pc_col = map_user[keyShipHit][0].second;
+
+            encodeCoords(temp_pcMove, pc_row, pc_col);
+
+            it = std::find(pc_moves.begin(), pc_moves.end(), temp_pcMove);
+
+            if(it != pc_moves.end()){
+                move = it - pc_moves.begin();
+                pcLastMove = pc_moves.at(move);
+            }
+            
+        }
 
         std::cout << " " << pc_moves.at(move) << std::endl;
-        pcLastMove = pc_moves.at(move);
         pc_moves.erase(pc_moves.begin() + move);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(700)); //800 ms
-
-        decodeCoords(pcLastMove, pc_row, pc_col);
     }
+    //std::this_thread::sleep_for(std::chrono::milliseconds(700)); //700 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
@@ -695,9 +795,20 @@ void startMessage(){
     std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
+void printMoveTable(std::vector<std::string> const &pc_moves){
+    int a{0};
+        for (int i = 0; i < pc_moves.size(); ++i){
+            std::cout << pc_moves[i] << " ";
+            ++a;
+            if (a % 10 == 0) std::cout << std::endl;
+        }
+         std::cout << std::endl;
+}
+
+
 int main(){
 
-    startMessage();
+    //startMessage();
     system(CLS);
     srand(static_cast<unsigned int>(time(0)));
     
@@ -723,6 +834,7 @@ int main(){
 
     std::string coord = "";
     std::string userLastMove = "";
+    std::string keyShipHit = "";
 
     //game loop
     while(1){
@@ -753,7 +865,7 @@ int main(){
 
         //user move
         if(userMove(field_pc, row, col)){
-             if(checkMap(map_pc, row, col, field_pc, message_user, Player::User)){
+             if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, Player::User)){
                     system(CLS);
                     printTwoFields(field_pc, field_user);
                     printCongrats(Player::User);
@@ -767,9 +879,9 @@ int main(){
         printUpdateMessage(message_user, message_pc, userLastMove, pcLastMove);
 
         //pc move
-        getPcCoord(field_user, pc_moves, pcLastMove, pc_row, pc_col);
+        getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
         if (pcMove(field_user, pc_row, pc_col)){
-            if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, Player::Pc)){
+            if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, Player::Pc)){
                     system(CLS);
                     printTwoFields(field_pc, field_user);
                     printCongrats(Player::Pc);
@@ -782,6 +894,10 @@ int main(){
         system(CLS);
         printTwoFields(field_pc, field_user);
         printUpdateMessage(message_user, message_pc, userLastMove, pcLastMove);
+
+        //printMap(map_pc);
+        std::cout << std::endl;
+        //printMap(map_user);
 
     }
 
