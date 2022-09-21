@@ -4,7 +4,7 @@
 
     This is a personal challenge project.
     An attempt to recreated the Battleship classic game without looking at other examples.
-    The code might be a bit too spaggetti, oh well lol.
+    The code might be a bit too spaggetti, oh well but it works lol.
 
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
