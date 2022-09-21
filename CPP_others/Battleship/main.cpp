@@ -148,7 +148,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
             //border around hitted ship
             else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 4); 
+                SetConsoleTextAttribute(hConsole, 5); 
                 #endif
                 std::cout << c_BORDERHIT << " ";
                 #ifdef _WIN32
@@ -158,7 +158,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
             //missed hit
             else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)){
                 #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 4); //4 dark red, light blue 11
+                SetConsoleTextAttribute(hConsole, 5); //4 dark red, light blue 11
                 #endif
                 std::cout << c_MISS << " ";
                 #ifdef _WIN32
@@ -187,7 +187,7 @@ void printTwoFields(std::array<std::array<int, 10>, 10> const &field_pc, std::ar
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
-                std::cout << c_SHIP << " ";
+                std::cout << c_FIELD << " ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
                 #endif
@@ -612,7 +612,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c){
             std::cout << ".";
-            std::this_thread::sleep_for(std::chrono::milliseconds(400)); //400 ms
+            std::this_thread::sleep_for(std::chrono::milliseconds(300)); //400 ms
         }
 
         int move = rand() % pc_moves.size();
@@ -622,7 +622,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
         pcLastMove = pc_moves.at(move);
         pc_moves.erase(pc_moves.begin() + move);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(800)); //800 ms
+        std::this_thread::sleep_for(std::chrono::milliseconds(700)); //800 ms
 
         decodeCoords(pcLastMove, pc_row, pc_col);
     }
@@ -690,9 +690,9 @@ void startMessage(){
 
     for (auto const& l : message_start){
         std::cout << l;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); //400 ms
+        std::this_thread::sleep_for(std::chrono::milliseconds(50)); //400 ms
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1800));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 int main(){
