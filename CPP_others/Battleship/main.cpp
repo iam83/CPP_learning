@@ -43,14 +43,14 @@ enum class Player{
     Pc
 };
 
-enum class Ship{
+// enum class Ship{
 
-    Submarine = 1,
-    Cruiser = 2,
-    Battleship = 3,
-    Carrier = 4
+//     Submarine = 1,
+//     Cruiser = 2,
+//     Battleship = 3,
+//     Carrier = 4
 
-};
+// };
 
 enum class FieldCellStates{
     Ship = 1,
@@ -878,7 +878,8 @@ int main(){
         std::string coord = "";
         std::string userLastMove = "";
         std::string keyShipHit = "";
-
+            
+            
             while(1){
 
                 do{
