@@ -879,64 +879,63 @@ int main(){
         std::string userLastMove = "";
         std::string keyShipHit = "";
             
-            
-            while(1){
+        while(1){
 
-                do{
-                    std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
-                    std::cin >> coord;
-                    coord[0] = std::toupper(coord[0]);
-                    if (coord == "N"){
-                        std::cout << "See you, bye!\n\n";
-                        return 0;
-                    }
-                    
-                } while(!isInputValid(field_pc, coord));
-
-                system(CLS);
-
-                userLastMove = coord;
-                std::string pcLastMove;
-
-                decodeCoords(coord, &row, &col);
-
-                checkField(field_pc);
-                checkField(field_user);
-
-                std::string message_user = "";
-                std::string message_pc = "";
-
-                //user move
-                if(userMove(field_pc, row, col)){
-                    if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
-                            system(CLS);
-                            printFields(field_pc, field_user, 1);
-                            printCongrats(Player::User);
-                            break;
-                    }
-                }else{
-                    message_user = "  You missed.";
+            do{
+                std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
+                std::cin >> coord;
+                coord[0] = std::toupper(coord[0]);
+                if (coord == "N"){
+                    std::cout << "See you, bye!\n\n";
+                    return 0;
                 }
+                
+            } while(!isInputValid(field_pc, coord));
 
-                printFields(field_pc, field_user, 0);
-                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            system(CLS);
 
-                //pc move
-                getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
-                if (pcMove(field_user, pc_row, pc_col)){
-                    if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
-                            system(CLS);
-                            printFields(field_pc, field_user, 1);
-                            printCongrats(Player::Pc);
-                            break;
-                    }
-                }else{
-                    message_pc = "  PC missed.";
+            userLastMove = coord;
+            std::string pcLastMove;
+
+            decodeCoords(coord, &row, &col);
+
+            checkField(field_pc);
+            checkField(field_user);
+
+            std::string message_user = "";
+            std::string message_pc = "";
+
+            //user move
+            if(userMove(field_pc, row, col)){
+                if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
+                        system(CLS);
+                        printFields(field_pc, field_user, 1);
+                        printCongrats(Player::User);
+                        break;
                 }
+            }else{
+                message_user = "  You missed.";
+            }
 
-                system(CLS);
-                printFields(field_pc, field_user, 0);
-                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            printFields(field_pc, field_user, 0);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+
+            //pc move
+            getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
+            if (pcMove(field_user, pc_row, pc_col)){
+                if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
+                        system(CLS);
+                        printFields(field_pc, field_user, 1);
+                        printCongrats(Player::Pc);
+                        break;
+                }
+            }else{
+                message_pc = "  PC missed.";
+            }
+
+            system(CLS);
+            printFields(field_pc, field_user, 0);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
             }
     }while(playAgain());
