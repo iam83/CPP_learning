@@ -567,7 +567,8 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const &field_user, st
 }
 
 //checking which ship is got hit
-bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string &message, std::string &keyShipHit, std::vector<std::string> &pc_moves, Player player){
+bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field,
+              std::string &message, std::string &keyShipHit, std::vector<std::string> &pc_moves, Player player){
 
     for(auto& [key, value] : map){
 
