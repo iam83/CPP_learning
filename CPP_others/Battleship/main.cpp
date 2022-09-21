@@ -1,3 +1,23 @@
+//////////////////////////////////////////////////////////////////////////////////////////////
+/*
+    Battleship game. AU. 09-2022.
+
+    this is a personal challenge project.
+    an attempt to recreated the Battleship classic game without looking at other examples.
+    the code might be a bit too spaggetti, oh well lol.
+
+*/
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+    TODO:
+        1. CHeck for errors
+    FEATURES:
+        1. Make TCP/IP client-server
+
+*/
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -15,37 +35,6 @@
 #ifdef __APPLE__
 #define CLS "clear"
 #endif
-
-/*
-
-    TODO:
-        1. CHeck for errors
-    FEATURES:
-        1. Make TCP/IP client-server
-
-*/
-
-// A simplified version of Battleship game. An attemp to make it from scratch without looking at other examples.
-//
-// create 10x10 field_pc
-// fill cells with random located ships.
-//
-// 4* ships - 1
-// 3* ships - 2
-// 2* ships - 3
-// 1* ships - 4
-//
-// create game loop
-//      print your field_pc
-//      print enemy's field_pc
-//      ask user to enter coords to shot
-//      check if user hits succsefully
-//          if yes then update enemy's field_pc
-//          else let enemy to hit
-//      choose random coord to shoot
-//      check if enemy hits succsefully
-//      if yes then update user's field_pc
-//      else ask user to eneter coords to shot
 
 typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
@@ -719,7 +708,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c){
             std::cout << ".";
-            std::this_thread::sleep_for(std::chrono::milliseconds(300)); //400 ms
+            std::this_thread::sleep_for(std::chrono::milliseconds(250)); //400 ms
         }
 
         if (map_user[keyShipHit].size() == 0){
@@ -748,7 +737,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10> &field_user, std::vector<std
         pc_moves.erase(pc_moves.begin() + move);
 
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(700)); //700 ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(600)); //700 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
@@ -833,10 +822,35 @@ void printMoveTable(std::vector<std::string> const &pc_moves){
          std::cout << std::endl;
 }
 
+int playAgain(){
+
+	char exit;
+
+	do{
+		std::cout << "  Would you like to play again (y/n)?: ";
+		std::cin >> exit;
+
+        if (exit == 'y'){
+			return 1;
+			break;
+		}else if(exit == 'n'){
+			std::cout << "  Thank you for playing. See you!" << std::endl;
+			return 0;
+			break;
+		}else{
+			std::cin.clear(); // то возвращаем cin в 'обычный' режим работы
+    		std::cin.ignore(32767,'\n'); // и удаляем значения предыдущего ввода из входного буфера
+		}
+
+	}while(1);
+
+	std::cout << std::endl;
+}
+
 int main(){
 
     startMessage();
-    system(CLS);
+    
     srand(static_cast<unsigned int>(time(0)));
     
     std::array<std::array<int, 10>, 10> field_user; //store user main field
@@ -848,81 +862,83 @@ int main(){
     std::vector<std::pair<int, int>> vec; //store coords of where ships can be installed
     std::vector<std::string> pc_moves; //store pc moves
 
-    int dir{0};
-
-    createGameField(field_pc, vec, dir, map_pc);
-    createGameField(field_user, vec, dir, map_user);
-
-    createPcMoveTable(pc_moves);
-    printFields(field_pc, field_user, 0);
-    
-    int row{0}, col{0};
-    int pc_row{0}, pc_col{0};
-
-    std::string coord = "";
-    std::string userLastMove = "";
-    std::string keyShipHit = "";
-
     //game loop
-    while(1){
-
-        do{
-            std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
-            std::cin >> coord;
-            coord[0] = std::toupper(coord[0]);
-            if (coord == "N"){
-                std::cout << "See you, bye!\n\n";
-                return 0;
-            }
-            
-        } while(!isInputValid(field_pc, coord));
-
+    do{
         system(CLS);
+        int dir{0};
+        createGameField(field_pc, vec, dir, map_pc);
+        createGameField(field_user, vec, dir, map_user);
 
-        userLastMove = coord;
-        std::string pcLastMove;
-
-        decodeCoords(coord, &row, &col);
-
-        checkField(field_pc);
-        checkField(field_user);
-
-        std::string message_user = "";
-        std::string message_pc = "";
-
-        //user move
-        if(userMove(field_pc, row, col)){
-             if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
-                    system(CLS);
-                    printFields(field_pc, field_user, 1);
-                    printCongrats(Player::User);
-                    return 0;
-            }
-        }else{
-            message_user = "  You missed.";
-        }
-
+        createPcMoveTable(pc_moves);
         printFields(field_pc, field_user, 0);
-        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+        
+        int row{0}, col{0};
+        int pc_row{0}, pc_col{0};
 
-        //pc move
-        getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
-        if (pcMove(field_user, pc_row, pc_col)){
-            if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
-                    system(CLS);
-                    printFields(field_pc, field_user, 1);
-                    printCongrats(Player::Pc);
-                    return 0;
+        std::string coord = "";
+        std::string userLastMove = "";
+        std::string keyShipHit = "";
+
+            while(1){
+
+                do{
+                    std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
+                    std::cin >> coord;
+                    coord[0] = std::toupper(coord[0]);
+                    if (coord == "N"){
+                        std::cout << "See you, bye!\n\n";
+                        return 0;
+                    }
+                    
+                } while(!isInputValid(field_pc, coord));
+
+                system(CLS);
+
+                userLastMove = coord;
+                std::string pcLastMove;
+
+                decodeCoords(coord, &row, &col);
+
+                checkField(field_pc);
+                checkField(field_user);
+
+                std::string message_user = "";
+                std::string message_pc = "";
+
+                //user move
+                if(userMove(field_pc, row, col)){
+                    if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
+                            system(CLS);
+                            printFields(field_pc, field_user, 1);
+                            printCongrats(Player::User);
+                            break;
+                    }
+                }else{
+                    message_user = "  You missed.";
+                }
+
+                printFields(field_pc, field_user, 0);
+                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+
+                //pc move
+                getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
+                if (pcMove(field_user, pc_row, pc_col)){
+                    if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
+                            system(CLS);
+                            printFields(field_pc, field_user, 1);
+                            printCongrats(Player::Pc);
+                            break;
+                    }
+                }else{
+                    message_pc = "  PC missed.";
+                }
+
+                system(CLS);
+                printFields(field_pc, field_user, 0);
+                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+
             }
-        }else{
-            message_pc = "  PC missed.";
-        }
-
-        system(CLS);
-        printFields(field_pc, field_user, 0);
-        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-
-    }
+    }while(playAgain());
 
     std::cout << std::endl;
     return 0;
