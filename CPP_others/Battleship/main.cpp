@@ -641,11 +641,6 @@ void createGameField(std::array<std::array<int, 10>, 10> &field,
 
 bool isInputValid(std::array<std::array<int, 10>, 10> &field_pc, std::string &coord){ //check if user makes correct input
 
-    if(coord.size() > 2){
-        std::cout << "Wrong coordinates! Try again.\n";
-        return false;
-    }
-
     if ((coord[0] == 'A' || coord[0] == 'B' ||
          coord[0] == 'C' || coord[0] == 'D' ||
          coord[0] == 'E' || coord[0] == 'F' ||
@@ -656,7 +651,7 @@ bool isInputValid(std::array<std::array<int, 10>, 10> &field_pc, std::string &co
          coord[1] == '2' || coord[1] == '3' ||
          coord[1] == '4' || coord[1] == '5' ||
          coord[1] == '6' || coord[1] == '7' ||
-         coord[1] == '8' || coord[1] == '9')){
+         coord[1] == '8' || coord[1] == '9') && coord.size() == 2){
 
             checkField(field_pc);
             int row{0}, col{0};
