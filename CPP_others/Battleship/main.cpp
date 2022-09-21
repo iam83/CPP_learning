@@ -651,7 +651,8 @@ bool isInputValid(std::array<std::array<int, 10>, 10> &field_pc, std::string &co
          coord[1] == '2' || coord[1] == '3' ||
          coord[1] == '4' || coord[1] == '5' ||
          coord[1] == '6' || coord[1] == '7' ||
-         coord[1] == '8' || coord[1] == '9') && coord.size() == 2){
+         coord[1] == '8' || coord[1] == '9')
+         && coord.size() == 2){
 
             checkField(field_pc);
             int row{0}, col{0};
