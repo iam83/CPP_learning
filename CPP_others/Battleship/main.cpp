@@ -2,9 +2,9 @@
 /*
     Battleship game. AU. 09-2022.
 
-    this is a personal challenge project.
-    an attempt to recreated the Battleship classic game without looking at other examples.
-    the code might be a bit too spaggetti, oh well lol.
+    This is a personal challenge project.
+    An attempt to recreated the Battleship classic game without looking at other examples.
+    The code might be a bit too spaggetti, oh well lol.
 
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
