@@ -896,7 +896,7 @@ int main(){
         printUpdateMessage(message_user, message_pc, userLastMove, pcLastMove);
 
         //printMap(map_pc);
-        std::cout << std::endl;
+        //std::cout << std::endl;
         //printMap(map_user);
 
     }
