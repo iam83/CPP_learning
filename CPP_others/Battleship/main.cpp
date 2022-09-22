@@ -1,21 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*
     Battleship game. AU. 09-2022.
-
     This is a personal challenge project.
     An attempt to recreated the Battleship classic game without looking at other examples.
     The code might be a bit too spaggetti, oh well but it works lol.
-
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-
     TODO:
         1. CHeck for errors
     FEATURES:
         1. Make TCP/IP client-server
-
 */
 
 #include <iostream>
@@ -63,7 +59,6 @@ enum class Direction{
 // };
 
 enum class FieldCellStates{
-    Field = 0,
     Ship = 1,
     Hit = 2,
     Miss = 3,
@@ -81,8 +76,7 @@ void createField(std::array<std::array<int, 10>, 10> &field){
 }
 
 //print both fields, make it colorful on windows
-void printFields(std::array<std::array<int, 10>, 10> const &field_pc,
-                 std::array<std::array<int, 10>, 10> const &field_user, ShipView field_view){
+void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user, ShipView field_view){
 
     #ifdef _WIN32
     HANDLE  hConsole;
@@ -274,11 +268,11 @@ void checkField(std::array<std::array<int, 10>, 10> &field){
 
     for(int row = 0; row < field.size(); ++row){
         for(int col = 0; col < field.size(); ++col){
-            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Field)){
+            if (field.at(row).at(col) == 0){
                 for(int i=0; i < 8; ++i) { // looking around cell
                     if (inField(row+y[i], col+x[i])){
-                        if(field.at(row+y[i]).at(col+x[i]) == static_cast<int>(FieldCellStates::Ship))
-                            field.at(row).at(col) = static_cast<int>(FieldCellStates::Border);
+                        if(field.at(row+y[i]).at(col+x[i]) == 1)
+                            field.at(row).at(col) = 8;
                     }
                 }
             }
@@ -296,12 +290,12 @@ void checkHitField(std::array<std::array<int, 10>, 10> &field){
     for(int row = 0; row < field.size(); ++row){
         for(int col = 0; col < field.size(); ++col){
 
-            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)){
+            if (field.at(row).at(col) == 2){
 
                 for(int i=0; i < 8; ++i) { // looking around cell
                     if (inField(row+y[i], col+x[i])){
-                        if(field.at(row+y[i]).at(col+x[i]) != static_cast<int>(FieldCellStates::Hit))
-                        field.at(row+y[i]).at(col+x[i]) = static_cast<int>(FieldCellStates::BorderHit);
+                        if(field.at(row+y[i]).at(col+x[i]) != 2)
+                        field.at(row+y[i]).at(col+x[i]) = 7;
                     }
                 }
             }
@@ -322,7 +316,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
         //horizontal check
         for (int row = 0; row < field.size(); ++row){        
             for (int col = 0; col < field.size(); ++col){
-                if (field.at(row).at(col) != 1 && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)){
+                if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
                         if (count == 0){
                             temp_col = col;
                             temp_row = row;
@@ -344,7 +338,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
         //vertical check
         for (int col = 0; col < field.size(); ++col){        
             for (int row = 0; row < field.size(); ++row){
-                if (field.at(row).at(col) != 1 && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)){
+                if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8){
                         if (count == 0){
                             temp_col = col;
                             temp_row = row;
@@ -365,8 +359,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
     }
 }
 
-void generateFirstShip(std::array<std::array<int, 10>, 10> &field,
-                       std::map<std::string, std::vector<std::pair<int, int>>> &map){
+void generateFirstShip(std::array<std::array<int, 10>, 10> &field, std::map<std::string, std::vector<std::pair<int, int>>> &map){
 
     checkField(field);
     int row{0}, col{0}, dir{0};
@@ -396,9 +389,7 @@ void generateFirstShip(std::array<std::array<int, 10>, 10> &field,
         map.emplace(ship, temp_vec);
 }
 
-void setShips(std::array<std::array<int, 10>, 10> &field,
-              std::map<std::string, std::vector<std::pair<int, int>>> &map,
-              std::vector<std::pair<int, int>> &vec, int &dir, int ship, std::string ship_name){
+void setShips(std::array<std::array<int, 10>, 10> &field, std::map<std::string, std::vector<std::pair<int, int>>> &map, std::vector<std::pair<int, int>> &vec, int &dir, int ship, std::string ship_name){
     
     checkField(field);
     getPossibles(field, vec, dir, ship);
@@ -455,40 +446,40 @@ void encodeCoords(std::string &coord, int row, int col){
             case 9:
                 coord = "J";
                 break;
-    }
+        }
 
     switch(col){
-            case 0:
-                coord += "0";
-                break;
-            case 1:
-                coord += "1";
-                break;
-            case 2:
-                coord += "2";
-                break;
-            case 3:
-                coord += "3";
-                break;
-            case 4:
-                coord += "4";
-                break;
-            case 5:
-                coord += "5";
-                break;
-            case 6:
-                coord += "6";
-                break;
-            case 7:
-                coord += "7";
-                break;
-            case 8:
-                coord += "8";
-                break;
-            case 9:
-                coord += "9";
-                break;
-    }
+                case 0:
+                    coord += "0";
+                    break;
+                case 1:
+                    coord += "1";
+                    break;
+                case 2:
+                    coord += "2";
+                    break;
+                case 3:
+                    coord += "3";
+                    break;
+                case 4:
+                    coord += "4";
+                    break;
+                case 5:
+                    coord += "5";
+                    break;
+                case 6:
+                    coord += "6";
+                    break;
+                case 7:
+                    coord += "7";
+                    break;
+                case 8:
+                    coord += "8";
+                    break;
+                case 9:
+                    coord += "9";
+                    break;
+            }
 
 }
 
@@ -582,9 +573,8 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const &field_user, st
 }
 
 //checking which ship is got hit
-bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col,
-              std::array<std::array<int, 10>, 10> &field, std::string &message, std::string &keyShipHit,
-              std::vector<std::string> &pc_moves, Player player){
+bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field,
+              std::string &message, std::string &keyShipHit, std::vector<std::string> &pc_moves, Player player){
 
     for(auto& [key, value] : map){
 
