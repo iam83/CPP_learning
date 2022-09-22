@@ -1,17 +1,21 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*
     Battleship game. AU. 09-2022.
-    This is a personal challenge project.
-    An attempt to recreated the Battleship classic game without looking at other examples.
-    The code might be a bit too spaggetti, oh well but it works lol.
+
+    this is a personal challenge project.
+    an attempt to recreated the Battleship classic game without looking at other examples.
+    the code might be a bit too spaggetti, oh well lol.
+
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
+
     TODO:
         1. CHeck for errors
     FEATURES:
         1. Make TCP/IP client-server
+
 */
 
 #include <iostream>
@@ -39,24 +43,14 @@ enum class Player{
     Pc
 };
 
-enum class ShipView{
-    Invisible,
-    Visible
+enum class Ship{
+
+    Submarine = 1,
+    Cruiser = 2,
+    Battleship = 3,
+    Carrier = 4
+
 };
-
-// enum class Direction{
-//     Horizontal,
-//     Vertical
-// };
-
-// enum class Ship{
-
-//     Submarine = 1,
-//     Cruiser = 2,
-//     Battleship = 3,
-//     Carrier = 4
-
-// };
 
 enum class FieldCellStates{
     Ship = 1,
@@ -76,15 +70,15 @@ void createField(std::array<std::array<int, 10>, 10> &field){
 }
 
 //print both fields, make it colorful on windows
-void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user, ShipView field_view){
+void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user, int visible){
 
     #ifdef _WIN32
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
     std::cout << std::endl;
-    const std::string letters = "ABCDEFGHIJ";
-    const std::string separator = "        ";
+    std::string letters = "ABCDEFGHIJ";
+    std::string separator = "        ";
     std::cout << "      ";
 
     const char c_SHIP = '#';
@@ -98,7 +92,7 @@ void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array
         std::cout << c << " ";
     }
 
-    std::cout << separator << "   ";
+    std::cout << separator + "   ";
 
     for (int c = 0; c < 10; ++c){
         std::cout << c << " ";
@@ -183,7 +177,7 @@ void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
-                if (field_view == ShipView::Visible)
+                if (visible == 1)
                     std::cout << c_SHIP << " ";
                 else
                     std::cout << c_FIELD << " ";
@@ -483,71 +477,71 @@ void encodeCoords(std::string &coord, int row, int col){
 
 }
 
-void decodeCoords(std::string coord, int row, int col){
+void decodeCoords(std::string coord, int *row, int *col){
 
     switch(coord[0]){
             case 'A':
-                row = 0;
+                *(row) = 0;
                 break;
             case 'B':
-                row = 1;
+                *(row) = 1;
                 break;
             case 'C':
-                row = 2;
+                *(row) = 2;
                 break;
             case 'D':
-                row = 3;
+                *(row) = 3;
                 break;
             case 'E':
-                row = 4;
+                *(row) = 4;
                 break;
             case 'F':
-                row = 5;
+                *(row) = 5;
                 break;
             case 'G':
-                row = 6;
+                *(row) = 6;
                 break;
             case 'H':
-                row = 7;
+                *(row) = 7;
                 break;
             case 'I':
-                row = 8;
+                *(row) = 8;
                 break;
             case 'J':
-                row = 9;
+                *(row) = 9;
                 break;
         }
 
         switch(coord[1]){
             case '0':
-                col = 0;
+                *(col) = 0;
                 break;
             case '1':
-                col = 1;
+                *(col) = 1;
                 break;
             case '2':
-                col = 2;
+                *(col) = 2;
                 break;
             case '3':
-                col = 3;
+                *(col) = 3;
                 break;
             case '4':
-                col = 4;
+                *(col) = 4;
                 break;
             case '5':
-                col = 5;
+                *(col) = 5;
                 break;
             case '6':
-                col = 6;
+                *(col) = 6;
                 break;
             case '7':
-                col = 7;
+                *(col) = 7;
                 break;
             case '8':
-                col = 8;
+                *(col) = 8;
                 break;
             case '9':
-                col = 9;
+                *(col) = 9;
                 break;
         }
 }
@@ -573,8 +567,7 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const &field_user, st
 }
 
 //checking which ship is got hit
-bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field,
-              std::string &message, std::string &keyShipHit, std::vector<std::string> &pc_moves, Player player){
+bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string &message, std::string &keyShipHit, std::vector<std::string> &pc_moves, Player player){
 
     for(auto& [key, value] : map){
 
@@ -647,6 +640,11 @@ void createGameField(std::array<std::array<int, 10>, 10> &field,
 
 bool isInputValid(std::array<std::array<int, 10>, 10> &field_pc, std::string &coord){ //check if user makes correct input
 
+    if(coord.size() > 2){
+        std::cout << "Wrong coordinates! Try again.\n";
+        return false;
+    }
+
     if ((coord[0] == 'A' || coord[0] == 'B' ||
          coord[0] == 'C' || coord[0] == 'D' ||
          coord[0] == 'E' || coord[0] == 'F' ||
@@ -657,12 +655,11 @@ bool isInputValid(std::array<std::array<int, 10>, 10> &field_pc, std::string &co
          coord[1] == '2' || coord[1] == '3' ||
          coord[1] == '4' || coord[1] == '5' ||
          coord[1] == '6' || coord[1] == '7' ||
-         coord[1] == '8' || coord[1] == '9')
-         && coord.size() == 2){
+         coord[1] == '8' || coord[1] == '9')){
 
             checkField(field_pc);
             int row{0}, col{0};
-            decodeCoords(coord, row, col);
+            decodeCoords(coord, &row, &col);
 
         if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Miss) ||
             field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit) ||
@@ -758,8 +755,8 @@ bool pcMove(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
 }
 
 void createPcMoveTable(std::vector<std::string> &pc_moves){
-    
     const std::string letters = "ABCDEFGHIJ";
+
     for (int i = 0; i <= 9; ++i){
         for(int j = 0; j <= 9; ++j){
             pc_moves.push_back(letters[i]+std::to_string(j));
@@ -800,13 +797,13 @@ void printCongrats(Player player){
 void startMessage(){
 
     system(CLS);
+    std::string ver = "1.1";
 
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
-
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.1";
+    std::string message_start = "\t\tB A T T L E S H I P  by  AU  " + ver;
 
     for (auto const& l : message_start){
         std::cout << l;
@@ -860,7 +857,7 @@ int main(){
     std::array<std::array<int, 10>, 10> field_pc;   //store pc main field
 
     std::map<std::string, std::vector<std::pair<int, int>>> map_user; //store user ships coords
-    std::map<std::string, std::vector<std::pair<int, int>>> map_pc;   //store pc ships coords
+    std::map<std::string, std::vector<std::pair<int, int>>> map_pc;   //stire pc ships coords
 
     std::vector<std::pair<int, int>> vec; //store coords of where ships can be installed
     std::vector<std::string> pc_moves; //store pc moves
@@ -873,7 +870,7 @@ int main(){
         createGameField(field_user, vec, dir, map_user);
 
         createPcMoveTable(pc_moves);
-        printFields(field_pc, field_user, ShipView::Invisible);
+        printFields(field_pc, field_user, 0);
         
         int row{0}, col{0};
         int pc_row{0}, pc_col{0};
@@ -881,64 +878,64 @@ int main(){
         std::string coord = "";
         std::string userLastMove = "";
         std::string keyShipHit = "";
-            
-        while(1){
 
-            do{
-                std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
-                std::cin >> coord;
-                coord[0] = std::toupper(coord[0]);
-                if (coord == "N"){
-                    std::cout << "See you, bye!\n\n";
-                    return 0;
+            while(1){
+
+                do{
+                    std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
+                    std::cin >> coord;
+                    coord[0] = std::toupper(coord[0]);
+                    if (coord == "N"){
+                        std::cout << "See you, bye!\n\n";
+                        return 0;
+                    }
+                    
+                } while(!isInputValid(field_pc, coord));
+
+                system(CLS);
+
+                userLastMove = coord;
+                std::string pcLastMove;
+
+                decodeCoords(coord, &row, &col);
+
+                checkField(field_pc);
+                checkField(field_user);
+
+                std::string message_user = "";
+                std::string message_pc = "";
+
+                //user move
+                if(userMove(field_pc, row, col)){
+                    if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
+                            system(CLS);
+                            printFields(field_pc, field_user, 1);
+                            printCongrats(Player::User);
+                            break;
+                    }
+                }else{
+                    message_user = "  You missed.";
                 }
-                
-            } while(!isInputValid(field_pc, coord));
 
-            system(CLS);
+                printFields(field_pc, field_user, 0);
+                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
-            userLastMove = coord;
-            std::string pcLastMove;
-
-            decodeCoords(coord, &row, &col);
-
-            checkField(field_pc);
-            checkField(field_user);
-
-            std::string message_user = "";
-            std::string message_pc = "";
-
-            //user move
-            if(userMove(field_pc, row, col)){
-                if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
-                        system(CLS);
-                        printFields(field_pc, field_user, ShipView::Visible);
-                        printCongrats(Player::User);
-                        break;
+                //pc move
+                getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
+                if (pcMove(field_user, pc_row, pc_col)){
+                    if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
+                            system(CLS);
+                            printFields(field_pc, field_user, 1);
+                            printCongrats(Player::Pc);
+                            break;
+                    }
+                }else{
+                    message_pc = "  PC missed.";
                 }
-            }else{
-                message_user = "  You missed.";
-            }
 
-            printFields(field_pc, field_user, ShipView::Invisible);
-            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-
-            //pc move
-            getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
-            if (pcMove(field_user, pc_row, pc_col)){
-                if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
-                        system(CLS);
-                        printFields(field_pc, field_user, ShipView::Visible);
-                        printCongrats(Player::Pc);
-                        break;
-                }
-            }else{
-                message_pc = "  PC missed.";
-            }
-
-            system(CLS);
-            printFields(field_pc, field_user, ShipView::Invisible);
-            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+                system(CLS);
+                printFields(field_pc, field_user, 0);
+                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
             }
     }while(playAgain());
