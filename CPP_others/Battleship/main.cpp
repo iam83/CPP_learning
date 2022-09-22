@@ -48,6 +48,11 @@ enum class ShipView{
     Visible
 };
 
+enum class Direction{
+    Horizontal,
+    Vertical
+};
+
 // enum class Ship{
 
 //     Submarine = 1,
@@ -311,7 +316,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
     int count {0}, temp_row{0}, temp_col{0};
     vec.clear();
 
-    if (dir == 0){
+    if (dir == static_cast<int>(Direction::Horizontal)){
         //horizontal check
         for (int row = 0; row < field.size(); ++row){        
             for (int col = 0; col < field.size(); ++col){
@@ -375,7 +380,7 @@ void generateFirstShip(std::array<std::array<int, 10>, 10> &field, std::map<std:
     if ((col + 4) >= 9) col = 4;
     
     for (int i = 0; i < 4; ++i){
-        if (dir == 0){ //horizontal location
+        if (dir == static_cast<int>(Direction::Horizontal)){ //horizontal location
             field.at(row).at(col+i) = 1;
             temp_vec.emplace_back(row, col+i);
         }
@@ -399,7 +404,7 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::map<std::string, 
     int col = vec[i].second;
 
     for (int i = 0; i < ship; ++i){
-        if (dir == 0){
+        if (dir == static_cast<int>(Direction::Horizontal)){
             field.at(row).at(col+i) = 1;
             temp_vec.emplace_back(row, col+i);
         }
