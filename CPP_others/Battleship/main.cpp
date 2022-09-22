@@ -44,10 +44,10 @@ enum class ShipView{
     Visible
 };
 
-enum class Direction{
-    Horizontal,
-    Vertical
-};
+// enum class Direction{
+//     Horizontal,
+//     Vertical
+// };
 
 // enum class Ship{
 
@@ -312,7 +312,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
     int count {0}, temp_row{0}, temp_col{0};
     vec.clear();
 
-    if (dir == static_cast<int>(Direction::Horizontal)){
+    if (dir == 0){
         //horizontal check
         for (int row = 0; row < field.size(); ++row){        
             for (int col = 0; col < field.size(); ++col){
@@ -376,7 +376,7 @@ void generateFirstShip(std::array<std::array<int, 10>, 10> &field, std::map<std:
     if ((col + 4) >= 9) col = 4;
     
     for (int i = 0; i < 4; ++i){
-        if (dir == static_cast<int>(Direction::Horizontal)){ //horizontal location
+        if (dir == 0){ //horizontal location
             field.at(row).at(col+i) = 1;
             temp_vec.emplace_back(row, col+i);
         }
@@ -400,7 +400,7 @@ void setShips(std::array<std::array<int, 10>, 10> &field, std::map<std::string, 
     int col = vec[i].second;
 
     for (int i = 0; i < ship; ++i){
-        if (dir == static_cast<int>(Direction::Horizontal)){
+        if (dir == 0){
             field.at(row).at(col+i) = 1;
             temp_vec.emplace_back(row, col+i);
         }
@@ -483,71 +483,71 @@ void encodeCoords(std::string &coord, int row, int col){
 
 }
 
-void decodeCoords(std::string coord, int *row, int *col){
+void decodeCoords(std::string coord, int row, int col){
 
     switch(coord[0]){
             case 'A':
-                *(row) = 0;
+                row = 0;
                 break;
             case 'B':
-                *(row) = 1;
+                row = 1;
                 break;
             case 'C':
-                *(row) = 2;
+                row = 2;
                 break;
             case 'D':
-                *(row) = 3;
+                row = 3;
                 break;
             case 'E':
-                *(row) = 4;
+                row = 4;
                 break;
             case 'F':
-                *(row) = 5;
+                row = 5;
                 break;
             case 'G':
-                *(row) = 6;
+                row = 6;
                 break;
             case 'H':
-                *(row) = 7;
+                row = 7;
                 break;
             case 'I':
-                *(row) = 8;
+                row = 8;
                 break;
             case 'J':
-                *(row) = 9;
+                row = 9;
                 break;
         }
 
         switch(coord[1]){
             case '0':
-                *(col) = 0;
+                col = 0;
                 break;
             case '1':
-                *(col) = 1;
+                col = 1;
                 break;
             case '2':
-                *(col) = 2;
+                col = 2;
                 break;
             case '3':
-                *(col) = 3;
+                col = 3;
                 break;
             case '4':
-                *(col) = 4;
+                col = 4;
                 break;
             case '5':
-                *(col) = 5;
+                col = 5;
                 break;
             case '6':
-                *(col) = 6;
+                col = 6;
                 break;
             case '7':
-                *(col) = 7;
+                col = 7;
                 break;
             case '8':
-                *(col) = 8;
+                col = 8;
                 break;
             case '9':
-                *(col) = 9;
+                col = 9;
                 break;
         }
 }
@@ -662,7 +662,7 @@ bool isInputValid(std::array<std::array<int, 10>, 10> &field_pc, std::string &co
 
             checkField(field_pc);
             int row{0}, col{0};
-            decodeCoords(coord, &row, &col);
+            decodeCoords(coord, row, col);
 
         if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Miss) ||
             field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit) ||
