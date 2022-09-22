@@ -455,40 +455,40 @@ void encodeCoords(std::string &coord, int row, int col){
             case 9:
                 coord = "J";
                 break;
-        }
+    }
 
     switch(col){
-                case 0:
-                    coord += "0";
-                    break;
-                case 1:
-                    coord += "1";
-                    break;
-                case 2:
-                    coord += "2";
-                    break;
-                case 3:
-                    coord += "3";
-                    break;
-                case 4:
-                    coord += "4";
-                    break;
-                case 5:
-                    coord += "5";
-                    break;
-                case 6:
-                    coord += "6";
-                    break;
-                case 7:
-                    coord += "7";
-                    break;
-                case 8:
-                    coord += "8";
-                    break;
-                case 9:
-                    coord += "9";
-                    break;
-            }
+            case 0:
+                coord += "0";
+                break;
+            case 1:
+                coord += "1";
+                break;
+            case 2:
+                coord += "2";
+                break;
+            case 3:
+                coord += "3";
+                break;
+            case 4:
+                coord += "4";
+                break;
+            case 5:
+                coord += "5";
+                break;
+            case 6:
+                coord += "6";
+                break;
+            case 7:
+                coord += "7";
+                break;
+            case 8:
+                coord += "8";
+                break;
+            case 9:
+                coord += "9";
+                break;
+    }
 
 }
 
