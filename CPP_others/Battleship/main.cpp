@@ -77,8 +77,8 @@ void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
     std::cout << std::endl;
-    std::string letters = "ABCDEFGHIJ";
-    std::string separator = "        ";
+    const std::string letters = "ABCDEFGHIJ";
+    const std::string separator = "        ";
     std::cout << "      ";
 
     const char c_SHIP = '#';
@@ -92,7 +92,7 @@ void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array
         std::cout << c << " ";
     }
 
-    std::cout << separator + "   ";
+    std::cout << separator << "   ";
 
     for (int c = 0; c < 10; ++c){
         std::cout << c << " ";
@@ -752,8 +752,8 @@ bool pcMove(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
 }
 
 void createPcMoveTable(std::vector<std::string> &pc_moves){
+    
     const std::string letters = "ABCDEFGHIJ";
-
     for (int i = 0; i <= 9; ++i){
         for(int j = 0; j <= 9; ++j){
             pc_moves.push_back(letters[i]+std::to_string(j));
@@ -794,13 +794,13 @@ void printCongrats(Player player){
 void startMessage(){
 
     system(CLS);
-    std::string ver = "1.1";
 
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
-    std::string message_start = "\t\tB A T T L E S H I P  by  AU  " + ver;
+
+    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.1";
 
     for (auto const& l : message_start){
         std::cout << l;
@@ -854,7 +854,7 @@ int main(){
     std::array<std::array<int, 10>, 10> field_pc;   //store pc main field
 
     std::map<std::string, std::vector<std::pair<int, int>>> map_user; //store user ships coords
-    std::map<std::string, std::vector<std::pair<int, int>>> map_pc;   //stire pc ships coords
+    std::map<std::string, std::vector<std::pair<int, int>>> map_pc;   //store pc ships coords
 
     std::vector<std::pair<int, int>> vec; //store coords of where ships can be installed
     std::vector<std::string> pc_moves; //store pc moves
