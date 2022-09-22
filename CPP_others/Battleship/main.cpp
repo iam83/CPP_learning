@@ -43,6 +43,11 @@ enum class Player{
     Pc
 };
 
+enum class ShipView{
+    Invisible,
+    Visible
+};
+
 // enum class Ship{
 
 //     Submarine = 1,
@@ -70,7 +75,7 @@ void createField(std::array<std::array<int, 10>, 10> &field){
 }
 
 //print both fields, make it colorful on windows
-void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user, int visible){
+void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array<std::array<int, 10>, 10> const &field_user, ShipView field_view){
 
     #ifdef _WIN32
     HANDLE  hConsole;
@@ -177,7 +182,7 @@ void printFields(std::array<std::array<int, 10>, 10> const &field_pc, std::array
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, 8);                    
                 #endif
-                if (visible == 1)
+                if (field_view == ShipView::Visible)
                     std::cout << c_SHIP << " ";
                 else
                     std::cout << c_FIELD << " ";
@@ -867,7 +872,7 @@ int main(){
         createGameField(field_user, vec, dir, map_user);
 
         createPcMoveTable(pc_moves);
-        printFields(field_pc, field_user, 0);
+        printFields(field_pc, field_user, ShipView::Invisible);
         
         int row{0}, col{0};
         int pc_row{0}, pc_col{0};
@@ -906,7 +911,7 @@ int main(){
             if(userMove(field_pc, row, col)){
                 if(checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)){
                         system(CLS);
-                        printFields(field_pc, field_user, 1);
+                        printFields(field_pc, field_user, ShipView::Visible);
                         printCongrats(Player::User);
                         break;
                 }
@@ -914,7 +919,7 @@ int main(){
                 message_user = "  You missed.";
             }
 
-            printFields(field_pc, field_user, 0);
+            printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
             //pc move
@@ -922,7 +927,7 @@ int main(){
             if (pcMove(field_user, pc_row, pc_col)){
                 if(checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)){
                         system(CLS);
-                        printFields(field_pc, field_user, 1);
+                        printFields(field_pc, field_user, ShipView::Visible);
                         printCongrats(Player::Pc);
                         break;
                 }
@@ -931,7 +936,7 @@ int main(){
             }
 
             system(CLS);
-            printFields(field_pc, field_user, 0);
+            printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
             }
