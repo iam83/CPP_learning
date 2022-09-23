@@ -857,8 +857,8 @@ int playAgain() {
             break;
         }
         else {
-            std::cin.clear(); // то возвращаем cin в 'обычный' режим работы
-            std::cin.ignore(32767, '\n'); // и удаляем значения предыдущего ввода из входного буфера
+            std::cin.clear(); // 
+            std::cin.ignore(32767, '\n');
         }
 
     } while (1);
