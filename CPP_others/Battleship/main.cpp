@@ -32,7 +32,7 @@
 #define CLS "clear"
 #endif
 
-
+typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
 enum class Player {
     User,
@@ -49,19 +49,20 @@ enum class Direction {
     Vertical
 };
 
-// enum class Ship{
+enum class Ship{
 
-//     Submarine = 1,
-//     Cruiser = 2,
-//     Battleship = 3,
-//     Carrier = 4
+    Submarine = 1,
+    Cruiser = 2,
+    Battleship = 3,
+    Carrier = 4
 
-// };
+};
 
 enum class FieldCellStates {
-    Ship = 1,
-    Hit = 2,
-    Miss = 3,
+    Field,
+    Ship,
+    Hit,
+    Miss,
     BorderHit = 7,
     Border = 8
 };
@@ -186,7 +187,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 if (field_view == ShipView::Visible)
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_SHIP << " ";
+                    std::cout << c_FIELD << " ";
 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
 #endif
@@ -268,11 +269,11 @@ void checkField(std::array<std::array<int, 10>, 10>& field) {
 
     for (int row = 0; row < field.size(); ++row) {
         for (int col = 0; col < field.size(); ++col) {
-            if (field.at(row).at(col) == 0) {
+            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Field)) {
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) == 1)
-                            field.at(row).at(col) = 8;
+                        if (field.at(row + y[i]).at(col + x[i]) == static_cast<int>(FieldCellStates::Ship))
+                            field.at(row).at(col) = static_cast<int>(FieldCellStates::Border);
                     }
                 }
             }
@@ -290,12 +291,12 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
     for (int row = 0; row < field.size(); ++row) {
         for (int col = 0; col < field.size(); ++col) {
 
-            if (field.at(row).at(col) == 2) {
+            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
 
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) != 2)
-                            field.at(row + y[i]).at(col + x[i]) = 7;
+                        if (field.at(row + y[i]).at(col + x[i]) != static_cast<int>(FieldCellStates::Hit))
+                            field.at(row + y[i]).at(col + x[i]) = static_cast<int>(FieldCellStates::BorderHit);
                     }
                 }
             }
@@ -316,7 +317,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
         //horizontal check
         for (int row = 0; row < field.size(); ++row) {
             for (int col = 0; col < field.size(); ++col) {
-                if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8) {
+                if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
                     if (count == 0) {
                         temp_col = col;
                         temp_row = row;
@@ -340,7 +341,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
         //vertical check
         for (int col = 0; col < field.size(); ++col) {
             for (int row = 0; row < field.size(); ++row) {
-                if (field.at(row).at(col) != 1 && field.at(row).at(col) != 8) {
+                if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
                     if (count == 0) {
                         temp_col = col;
                         temp_row = row;
@@ -362,11 +363,11 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
     }
 }
 
-void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map) {
+void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, int ship) {
 
     checkField(field);
     int row{ 0 }, col{ 0 }, dir{ 0 };
-    const std::string ship = "ship4";
+    const std::string ship_name = "ship4";
     std::vector<std::pair<int, int>> temp_vec;
 
     do { //iterate while coords are not good enough
@@ -374,22 +375,22 @@ void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std:
         col = getRandomNumber(0, 9);
         dir = getRandomNumber(0, 1);
 
-    } while (!(field.at(row).at(col) != 1 && field.at(row).at(col) != 8 && (row + 4) < 9 && (col + 4) < 9));
+    } while (!(field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border) && (row + 4) < 9 && (col + 4) < 9));
 
-    if ((col + 4) >= 9) col = 4;
+    if ((col + ship) >= 9) col = 4;
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < ship; ++i) {
         if (dir == static_cast<int>(Direction::Horizontal)) { //horizontal location
-            field.at(row).at(col + i) = 1;
+            field.at(row).at(col + i) = static_cast<int>(FieldCellStates::Ship);
             temp_vec.emplace_back(row, col + i);
         }
         else { //vertical
-            field.at(row + i).at(col) = 1;
+            field.at(row + i).at(col) = static_cast<int>(FieldCellStates::Ship);
             temp_vec.emplace_back(row + i, col);
         }
     }
 
-    map.emplace(ship, temp_vec);
+    map.emplace(ship_name, temp_vec);
 }
 
 void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, std::vector<std::pair<int, int>>& vec, int& dir, int ship, std::string ship_name) {
@@ -404,11 +405,11 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
 
     for (int i = 0; i < ship; ++i) {
         if (dir == static_cast<int>(Direction::Horizontal)) {
-            field.at(row).at(col + i) = 1;
+            field.at(row).at(col + i) = static_cast<int>(FieldCellStates::Ship);
             temp_vec.emplace_back(row, col + i);
         }
         else {
-            field.at(row + i).at(col) = 1;
+            field.at(row + i).at(col) = static_cast<int>(FieldCellStates::Ship);
             temp_vec.emplace_back(row + i, col);
         }
     }
@@ -578,9 +579,9 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 //checking which ship is got hit
 bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit, std::vector<std::string>& pc_moves, Player player) {
 
-    std::map<std::string, std::vector<std::pair<int, int>>>::iterator it;
+    //std::map<std::string, std::vector<std::pair<int, int>>>::iterator it;
     
-    std::string temp = "";
+    std::string temp_key = "";
 
     for (auto& [key, value] : map) {
 
@@ -611,13 +612,13 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                 //it = map.find(key);
                 //if (it != map.end())
                 //    map.erase(it);
-                temp = key;
+                temp_key = key;
             }
         }
     }
     
-    if (!temp.empty())
-        map.erase(temp);
+    if (!temp_key.empty())
+        map.erase(temp_key);
 
     if (map.empty()) {
         return true;
@@ -644,16 +645,16 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     std::map<std::string, std::vector<std::pair<int, int>>>& map) {
 
     createField(field);
-    generateFirstShip(field, map);
-    setShips(field, map, vec, dir, 3, "ship3_1");
-    setShips(field, map, vec, dir, 3, "ship3_2");
-    setShips(field, map, vec, dir, 2, "ship2_1");
-    setShips(field, map, vec, dir, 2, "ship2_2");
-    setShips(field, map, vec, dir, 2, "ship2_3");
-    setShips(field, map, vec, dir, 1, "ship1_1");
-    setShips(field, map, vec, dir, 1, "ship1_2");
-    setShips(field, map, vec, dir, 1, "ship1_3");
-    setShips(field, map, vec, dir, 1, "ship1_4");
+    generateFirstShip(field, map, static_cast<int>(Ship::Carrier));
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Battleship), "ship3_1");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Battleship), "ship3_2");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_1");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_2");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_3");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_1");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_2");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_3");
+    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_4");
     checkField(field);
 }
 
@@ -723,7 +724,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
-            //std::this_thread::sleep_for(std::chrono::milliseconds(250)); //400 ms
+            std::this_thread::sleep_for(std::chrono::milliseconds(250)); //400 ms
         }
 
         if (map_user[keyShipHit].size() == 0) {
@@ -753,7 +754,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         pc_moves.erase(pc_moves.begin() + move);
 
     }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(600)); //700 ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(600)); //700 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
@@ -781,7 +782,7 @@ void createPcMoveTable(std::vector<std::string>& pc_moves) {
     }
 }
 
-void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user, std::map<std::string, std::vector<std::pair<int, int>>> map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
+void printUpdateMessage(Map map_user, Map map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
     std::cout << "       Your ships: " << map_user.size();
     std::cout << "\t\t" << message_user << std::endl;
 
@@ -805,7 +806,7 @@ void printCongrats(Player player) {
 
     for (auto const& l : message_congrats) {
         std::cout << l;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); //400 ms
+        std::this_thread::sleep_for(std::chrono::milliseconds(50)); //400 ms
     }
 
     std::cout << std::endl;
@@ -820,7 +821,7 @@ void startMessage() {
     std::cout << std::endl;
     std::cout << std::endl;
 
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.1";
+    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.2";
 
     for (auto const& l : message_start) {
         std::cout << l;
@@ -868,7 +869,7 @@ int playAgain() {
 
 int main() {
 
-    //startMessage();
+    startMessage();
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -957,10 +958,6 @@ int main() {
              system(CLS);
              printFields(field_pc, field_user, ShipView::Invisible);
              printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-
-            // printMap(map_user);
-            // std::cout << std::endl;
-            // printMap(map_pc);
 
         }
     } while (playAgain());
