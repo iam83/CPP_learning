@@ -49,7 +49,7 @@ enum class Direction {
     Vertical
 };
 
-enum class Ship{
+enum class Ship {
 
     Submarine = 1,
     Cruiser = 2,
@@ -363,11 +363,10 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
     }
 }
 
-void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, int ship) {
+void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, int const ship, std::string const ship_name) {
 
     checkField(field);
     int row{ 0 }, col{ 0 }, dir{ 0 };
-    const std::string ship_name = "ship4";
     std::vector<std::pair<int, int>> temp_vec;
 
     do { //iterate while coords are not good enough
@@ -645,7 +644,7 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     std::map<std::string, std::vector<std::pair<int, int>>>& map) {
 
     createField(field);
-    generateFirstShip(field, map, static_cast<int>(Ship::Carrier));
+    generateFirstShip(field, map, static_cast<int>(Ship::Carrier), "ship4");
     setShips(field, map, vec, dir, static_cast<int>(Ship::Battleship), "ship3_1");
     setShips(field, map, vec, dir, static_cast<int>(Ship::Battleship), "ship3_2");
     setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_1");
