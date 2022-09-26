@@ -9,7 +9,7 @@
 
 /*
     TODO:
-        1. CHeck for errors
+        1. Add manual ship set-up
     FEATURES:
         1. Make TCP/IP client-server
 */
