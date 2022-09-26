@@ -866,9 +866,92 @@ int playAgain() {
     std::cout << std::endl;
 }
 
+bool isAutomaticSetup(){
+
+    char exit;
+
+    do {
+        std::cout << "  Type 'a' for Automatic or 'm' for Manual ship setup (a/m)?: ";
+        std::cin >> exit;
+
+        if (exit == 'a') {
+            return true;
+            break;
+        }
+        else if (exit == 'm') {
+            //std::cout << "  Thank you for playing. See you!" << std::endl;
+            return false;
+            break;
+        }
+        else {
+            std::cin.clear(); // 
+            std::cin.ignore(32767, '\n');
+        }
+
+    } while (1);
+
+    std::cout << std::endl;
+
+}
+
+void setManualField(std::array<std::array<int, 10>, 10> &field_user, Map &map_user, std::string coord, char dir_char, int ship){
+
+    std::vector<std::pair<int, int>> temp_vec;
+
+    int row = coord[0];
+    int col = coord[1];
+    int dir{0};
+
+    if (dir_char == 'h')
+        dir = static_cast<int>(Direction::Horizontal);
+    else if (dir_char == 'v')
+        dir = static_cast<int>(Direction::Vertical);
+
+    for (int i = 0; i < ship; ++i) {
+        if (dir == static_cast<int>(Direction::Horizontal)) {
+            field_user.at(row).at(col + i) = static_cast<int>(FieldCellStates::Ship);
+            temp_vec.emplace_back(row, col + i);
+        }
+        else {
+            field_user.at(row + i).at(col) = static_cast<int>(FieldCellStates::Ship);
+            temp_vec.emplace_back(row + i, col);
+        }
+    }
+
+    //map.emplace(ship_name, temp_vec);
+
+}
+
+void manualSetup(std::array<std::array<int, 10>, 10> &field_user, Map &map_user){
+
+    std::string coord = "";
+    char dir = ' ';
+    int ship = 4;
+
+    do {
+            std::cout << "Enter start row and column for the 4X ship (eg. a0): ";
+            std::cin >> coord;
+            coord[0] = std::toupper(coord[0]);
+            if (coord == "N") {
+                std::cout << "See you, bye!\n\n";
+                break;
+            }
+        } while (!isInputValid(field_user, coord));
+
+    do {
+            std::cout << "Type 'v' for vertical or 'h' for horizontal placement: ";
+            std::cin >> dir;
+
+        } while (dir != 'v' || dir != 'h');
+    
+    setManualField(field_user, map_user, coord, dir, ship);
+    
+}
+
+
 int main() {
 
-    startMessage();
+    //startMessage();
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -883,9 +966,17 @@ int main() {
 
     //game loop
     do {
-        system(CLS);
+        //system(CLS);
         int dir{ 0 };
-        createGameField(field_pc, vec, dir, map_pc);
+
+        if (!isAutomaticSetup()){
+            std::cout << "Manual setup";
+            manualSetup(field_user, map_user);
+        }else{
+            std::cout << "Automatic setup";
+            createGameField(field_pc, vec, dir, map_pc);
+        }
+
         createGameField(field_user, vec, dir, map_user);
 
         createPcMoveTable(pc_moves);
@@ -914,7 +1005,7 @@ int main() {
 
             } while (!isInputValid(field_pc, coord));
 
-            system(CLS);
+            //system(CLS);
 
             userLastMove = coord;
             
@@ -922,7 +1013,6 @@ int main() {
 
             checkField(field_pc);
             checkField(field_user);
-
 
             //user move
             if (userMove(field_pc, row, col)) {
@@ -954,7 +1044,7 @@ int main() {
                  message_pc = "  PC missed.";
              }
 
-             system(CLS);
+             //system(CLS);
              printFields(field_pc, field_user, ShipView::Invisible);
              printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
