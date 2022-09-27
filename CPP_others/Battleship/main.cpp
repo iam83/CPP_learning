@@ -944,16 +944,10 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     std::cout << "row + ship " << row + ship << "\n";
     std::cout << "col + ship " << col + ship << "\n";
 
-    // if ((row + ship) > 10){
-    //     std::cout << "You cannot install a ship there. Try again.\n";
-    //     return false;
-    // }
-
-    //  if ((col + ship) > 10){
-    //     std::cout << "You cannot install a ship there. Try again.\n";
-    //     return false;
-    // }
-
+    if ((row + ship) > 10 && (col + ship) > 10){
+        std::cout << "You cannot install a ship there. Try again.\n";
+        return false;
+    }
 
     std::cout << "Checking2...\n";
 
