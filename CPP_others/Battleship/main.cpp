@@ -894,13 +894,14 @@ bool isAutomaticSetup(){
 
 }
 
-void setManualField(std::array<std::array<int, 10>, 10> &field_user, Map &map_user, std::string coord, char dir_char, int ship){
+void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord, char dir_char, int ship){
 
     std::vector<std::pair<int, int>> temp_vec;
-
-    int row = coord[0];
-    int col = coord[1];
+    int row{0}; int col{0};
     int dir{0};
+    std::string ship_name = "ship" + std::to_string(ship);
+
+    decodeCoords(coord, row, col);
 
     if (dir_char == 'h')
         dir = static_cast<int>(Direction::Horizontal);
@@ -918,33 +919,54 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, Map &map_us
         }
     }
 
-    //map.emplace(ship_name, temp_vec);
+    map_user.emplace(ship_name, temp_vec);
+    checkField(field_user);
+    printFields(field_pc, field_user, ShipView::Invisible);
 
 }
 
-void manualSetup(std::array<std::array<int, 10>, 10> &field_user, Map &map_user){
+bool isManualInputValid(char dir_char){
+    if (dir_char == 'v' || dir_char == 'h') 
+        return true;
+    return false;
+}
+
+void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user){
 
     std::string coord = "";
-    char dir = ' ';
+    char dir_char = ' ';
     int ship = 4;
+    int row{0}; int col{0};
+
+    checkField(field_user);
+    printFields(field_pc, field_user, ShipView::Invisible);
 
     do {
-            std::cout << "Enter start row and column for the 4X ship (eg. a0): ";
-            std::cin >> coord;
-            coord[0] = std::toupper(coord[0]);
-            if (coord == "N") {
-                std::cout << "See you, bye!\n\n";
-                break;
-            }
-        } while (!isInputValid(field_user, coord));
+        do {
+                std::cout << "Enter start row and column for the 4X ship (eg. a0): ";
+                std::cin >> coord;
+                coord[0] = std::toupper(coord[0]);
+                if (coord == "N") {
+                    std::cout << "See you, bye!\n\n";
+                    break;
+                }
+            } while (!isInputValid(field_user, coord));
 
-    do {
-            std::cout << "Type 'v' for vertical or 'h' for horizontal placement: ";
-            std::cin >> dir;
+            decodeCoords(coord, row, col);
+            field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
+            std::cout << "installed\n";
+            printFields(field_pc, field_user, ShipView::Invisible);
 
-        } while (dir != 'v' || dir != 'h');
-    
-    setManualField(field_user, map_user, coord, dir, ship);
+        do {
+                std::cout << "Type 'v' for vertical or 'h' for horizontal placement: ";
+                std::cin >> dir_char;
+
+            } while (!isManualInputValid(dir_char));
+        
+        setManualField(field_user, field_pc, map_user, coord, dir_char, ship);
+        std::cout << "map_size: " << map_user.size() << std::endl;
+
+    } while(map_user.size() != 10);
     
 }
 
@@ -968,17 +990,19 @@ int main() {
     do {
         //system(CLS);
         int dir{ 0 };
+        createField(field_user);
+        createField(field_pc);
 
         if (!isAutomaticSetup()){
             std::cout << "Manual setup";
-            manualSetup(field_user, map_user);
+            manualSetup(field_user, field_pc, map_user);
         }else{
             std::cout << "Automatic setup";
             createGameField(field_pc, vec, dir, map_pc);
         }
 
-        createGameField(field_user, vec, dir, map_user);
 
+        createGameField(field_user, vec, dir, map_user);
         createPcMoveTable(pc_moves);
         printFields(field_pc, field_user, ShipView::Invisible);
 
