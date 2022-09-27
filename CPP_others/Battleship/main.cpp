@@ -92,7 +92,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
     const char c_HIT = 'X';
     const char c_MISS = '~';
     const char c_FIELD = '.';
-    const char c_BORDER = '.';
+    const char c_BORDER = '+';
     const char c_BORDERHIT = '~';
 
     for (int c = 0; c < 10; ++c) {
@@ -127,7 +127,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
 #endif
-                std::cout << c_FIELD << " ";
+                std::cout << c_BORDER << " ";
 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
 #endif
@@ -931,6 +931,52 @@ bool isManualInputValid(char dir_char){
     return false;
 }
 
+
+bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, char dir_char, int row, int col, int ship){
+    
+    std::cout << "Checking1...\n";
+
+    if(field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship) || field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
+        std::cout << "You cannot install a ship there. Try again.\n";
+        return false;
+       }
+
+    std::cout << "Checking2...\n";
+
+    if (dir_char == 'v' && (row + ship) < 10){
+        for (int i = 0; i < ship; ++i){
+                if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Ship) &&
+                field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
+                    std::cout << "You cannot install a ship there. Try again.\n";
+                    return false;
+                }
+
+            }
+        }else{
+            std::cout << "This " << ship << "X ship cannot be installed at this position. Try again.\n";
+            return false;
+        }
+
+
+    std::cout << "Checking3...\n";
+
+    if (dir_char == 'h' && (col + ship) < 10){
+        for (int i = 0; i < ship; ++i){
+            
+                if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Ship) &&
+                field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
+                    std::cout << "You cannot install a ship there. Try again.\n";
+                    return false;
+                }
+            }
+        }else{
+            std::cout << "This " << ship << "X ship cannot be installed at this position. Try again.\n";
+            return false;
+        }
+
+    return true;
+}
+
 void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user){
 
     std::string coord = "";
@@ -953,15 +999,19 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 std::cout << "Enter start row and column for the " << ship_bank[0] << "X ship (eg. a0): ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
+
                 if (coord == "N") {
                     std::cout << "See you, bye!\n\n";
                     break;
                 }
-            } while (!isInputValid(field_user, coord));
+                
+                decodeCoords(coord, row, col);
+
+            } while (!isValidToInstall(field_user, dir_char, row, col, ship));
 
             decodeCoords(coord, row, col);
+
             field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
-            std::cout << "installed\n";
             printFields(field_pc, field_user, ShipView::Invisible);
 
         do {
@@ -970,7 +1020,8 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 std::cout << "Type 'v' for vertical or 'h' for horizontal placement: ";
                 std::cin >> dir_char;
 
-            } while (!isManualInputValid(dir_char));
+            } while (!isManualInputValid(dir_char) || !isValidToInstall(field_user, row, col, dir_char, ship));
+
         
         setManualField(field_user, field_pc, map_user, coord, dir_char, ship);
         std::cout << "map_size: " << map_user.size() << std::endl;
