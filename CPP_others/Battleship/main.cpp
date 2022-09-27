@@ -943,7 +943,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
     do {
         do {
-                std::cout << "Enter start row and column for the 4X ship (eg. a0): ";
+                std::cout << "Enter start row and column for the " << ship << "X ship (eg. a0): ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
                 if (coord == "N") {
