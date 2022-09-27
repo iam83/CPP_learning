@@ -958,7 +958,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     std::cout << "Checking2...\n";
 
     if (dir_char == 'v'){
-        if ((row + ship) < 10){
+        if ((row + ship) < 11){
             std::cout << "Checking2_2...\n";
 
             for (int i = 0; i < ship; ++i){
@@ -977,7 +977,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     std::cout << "Checking3...\n";
 
     if (dir_char == 'h'){
-        if((col + ship) < 10){
+        if((col + ship) < 11){
             for (int i = 0; i < ship; ++i){
                     std::cout << field_user.at(row).at(col + i) << " ";
                     if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
