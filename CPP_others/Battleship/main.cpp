@@ -935,15 +935,22 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
     std::string coord = "";
     char dir_char = ' ';
-    int ship = 4;
+    int ship{0};
     int row{0}; int col{0};
 
     checkField(field_user);
     printFields(field_pc, field_user, ShipView::Invisible);
 
+    std::vector<int> ship_bank = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
+
+    // 4X, 3X, 3X, 2X, 2X, 2X, 1X, 1X, 1X, 1X
+
     do {
+        
+        ship = ship_bank[0];
+
         do {
-                std::cout << "Enter start row and column for the " << ship << "X ship (eg. a0): ";
+                std::cout << "Enter start row and column for the " << ship_bank[0] << "X ship (eg. a0): ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
                 if (coord == "N") {
@@ -958,6 +965,8 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
             printFields(field_pc, field_user, ShipView::Invisible);
 
         do {
+                if (ship_bank[0] == 1)
+                    break;
                 std::cout << "Type 'v' for vertical or 'h' for horizontal placement: ";
                 std::cin >> dir_char;
 
@@ -965,8 +974,14 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
         
         setManualField(field_user, field_pc, map_user, coord, dir_char, ship);
         std::cout << "map_size: " << map_user.size() << std::endl;
+        ship_bank.erase(ship_bank.begin());
+        
+        for (auto const &s : ship_bank){
+            std::cout << s;
+        }
+        std::cout << "\n";
 
-    } while(map_user.size() != 10);
+    } while(ship_bank.size() != 0);
     
 }
 
@@ -998,11 +1013,11 @@ int main() {
             manualSetup(field_user, field_pc, map_user);
         }else{
             std::cout << "Automatic setup";
-            createGameField(field_pc, vec, dir, map_pc);
+            
+            createGameField(field_user, vec, dir, map_user);
         }
-
-
-        createGameField(field_user, vec, dir, map_user);
+        
+        createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
         printFields(field_pc, field_user, ShipView::Invisible);
 
