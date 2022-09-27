@@ -944,12 +944,12 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     std::cout << "row + ship " << row + ship << "\n";
     std::cout << "col + ship " << col + ship << "\n";
 
-    // if (dir_char == 'v' && (row + ship) > 10){
+    // if ((row + ship) > 10){
     //     std::cout << "You cannot install a ship there. Try again.\n";
     //     return false;
     // }
 
-    //  if (dir_char == 'h' && (col + ship) > 10){
+    //  if ((col + ship) > 10){
     //     std::cout << "You cannot install a ship there. Try again.\n";
     //     return false;
     // }
@@ -1024,7 +1024,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 
                 decodeCoords(coord, row, col);
 
-            } while (!isInputValid(field_user, coord) || !isValidToInstall(field_user, row, col));
+            } while (!isInputValid(field_user, coord) || !isValidToInstall(field_user, row, col, dir_char, ship));
 
             field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
             printFields(field_pc, field_user, ShipView::Invisible);
