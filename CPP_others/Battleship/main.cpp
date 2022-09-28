@@ -1003,7 +1003,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
                         }
                     }
             }else{
-                    std::cout << "  WARNING: Ship " << ship << "X cannot be installed in this direction. Try again.\n";
+                    printWarning(Warning::TryAgainHorizontal);
                     return false;
                  }
     }
@@ -1017,7 +1017,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
                         }
                     }
             }else{
-                std::cout << "  WARNING: Ship " << ship << "X cannot be installed in this direction. Try again.\n";
+                printWarning(Warning::TryAgainVertical);
                 return false;
                 }
         }
