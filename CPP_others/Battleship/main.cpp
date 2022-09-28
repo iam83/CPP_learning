@@ -977,14 +977,14 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
                 if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
                     continue;
                 }
-            }
+        }
     }
     else if((row + ship) < 11){
          for (int i = 0; i < ship; ++i){
-                        if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
-                            continue;
-                        }
-                    }
+                if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
+                    continue;
+                }
+        }
     }else{
         printWarning(Warning::TryAgain);
         return false;
