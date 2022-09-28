@@ -67,6 +67,12 @@ enum class FieldCellStates {
     Border = 8
 };
 
+enum class Warning{
+    TryAgain,
+    TryAgainHorizontal,
+    TryAgainVertical
+};
+
 int getRandomNumber(int min, int max) {
     static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
@@ -107,11 +113,11 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 
     std::cout << std::endl;
 
-    for (int row = 0; row < field_user.size(); ++row) {
+    for (unsigned int row = 0; row < field_user.size(); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
 
         // user field
-        for (int col = 0; col < field_user.size(); ++col) {
+        for (unsigned int col = 0; col < field_user.size(); ++col) {
             if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
@@ -178,7 +184,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
         std::cout << letters[row] << "  ";
 
         // pc field
-        for (int col = 0; col < field_pc.size(); ++col) {
+        for (unsigned int col = 0; col < field_pc.size(); ++col) {
             if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
 #ifdef _WIN32
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
@@ -267,8 +273,8 @@ void checkField(std::array<std::array<int, 10>, 10>& field) {
 
     //check in boundary
 
-    for (int row = 0; row < field.size(); ++row) {
-        for (int col = 0; col < field.size(); ++col) {
+    for (unsigned int row = 0; row < field.size(); ++row) {
+        for (unsigned int col = 0; col < field.size(); ++col) {
             if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Field)) {
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
@@ -288,8 +294,8 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
 
     //check in boundary
 
-    for (int row = 0; row < field.size(); ++row) {
-        for (int col = 0; col < field.size(); ++col) {
+    for (unsigned int row = 0; row < field.size(); ++row) {
+        for (unsigned int col = 0; col < field.size(); ++col) {
 
             if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
 
@@ -315,8 +321,8 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
 
     if (dir == static_cast<int>(Direction::Horizontal)) {
         //horizontal check
-        for (int row = 0; row < field.size(); ++row) {
-            for (int col = 0; col < field.size(); ++col) {
+        for (unsigned int row = 0; row < field.size(); ++row) {
+            for (unsigned int col = 0; col < field.size(); ++col) {
                 if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
                     if (count == 0) {
                         temp_col = col;
@@ -339,8 +345,8 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
     }
     else {
         //vertical check
-        for (int col = 0; col < field.size(); ++col) {
-            for (int row = 0; row < field.size(); ++row) {
+        for (unsigned int col = 0; col < field.size(); ++col) {
+            for (unsigned int row = 0; row < field.size(); ++row) {
                 if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
                     if (count == 0) {
                         temp_col = col;
@@ -561,10 +567,12 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
     std::string temp_coord = "";
     std::vector<std::string>::iterator it;
 
-    for (int row = 0; row < field_user.size(); ++row) {
-        for (int col = 0; col < field_user.size(); ++col) {
+    for (unsigned int row = 0; row < field_user.size(); ++row) {
+        for (unsigned int col = 0; col < field_user.size(); ++col) {
             if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
+
                 encodeCoords(temp_coord, row, col);
+
                 it = std::find(pc_moves.begin(), pc_moves.end(), temp_coord);
                 if (it != pc_moves.end()) {
                     int del = it - pc_moves.begin();
@@ -584,7 +592,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
 
     for (auto& [key, value] : map) {
 
-        for (int i = 0; i < value.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User)
@@ -632,7 +640,7 @@ void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map
 
     for (auto& [key, value] : map) {
         std::cout << key << ": ";
-        for (int i = 0; i < value.size(); ++i) {
+        for (unsigned int i = 0; i < value.size(); ++i) {
             std::cout << value[i].first << "." << value[i].second << " ";
         }
         std::cout << std::endl;
@@ -831,7 +839,7 @@ void startMessage() {
 
 void printMoveTable(std::vector<std::string> const& pc_moves) {
     int a{ 0 };
-    for (int i = 0; i < pc_moves.size(); ++i) {
+    for (unsigned int i = 0; i < pc_moves.size(); ++i) {
         std::cout << pc_moves[i] << " ";
         ++a;
         if (a % 10 == 0) std::cout << std::endl;
@@ -871,15 +879,15 @@ bool isAutomaticSetup(){
     char exit;
 
     do {
-        std::cout << "  Type 'a' for Automatic or 'm' for Manual ship setup (a/m)?: ";
+        std::cout << "    Type 'a' for Automatic or 'm' for Manual ship setup (a/m)?: ";
         std::cin >> exit;
+        std::cout << std::endl;
 
         if (exit == 'a') {
             return true;
             break;
         }
         else if (exit == 'm') {
-            //std::cout << "  Thank you for playing. See you!" << std::endl;
             return false;
             break;
         }
@@ -892,6 +900,7 @@ bool isAutomaticSetup(){
 
     std::cout << std::endl;
 
+
 }
 
 void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord, char dir_char, int ship, std::vector<std::string> &ship_name){
@@ -899,8 +908,6 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<
     std::vector<std::pair<int, int>> temp_vec;
     int row{0}; int col{0};
     int dir{0};
-    //std::string ship_name = "ship" + std::to_string(ship);
-    
 
     decodeCoords(coord, row, col);
 
@@ -923,7 +930,9 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<
     map_user.emplace(ship_name[0], temp_vec);
     ship_name.erase(ship_name.begin());
 
+    system(CLS);
     checkField(field_user);
+    std::cout << "\tManual setup\n";
     printFields(field_pc, field_user, ShipView::Invisible);
 
 }
@@ -934,61 +943,84 @@ bool isManualInputValid(char dir_char){
     return false;
 }
 
+void printWarning(Warning warning){
+    switch(warning){
+        case Warning::TryAgain:
+            std::cout << "  WARNING: You cannot install this ship there. Try again.\n";
+            break;
+        case Warning::TryAgainHorizontal:
+            std::cout << "  WARNING: You cannot install this ship there. Try horizontal direction.\n";
+            break;
+        case Warning::TryAgainVertical:
+            std::cout << "  WARNING: You cannot install a ship there. Try vertical direction.\n";
+    }
+}
+
 bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
 
     if(field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship) || field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
-        std::cout << "You cannot install a ship there. Try again.\n";
+        printWarning(Warning::TryAgain);
         return false;
        }
     return true;
 }
+
 bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, int col, char dir_char, int ship){
     
-    std::cout << "row + ship " << row + ship << "\n";
-    std::cout << "col + ship " << col + ship << "\n";
-
     if ((row + ship) > 10 && (col + ship) > 10){
-        std::cout << "You cannot install a ship there. Try again.\n";
+        printWarning(Warning::TryAgain);
         return false;
     }
 
-    std::cout << "Checking2...\n";
-
-    if (dir_char == 'v'){
-        if ((row + ship) < 11){
-            std::cout << "Checking2_2...\n";
-
-            for (int i = 0; i < ship; ++i){
-                    std::cout << field_user.at(row + i).at(col) << " ";
-                    if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
-                        std::cout << "You cannot install a ship there. Try horizontal direction.\n";
-                        return false;
-                    }
+    if((col + ship) < 11){
+        for (int i = 0; i < ship; ++i){
+                if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
+                    printWarning(Warning::TryAgain);
+                    return false;
                 }
-        }else{
-                std::cout << "This " << ship << "X ship cannot be installed at this position. Try again.\n";
-                return false;
             }
     }
+    else if((row + ship) < 11){
+         for (int i = 0; i < ship; ++i){
+                        if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
+                            printWarning(Warning::TryAgain);
+                            return false;
+                        }
+                    }
+    }else{
+        printWarning(Warning::TryAgain);
+        return false;
+    }
 
-    std::cout << "Checking3...\n";
+
+    //checking with directions
+    if (dir_char == 'v'){
+        if ((row + ship) < 11){
+                for (int i = 0; i < ship; ++i){
+                        if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
+                            printWarning(Warning::TryAgainHorizontal);
+                            return false;
+                        }
+                    }
+            }else{
+                    std::cout << "  WARNING: Ship " << ship << "X cannot be installed in this direction. Try again.\n";
+                    return false;
+                 }
+    }
 
     if (dir_char == 'h'){
         if((col + ship) < 11){
-            std::cout << "Checking3_2...\n";
-            for (int i = 0; i < ship; ++i){
-                    std::cout << field_user.at(row).at(col + i) << " ";
-                    if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
-                        std::cout << "You cannot install a ship there. Try vertical direction.\n";
-                        return false;
+                for (int i = 0; i < ship; ++i){
+                        if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
+                            printWarning(Warning::TryAgainVertical);
+                            return false;
+                        }
                     }
+            }else{
+                std::cout << "  WARNING: Ship " << ship << "X cannot be installed in this direction. Try again.\n";
+                return false;
                 }
-        }else{
-            std::cout << "This " << ship << "X ship cannot be installed at this position. Try again.\n";
-            return false;
-            }
-    }
-
+        }
     return true;
 }
 
@@ -1001,44 +1033,55 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
     checkField(field_user);
     printFields(field_pc, field_user, ShipView::Invisible);
-
+    
+    // create bank of ships to be installed - 4X, 3X, 3X, 2X, 2X, 2X, 1X, 1X, 1X, 1X
     std::vector<int> ship_bank = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
 
-    // 4X, 3X, 3X, 2X, 2X, 2X, 1X, 1X, 1X, 1X
+    #ifdef _WIN32
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    #endif
 
     do {
         
         ship = ship_bank[0];
 
-        do {
-                std::cout << "Enter start row and column for the " << ship_bank[0] << "X ship (eg. a0): ";
+        do {    
+                
+                std::cout << "   Enter start row and column for the ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
+                #endif
+                std::cout << ship_bank[0] << "X";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7); //set console color font green 10, yellow 14, or 22 for selected
+                #endif
+                std::cout << " ship (eg. a0): ";
+                
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
-
-                if (coord == "N") {
-                    std::cout << "See you, bye!\n\n";
-                    break;
-                }
                 
                 decodeCoords(coord, row, col);
 
-            } while (!isInputValid(field_user, coord) || !isValidToInstall(field_user, row, col, dir_char, ship) || !isValidToInstall(field_user, row, col));
+            } while (!isInputValid(field_user, coord) || !(isValidToInstall(field_user, row, col, dir_char, ship) && isValidToInstall(field_user, row, col)));
 
             field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
+            system(CLS);
+            std::cout << "\tManual setup\n";
             printFields(field_pc, field_user, ShipView::Invisible);
 
         do {
                 if (ship_bank[0] == 1)
                     break;
-                std::cout << "Type 'v' for vertical or 'h' for horizontal placement: ";
+                std::cout << "    Type 'v' for vertical or 'h' for horizontal placement: ";
                 std::cin >> dir_char;
                 
             } while (!isManualInputValid(dir_char) || !isValidToInstall(field_user, row, col, dir_char, ship));
 
         
         setManualField(field_user, field_pc, map_user, coord, dir_char, ship, ship_name);
-        std::cout << "map_size: " << map_user.size() << std::endl;
         ship_bank.erase(ship_bank.begin());
+        
         dir_char = ' ';
 
     } while(ship_bank.size() != 0);
@@ -1065,19 +1108,23 @@ int main() {
 
     //game loop
     do {
-        //system(CLS);
+        system(CLS);
+
         int dir{ 0 };
         createField(field_user);
         createField(field_pc);
 
         if (!isAutomaticSetup()){
-            std::cout << "Manual setup";
+            system(CLS);
+            std::cout << "\tManual setup\n";
             manualSetup(field_user, field_pc, map_user, ship_name);
         }else{
-            std::cout << "Automatic setup";
+            std::cout << " \tAutomatic setup\n";
             createGameField(field_user, vec, dir, map_user);
         }
         
+        std::cout << "\tGame started!\n";
+        system(CLS);
         createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
         printFields(field_pc, field_user, ShipView::Invisible);
@@ -1105,7 +1152,7 @@ int main() {
 
             } while (!isInputValid(field_pc, coord));
 
-            //system(CLS);
+            system(CLS);
 
             userLastMove = coord;
             
@@ -1144,10 +1191,9 @@ int main() {
                  message_pc = "  PC missed.";
              }
 
-             //system(CLS);
+             system(CLS);
              printFields(field_pc, field_user, ShipView::Invisible);
              printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-             printMap(map_user);
 
         }
     } while (playAgain());
