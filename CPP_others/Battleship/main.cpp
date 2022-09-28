@@ -894,12 +894,13 @@ bool isAutomaticSetup(){
 
 }
 
-void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord, char dir_char, int ship){
+void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord, char dir_char, int ship, std::vector<std::string> &ship_name){
 
     std::vector<std::pair<int, int>> temp_vec;
     int row{0}; int col{0};
     int dir{0};
-    std::string ship_name = "ship" + std::to_string(ship);
+    //std::string ship_name = "ship" + std::to_string(ship);
+    
 
     decodeCoords(coord, row, col);
 
@@ -919,7 +920,9 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<
         }
     }
 
-    map_user.emplace(ship_name, temp_vec);
+    map_user.emplace(ship_name[0], temp_vec);
+    ship_name.erase(ship_name.begin());
+
     checkField(field_user);
     printFields(field_pc, field_user, ShipView::Invisible);
 
@@ -989,7 +992,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     return true;
 }
 
-void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user){
+void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::vector<std::string> &ship_name){
 
     std::string coord = "";
     char dir_char = ' ';
@@ -1033,7 +1036,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
             } while (!isManualInputValid(dir_char) || !isValidToInstall(field_user, row, col, dir_char, ship));
 
         
-        setManualField(field_user, field_pc, map_user, coord, dir_char, ship);
+        setManualField(field_user, field_pc, map_user, coord, dir_char, ship, ship_name);
         std::cout << "map_size: " << map_user.size() << std::endl;
         ship_bank.erase(ship_bank.begin());
         dir_char = ' ';
@@ -1058,6 +1061,8 @@ int main() {
     std::vector<std::pair<int, int>> vec; //store coords of where ships can be installed
     std::vector<std::string> pc_moves; //store pc moves
 
+    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
+
     //game loop
     do {
         //system(CLS);
@@ -1067,10 +1072,9 @@ int main() {
 
         if (!isAutomaticSetup()){
             std::cout << "Manual setup";
-            manualSetup(field_user, field_pc, map_user);
+            manualSetup(field_user, field_pc, map_user, ship_name);
         }else{
             std::cout << "Automatic setup";
-            
             createGameField(field_user, vec, dir, map_user);
         }
         
@@ -1143,6 +1147,7 @@ int main() {
              //system(CLS);
              printFields(field_pc, field_user, ShipView::Invisible);
              printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+             printMap(map_user);
 
         }
     } while (playAgain());
