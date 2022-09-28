@@ -972,6 +972,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
 
     if (dir_char == 'h'){
         if((col + ship) < 11){
+            std::cout << "Checking3_2...\n";
             for (int i = 0; i < ship; ++i){
                     std::cout << field_user.at(row).at(col + i) << " ";
                     if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
@@ -1018,7 +1019,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 
                 decodeCoords(coord, row, col);
 
-            } while (!isInputValid(field_user, coord) || !isValidToInstall(field_user, row, col, dir_char, ship));
+            } while (!isInputValid(field_user, coord) || !isValidToInstall(field_user, row, col, dir_char, ship) || !isValidToInstall(field_user, row, col));
 
             field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
             printFields(field_pc, field_user, ShipView::Invisible);
