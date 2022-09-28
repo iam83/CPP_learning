@@ -1036,6 +1036,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
         setManualField(field_user, field_pc, map_user, coord, dir_char, ship);
         std::cout << "map_size: " << map_user.size() << std::endl;
         ship_bank.erase(ship_bank.begin());
+        dir_char = ' ';
 
     } while(ship_bank.size() != 0);
     
