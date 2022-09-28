@@ -98,7 +98,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
     const char c_HIT = 'X';
     const char c_MISS = '~';
     const char c_FIELD = '.';
-    const char c_BORDER = '+';
+    const char c_BORDER = '.';
     const char c_BORDERHIT = '~';
 
     for (int c = 0; c < 10; ++c) {
@@ -828,7 +828,7 @@ void startMessage() {
     std::cout << std::endl;
     std::cout << std::endl;
 
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.2";
+    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.3";
 
     for (auto const& l : message_start) {
         std::cout << l;
@@ -990,7 +990,6 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
         return false;
     }
 
-
     //checking with directions
     if (dir_char == 'v'){
         if ((row + ship) < 11){
@@ -1022,7 +1021,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     return true;
 }
 
-void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::vector<std::string> &ship_name){
+bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::vector<std::string> &ship_name){
 
     std::string coord = "";
     char dir_char = ' ';
@@ -1039,6 +1038,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
+    bool switchToAuto = false;
 
     do {
         
@@ -1046,7 +1046,7 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
         do {    
                 
-                std::cout << "   Enter start row and column for the ";
+                std::cout << "   Enter start Row and Column for the ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
@@ -1057,9 +1057,16 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 std::cout << " ship (eg. a0): ";
                 
                 std::cin >> coord;
+
+                if(coord == "auto"){
+                    switchToAuto = true;
+                    break;
+                }
+
                 coord[0] = std::toupper(coord[0]);
                 
                 decodeCoords(coord, row, col);
+
 
             } while (!isInputValid(field_user, coord) || !(isValidToInstall(field_user, row, col, dir_char, ship) && isValidToInstall(field_user, row, col)));
 
@@ -1069,6 +1076,10 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
             printFields(field_pc, field_user, ShipView::Invisible);
 
         do {
+                if(switchToAuto){
+                    break;
+                }
+
                 if (ship_bank[0] == 1)
                     break;
                 std::cout << "    Type 'v' for vertical or 'h' for horizontal placement: ";
@@ -1082,15 +1093,23 @@ void manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
         
         dir_char = ' ';
 
+        if (switchToAuto){
+            break;
+        }
+
     } while(ship_bank.size() != 0);
-    
+
+    if(switchToAuto){
+        return false;
+    }
+
+    return true;
 }
 
 
 int main() {
 
-    //startMessage();
-
+    startMessage();
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user; //store user main field
@@ -1115,14 +1134,17 @@ int main() {
         if (!isAutomaticSetup()){
             system(CLS);
             std::cout << "\tManual setup\n";
-            manualSetup(field_user, field_pc, map_user, ship_name);
+            if (!manualSetup(field_user, field_pc, map_user, ship_name)){
+                createGameField(field_user, vec, dir, map_user);
+            }
         }else{
             std::cout << " \tAutomatic setup\n";
             createGameField(field_user, vec, dir, map_user);
         }
-        
-        std::cout << "\tGame started!\n";
+
         system(CLS);
+        std::cout << "\tGame started!\n";
+
         createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
         printFields(field_pc, field_user, ShipView::Invisible);
@@ -1140,7 +1162,7 @@ int main() {
         while (1) {
 
             do {
-                std::cout << "Enter row and column (eg. A0 or a0, or 'n' to exit):> ";
+                std::cout << "Enter Row and Column (eg. A0 or a0, or 'n' to exit):> ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
                 if (coord == "N") {
