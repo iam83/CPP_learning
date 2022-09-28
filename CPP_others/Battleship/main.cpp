@@ -1054,7 +1054,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
-                std::cout << " ship (eg. a0): ";
+                std::cout << " ship\n   (eg. a0, or type 'auto'): ";
                 
                 std::cin >> coord;
 
@@ -1162,7 +1162,7 @@ int main() {
         while (1) {
 
             do {
-                std::cout << "Enter Row and Column (eg. A0 or a0, or 'n' to exit):> ";
+                std::cout << "  Enter Row and Column (eg. A0 or a0, or 'n' to exit):> ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
                 if (coord == "N") {
