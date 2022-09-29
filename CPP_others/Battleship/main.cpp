@@ -84,13 +84,109 @@ void createField(std::array<std::array<int, 10>, 10>& field) {
     field.fill({ 0,0 });
 }
 
+void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
+
+    #ifdef _WIN32
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    #endif
+    std::cout << std::endl;
+    const std::string letters = "ABCDEFGHIJ";
+    const std::string separator = "        ";
+    std::cout << "      ";
+
+    const char c_SHIP = '#';
+    const char c_HIT = 'X';
+    const char c_MISS = '~';
+    const char c_FIELD = '.';
+    const char c_BORDER = '.';
+    const char c_BORDERHIT = '~';
+
+    for (int c = 0; c < 10; ++c) {
+        std::cout << c << " ";
+    }
+
+    std::cout << std::endl;
+
+    for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
+        std::cout << "   " << letters[row] << "  "; //row number
+
+        // user field
+        for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
+            if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
+                #endif
+                std::cout << c_SHIP << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //border around ship
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)) {
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font green 10, yellow 14
+                #endif
+                std::cout << c_BORDER << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //ship is hit
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 12); //red
+                #endif
+                std::cout << c_HIT << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //border around hitted ship
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 9);
+                #endif
+                std::cout << c_BORDERHIT << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //missed hit
+            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)) {
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 9); //4 dark red, light blue 11
+                #endif
+                std::cout << c_MISS << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+            //just empty field
+            else {
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 8); //set console color font grey 8,
+                #endif
+                std::cout << c_FIELD << " ";
+                #ifdef _WIN32
+                SetConsoleTextAttribute(hConsole, 7);
+                #endif
+            }
+        }
+
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+}
+
 //print both fields, make it colorful on windows
 void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array<std::array<int, 10>, 10> const& field_user, ShipView field_view) {
 
-#ifdef _WIN32
+    #ifdef _WIN32
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-#endif
+    #endif
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
     const std::string separator = "        ";
@@ -253,9 +349,9 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
         std::cout << std::endl;
     }
 
-#ifdef _WIN32
+    #ifdef _WIN32
     SetConsoleTextAttribute(hConsole, 7); //set console color font white 7,
-#endif
+    #endif
     std::cout << std::endl;
 }
 
@@ -953,7 +1049,7 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<
     system(CLS);
     checkField(field_user);
     std::cout << "\tManual setup\n";
-    printFields(field_pc, field_user, ShipView::Invisible);
+    printUserField(field_user);
 
 }
 
@@ -1036,7 +1132,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     int row{0}; int col{0};
 
     checkField(field_user);
-    printFields(field_pc, field_user, ShipView::Invisible);
+    printUserField(field_user);
     
     // create bank of ships to be installed - 4X, 3X, 3X, 2X, 2X, 2X, 1X, 1X, 1X, 1X
     std::vector<int> ship_bank = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
@@ -1055,7 +1151,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 3); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
-                std::cout << "   Enter start Row and Column for the ";
+                std::cout << "  Enter start Row and Column for the ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
@@ -1067,7 +1163,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
-                std::cout << "   (eg. a0, or type 'auto'): ";
+                std::cout << "  (eg. a0, or type 'auto'): ";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
@@ -1088,7 +1184,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
             field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
             system(CLS);
             std::cout << "\tManual setup\n";
-            printFields(field_pc, field_user, ShipView::Invisible);
+            printUserField(field_user);
 
         do {
                 if(switchToAuto){
@@ -1097,7 +1193,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
                 if (ship == 1)
                     break;
-                std::cout << "    Type 'v' for vertical or 'h' for horizontal placement: ";
+                std::cout << "  Type 'v' for vertical or 'h' for horizontal placement: ";
                 std::cin >> dir_char;
                 
             } while (!isManualInputValid(dir_char) || !isValidToInstall(field_user, row, col, dir_char, ship));
@@ -1153,7 +1249,7 @@ int main() {
                 createGameField(field_user, vec, dir, map_user);
             }
         }else{
-            std::cout << " \tAutomatic setup\n";
+            std::cout << "\tAutomatic setup\n";
             createGameField(field_user, vec, dir, map_user);
         }
 
@@ -1181,7 +1277,7 @@ int main() {
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
                 if (coord == "N") {
-                    std::cout << "See you, bye!\n\n";
+                    std::cout << "  See you, bye!\n\n";
                     return 0;
                 }
 
