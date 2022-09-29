@@ -1273,7 +1273,7 @@ int main() {
         while (1) {
 
             do {
-                std::cout << "  Enter Row and Column (eg. A0 or a0, or 'n' to exit):> ";
+                std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
                 if (coord == "N") {
