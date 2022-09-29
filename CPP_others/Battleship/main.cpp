@@ -1319,7 +1319,7 @@ int main() {
                  }
             }
              else {
-                 message_pc = "  PC missed.";
+                 message_pc = "   PC missed.";
             }
 
             system(CLS);
