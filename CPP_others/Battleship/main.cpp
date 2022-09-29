@@ -830,8 +830,8 @@ void startMessage() {
 
     const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.3";
 
-    for (auto const& l : message_start) {
-        std::cout << l;
+    for (auto const& letter : message_start) {
+        std::cout << letter;
         std::this_thread::sleep_for(std::chrono::milliseconds(50)); //400 ms
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1500));
