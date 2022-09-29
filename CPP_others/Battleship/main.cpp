@@ -3,13 +3,13 @@
     Battleship game. AU. 09-2022.
     This is a personal challenge project.
     An attempt to recreated the Battleship classic game without looking at other examples.
-    The code might be a bit too spaggetti, oh well but it works lol.
+    The code might look a bit too spaggetti, oh well but it works lol.
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
     TODO:
-        1. Add manual ship set-up
+        1. Adjust PC move to make it a bit more random when hitting User's ship.
     FEATURES:
         1. Make TCP/IP client-server
 */
@@ -256,6 +256,19 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
     SetConsoleTextAttribute(hConsole, 7); //set console color font white 7,
 #endif
     std::cout << std::endl;
+}
+
+void printWarning(Warning warning){
+    switch(warning){
+        case Warning::TryAgain:
+            std::cout << "  WARNING: You cannot install this ship there. Try again.\n";
+            break;
+        case Warning::TryAgainHorizontal:
+            std::cout << "  WARNING: You cannot install this ship there. Try horizontal direction.\n";
+            break;
+        case Warning::TryAgainVertical:
+            std::cout << "  WARNING: You cannot install a ship there. Try vertical direction.\n";
+    }
 }
 
 bool inField(int r, int c)
@@ -943,19 +956,6 @@ bool isManualInputValid(char dir_char){
     return false;
 }
 
-void printWarning(Warning warning){
-    switch(warning){
-        case Warning::TryAgain:
-            std::cout << "  WARNING: You cannot install this ship there. Try again.\n";
-            break;
-        case Warning::TryAgainHorizontal:
-            std::cout << "  WARNING: You cannot install this ship there. Try horizontal direction.\n";
-            break;
-        case Warning::TryAgainVertical:
-            std::cout << "  WARNING: You cannot install a ship there. Try vertical direction.\n";
-    }
-}
-
 bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
 
     if(field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship) || field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
@@ -1050,7 +1050,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
-                std::cout << ship_bank[0] << "X";
+                std::cout << ship << "X";
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
@@ -1080,7 +1080,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                     break;
                 }
 
-                if (ship_bank[0] == 1)
+                if (ship == 1)
                     break;
                 std::cout << "    Type 'v' for vertical or 'h' for horizontal placement: ";
                 std::cin >> dir_char;
