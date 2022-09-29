@@ -70,7 +70,9 @@ enum class FieldCellStates {
 enum class Warning{
     TryAgain,
     TryAgainHorizontal,
-    TryAgainVertical
+    TryAgainVertical,
+    TryAgainWrongCoord,
+    TryAgainHitThere
 };
 
 int getRandomNumber(int min, int max) {
@@ -268,6 +270,12 @@ void printWarning(Warning warning){
             break;
         case Warning::TryAgainVertical:
             std::cout << "  WARNING: You cannot install a ship there. Try vertical direction.\n";
+        case Warning::TryAgainWrongCoord:
+            std::cout << "  WARNING: Wrong coordinates! Try again.\n";
+            break;
+        case Warning::TryAgainHitThere:
+            std::cout << "  WARNING: You've already hit there! Try again.\n";
+            break;
     }
 }
 
@@ -700,14 +708,14 @@ bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& co
         if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Miss) ||
             field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit) ||
             field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
-            std::cout << "You've already hit there! Try again.\n";
+            printWarning(Warning::TryAgainHitThere);
             return false;
         }
 
         return true;
     }
     else {
-        std::cout << "Wrong coordinates! Try again.\n";
+        printWarning(Warning::TryAgainWrongCoord);
         return false;
     }
     return false;
