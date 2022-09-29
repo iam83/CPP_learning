@@ -115,11 +115,11 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 
     std::cout << std::endl;
 
-    for (int row = 0; row < field_user.size(); ++row) {
+    for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
 
         // user field
-        for (int col = 0; col < field_user.size(); ++col) {
+        for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
             if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
@@ -186,7 +186,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
         std::cout << letters[row] << "  ";
 
         // pc field
-        for (int col = 0; col < field_pc.size(); ++col) {
+        for (int col = 0; col < static_cast<int>(field_pc.size()); ++col) {
             if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
 #ifdef _WIN32
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
@@ -294,8 +294,8 @@ void checkField(std::array<std::array<int, 10>, 10>& field) {
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
 
     //check in boundary
-    for (int row = 0; row < field.size(); ++row) {
-        for (int col = 0; col < field.size(); ++col) {
+    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
             if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Field)) {
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
@@ -315,8 +315,8 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
 
     //check in boundary
 
-    for (int row = 0; row < field.size(); ++row) {
-        for (int col = 0; col < field.size(); ++col) {
+    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (int col = 0; col <static_cast<int>(field.size()); ++col) {
 
             if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
 
@@ -342,8 +342,8 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
 
     if (dir == static_cast<int>(Direction::Horizontal)) {
         //horizontal check
-        for (int row = 0; row < field.size(); ++row) {
-            for (int col = 0; col < field.size(); ++col) {
+        for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+            for (int col = 0; col < static_cast<int>(field.size()); ++col) {
                 if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
                     if (count == 0) {
                         temp_col = col;
@@ -366,8 +366,8 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
     }
     else {
         //vertical check
-        for (int col = 0; col < field.size(); ++col) {
-            for (int row = 0; row < field.size(); ++row) {
+        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+            for (int row = 0; row < static_cast<int>(field.size()); ++row) {
                 if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
                     if (count == 0) {
                         temp_col = col;
@@ -588,8 +588,8 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
     std::string temp_coord = "";
     std::vector<std::string>::iterator it;
 
-    for (int row = 0; row < field_user.size(); ++row) {
-        for (int col = 0; col < field_user.size(); ++col) {
+    for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
+        for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
             if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
 
                 encodeCoords(temp_coord, row, col);
@@ -607,13 +607,12 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 //checking which ship is got hit
 bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit, std::vector<std::string>& pc_moves, Player player) {
 
-    //std::map<std::string, std::vector<std::pair<int, int>>>::iterator it;
     
     std::string temp_key = "";
 
     for (auto& [key, value] : map) {
 
-        for (int i = 0; i < value.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User)
@@ -637,9 +636,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                     checkHitField(field);
                     removeMissedMoves(field, pc_moves);
                 }
-                //it = map.find(key);
-                //if (it != map.end())
-                //    map.erase(it);
+
                 temp_key = key;
             }
         }
@@ -661,7 +658,7 @@ void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map
 
     for (auto& [key, value] : map) {
         std::cout << key << ": ";
-        for (int i = 0; i < value.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
             std::cout << value[i].first << "." << value[i].second << " ";
         }
         std::cout << std::endl;
@@ -860,7 +857,7 @@ void startMessage() {
 
 void printMoveTable(std::vector<std::string> const& pc_moves) {
     int a{ 0 };
-    for (int i = 0; i < pc_moves.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
         std::cout << pc_moves[i] << " ";
         ++a;
         if (a % 10 == 0) std::cout << std::endl;
