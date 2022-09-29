@@ -613,7 +613,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
 
     for (auto& [key, value] : map) {
 
-        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
+        for (unsigned int i = 0; i < value.size(); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User)
