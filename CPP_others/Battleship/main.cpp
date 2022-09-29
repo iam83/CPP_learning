@@ -920,8 +920,6 @@ bool isAutomaticSetup(){
     } while (1);
 
     std::cout << std::endl;
-
-
 }
 
 void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord, char dir_char, int ship, std::vector<std::string> &ship_name){
@@ -1214,14 +1212,14 @@ int main() {
                      printCongrats(Player::Pc);
                      break;
                  }
-             }
+            }
              else {
                  message_pc = "  PC missed.";
-             }
+            }
 
-             system(CLS);
-             printFields(field_pc, field_user, ShipView::Invisible);
-             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            system(CLS);
+            printFields(field_pc, field_user, ShipView::Invisible);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
         }
     } while (playAgain());
