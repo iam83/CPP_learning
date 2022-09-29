@@ -261,6 +261,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 }
 
 void printWarning(Warning warning){
+
     switch(warning){
         case Warning::TryAgain:
             std::cout << "  WARNING: You cannot install this ship there. Try again.\n";
@@ -277,6 +278,7 @@ void printWarning(Warning warning){
             std::cout << "  WARNING: You've already hit there! Try again.\n";
             break;
     }
+    
 }
 
 bool inField(int r, int c)
