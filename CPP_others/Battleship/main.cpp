@@ -195,7 +195,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 if (field_view == ShipView::Visible)
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_FIELD << " ";
+                    std::cout << c_SHIP << " ";
 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 7);
 #endif
@@ -832,9 +832,9 @@ void printCongrats(Player player) {
     else
         message_congrats = "\t             *** YOU LOST!!! ***\n";
 
-    for (auto const& l : message_congrats) {
-        std::cout << l;
-        std::this_thread::sleep_for(std::chrono::milliseconds(50)); //400 ms
+    for (auto const& letter : message_congrats) {
+        std::cout << letter;
+        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //400 ms
     }
 
     std::cout << std::endl;
@@ -1117,7 +1117,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
 int main() {
 
-    startMessage();
+    //startMessage();
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user; //store user main field
