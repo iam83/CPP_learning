@@ -261,7 +261,6 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 }
 
 void printWarning(Warning warning){
-
     switch(warning){
         case Warning::TryAgain:
             std::cout << "  WARNING: You cannot install this ship there. Try again.\n";
@@ -271,6 +270,7 @@ void printWarning(Warning warning){
             break;
         case Warning::TryAgainVertical:
             std::cout << "  WARNING: You cannot install a ship there. Try vertical direction.\n";
+            break;
         case Warning::TryAgainWrongCoord:
             std::cout << "  WARNING: Wrong coordinates! Try again.\n";
             break;
@@ -278,7 +278,6 @@ void printWarning(Warning warning){
             std::cout << "  WARNING: You've already hit there! Try again.\n";
             break;
     }
-    
 }
 
 bool inField(int r, int c)
@@ -291,11 +290,10 @@ bool inField(int r, int c)
 //checking field's cells and fill borders around ships
 void checkField(std::array<std::array<int, 10>, 10>& field) {
 
-    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
-    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
 
     //check in boundary
-
     for (unsigned int row = 0; row < field.size(); ++row) {
         for (unsigned int col = 0; col < field.size(); ++col) {
             if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Field)) {
