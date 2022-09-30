@@ -375,10 +375,10 @@ void printWarning(Warning warning){
     }
 }
 
-bool inField(int r, int c)
+bool inField(int row, int col)
 {
-    if (r < 0 || r > 9) return false;
-    if (c < 0 || c > 9) return false;
+    if (row < 0 || row > 9) return false;
+    if (col < 0 || col > 9) return false;
     return true;
 }
 
@@ -702,7 +702,6 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 //checking which ship is got hit
 bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit, std::vector<std::string>& pc_moves, Player player) {
 
-    
     std::string temp_key = "";
 
     for (auto& [key, value] : map) {
