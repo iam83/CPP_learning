@@ -541,69 +541,29 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
 void encodeCoords(std::string& coord, int row, int col) {
 
     switch (row) {
-        case 0:
-            coord = "A";
-            break;
-        case 1:
-            coord = "B";
-            break;
-        case 2:
-            coord = "C";
-            break;
-        case 3:
-            coord = "D";
-            break;
-        case 4:
-            coord = "E";
-            break;
-        case 5:
-            coord = "F";
-            break;
-        case 6:
-            coord = "G";
-            break;
-        case 7:
-            coord = "H";
-            break;
-        case 8:
-            coord = "I";
-            break;
-        case 9:
-            coord = "J";
-            break;
+        case 0: coord = "A"; break;
+        case 1: coord = "B"; break;
+        case 2: coord = "C"; break;
+        case 3: coord = "D"; break;
+        case 4: coord = "E"; break;
+        case 5: coord = "F"; break;
+        case 6: coord = "G"; break;
+        case 7: coord = "H"; break;
+        case 8: coord = "I"; break;
+        case 9: coord = "J"; break;
     }
 
     switch (col) {
-        case 0:
-            coord += "0";
-            break;
-        case 1:
-            coord += "1";
-            break;
-        case 2:
-            coord += "2";
-            break;
-        case 3:
-            coord += "3";
-            break;
-        case 4:
-            coord += "4";
-            break;
-        case 5:
-            coord += "5";
-            break;
-        case 6:
-            coord += "6";
-            break;
-        case 7:
-            coord += "7";
-            break;
-        case 8:
-            coord += "8";
-            break;
-        case 9:
-            coord += "9";
-            break;
+        case 0: coord += "0"; break;
+        case 1: coord += "1"; break;
+        case 2: coord += "2"; break;
+        case 3: coord += "3"; break;
+        case 4: coord += "4"; break;
+        case 5: coord += "5"; break;
+        case 6: coord += "6"; break;
+        case 7: coord += "7"; break;
+        case 8: coord += "8"; break;
+        case 9: coord += "9"; break;
     }
 
 }
@@ -611,69 +571,28 @@ void encodeCoords(std::string& coord, int row, int col) {
 void decodeCoords(std::string coord, int &row, int &col) {
 
     switch (coord[0]) {
-        case 'A':
-            row = 0;
-            break;
-        case 'B':
-            row = 1;
-            break;
-        case 'C':
-            row = 2;
-            break;
-        case 'D':
-            row = 3;
-            break;
-        case 'E':
-            row = 4;
-            break;
-        case 'F':
-            row = 5;
-            break;
-        case 'G':
-            row = 6;
-            break;
-        case 'H':
-            row = 7;
-            break;
-        case 'I':
-            row = 8;
-            break;
-        case 'J':
-            row = 9;
-            break;
+        case 'A': row = 0; break;
+        case 'B': row = 1; break;
+        case 'C': row = 2; break;
+        case 'D': row = 3; break;
+        case 'E': row = 4; break;
+        case 'F': row = 5; break;
+        case 'G': row = 6; break;
+        case 'H': row = 7; break;
+        case 'I': row = 8; break;
+        case 'J': row = 9; break;
     }
-
     switch (coord[1]) {
-        case '0':
-            col = 0;
-            break;
-        case '1':
-            col = 1;
-            break;
-        case '2':
-            col = 2;
-            break;
-        case '3':
-            col = 3;
-            break;
-        case '4':
-            col = 4;
-            break;
-        case '5':
-            col = 5;
-            break;
-        case '6':
-            col = 6;
-            break;
-        case '7':
-            col = 7;
-            break;
-        case '8':
-            col = 8;
-            break;
-        case '9':
-            col = 9;
-            break;
+        case '0': col = 0; break;
+        case '1': col = 1; break;
+        case '2': col = 2; break;
+        case '3': col = 3; break;
+        case '4': col = 4; break;
+        case '5': col = 5; break;
+        case '6': col = 6; break;
+        case '7': col = 7; break;
+        case '8': col = 8; break;
+        case '9': col = 9; break;
     }
 }
 
@@ -1275,7 +1194,7 @@ int main() {
                 std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
                 std::cin >> coord;
                 coord[0] = std::toupper(coord[0]);
-                if (coord == "N") {
+                if (coord == "Q") {
                     std::cout << "  See you, bye!\n\n";
                     return 0;
                 }
