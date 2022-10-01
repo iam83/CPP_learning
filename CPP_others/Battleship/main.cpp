@@ -716,7 +716,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                         keyShipHit = key;
                     }
                 }
-                value.erase(value.begin() + i);
+                value.erase(value.begin() + i); //HERE MIGHT BE A PROBLEM!!!
             }
 
             if (value.empty()) {
