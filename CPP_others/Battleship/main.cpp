@@ -368,6 +368,64 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
     std::cout << std::endl;
 }
 
+void printUpdateMessage(Map map_user, Map map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
+    std::cout << "       Your ships: " << map_user.size();
+    std::cout << "\t\t" << message_user << std::endl;
+
+    std::cout << "         PC ships: " << map_pc.size();
+    std::cout << "\t\t" << message_pc << std::endl;
+
+    std::cout << "   Your last move: " << userLastMove << std::endl;
+    std::cout << "     PC last move: " << pcLastMove << std::endl;
+
+    std::cout << std::endl;
+}
+
+void printCongrats(Player player) {
+
+    std::string message_congrats = "";
+
+    if (player == Player::User)
+        message_congrats = "\t    *** CONGRATULATIONS! YOU WON!!! ***\n";
+    else
+        message_congrats = "\t             *** YOU LOST!!! ***\n";
+
+    for (auto const& letter : message_congrats) {
+        std::cout << letter;
+        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //400 ms
+    }
+
+    std::cout << std::endl;
+}
+
+void startMessage() {
+
+    system(CLS);
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.3";
+
+    for (auto const& letter : message_start) {
+        std::cout << letter;
+        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //25 ms
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+}
+
+void printMoveTable(std::vector<std::string> const& pc_moves) {
+    int a{ 0 };
+    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
+        std::cout << pc_moves[i] << " ";
+        ++a;
+        if (a % 10 == 0) std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 void printWarning(Warning warning){
     switch(warning){
         case Warning::TryAgain:
@@ -831,64 +889,6 @@ void createPcMoveTable(std::vector<std::string>& pc_moves) {
             pc_moves.push_back(letters[i] + std::to_string(j));
         }
     }
-}
-
-void printUpdateMessage(Map map_user, Map map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
-    std::cout << "       Your ships: " << map_user.size();
-    std::cout << "\t\t" << message_user << std::endl;
-
-    std::cout << "         PC ships: " << map_pc.size();
-    std::cout << "\t\t" << message_pc << std::endl;
-
-    std::cout << "   Your last move: " << userLastMove << std::endl;
-    std::cout << "     PC last move: " << pcLastMove << std::endl;
-
-    std::cout << std::endl;
-}
-
-void printCongrats(Player player) {
-
-    std::string message_congrats = "";
-
-    if (player == Player::User)
-        message_congrats = "\t    *** CONGRATULATIONS! YOU WON!!! ***\n";
-    else
-        message_congrats = "\t             *** YOU LOST!!! ***\n";
-
-    for (auto const& letter : message_congrats) {
-        std::cout << letter;
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //400 ms
-    }
-
-    std::cout << std::endl;
-}
-
-void startMessage() {
-
-    system(CLS);
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.3";
-
-    for (auto const& letter : message_start) {
-        std::cout << letter;
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //25 ms
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-}
-
-void printMoveTable(std::vector<std::string> const& pc_moves) {
-    int a{ 0 };
-    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
-        std::cout << pc_moves[i] << " ";
-        ++a;
-        if (a % 10 == 0) std::cout << std::endl;
-    }
-    std::cout << std::endl;
 }
 
 int playAgain() {
