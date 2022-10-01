@@ -416,16 +416,6 @@ void startMessage() {
     std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
-void printMoveTable(std::vector<std::string> const& pc_moves) {
-    int a{ 0 };
-    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
-        std::cout << pc_moves[i] << " ";
-        ++a;
-        if (a % 10 == 0) std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-
 void printWarning(Warning warning){
     switch(warning){
         case Warning::TryAgain:
@@ -443,6 +433,29 @@ void printWarning(Warning warning){
         case Warning::TryAgainHitThere:
             std::cout << "  WARNING: You've already hit there! Try again.\n";
             break;
+    }
+}
+
+void printMoveTable(std::vector<std::string> const& pc_moves) {
+    int a{ 0 };
+    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
+        std::cout << pc_moves[i] << " ";
+        ++a;
+        if (a % 10 == 0) std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
+
+    std::cout << "map size " << map.size() << "\n";
+
+    for (auto& [key, value] : map) {
+        std::cout << key << ": ";
+        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
+            std::cout << value[i].first << "." << value[i].second << " ";
+        }
+        std::cout << std::endl;
     }
 }
 
@@ -734,19 +747,6 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
     }
 
     return false;
-}
-
-void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
-
-    std::cout << "map size " << map.size() << "\n";
-
-    for (auto& [key, value] : map) {
-        std::cout << key << ": ";
-        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
-            std::cout << value[i].first << "." << value[i].second << " ";
-        }
-        std::cout << std::endl;
-    }
 }
 
 void createGameField(std::array<std::array<int, 10>, 10>& field,
