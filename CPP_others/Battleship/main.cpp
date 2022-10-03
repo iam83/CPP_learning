@@ -34,19 +34,6 @@
 
 typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
-// enum Row{
-//     Row_A, Row_B, Row_C, Row_D, Row_E, Row_F, Row_G, Row_H, Row_I, Row_J
-// };
-
-// enum Col{
-//     Col_0, Col_1, Col_2, Col_3, Col_4, Col_5, Col_6, Col_7, Col_8, Col_9
-// };
-
-// struct Coord{
-//     Row row;
-//     Col col;
-// };
-
 enum Player {
     User,
     Pc
@@ -1165,6 +1152,10 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     return true;
 }
 
+void clearMaps(Map &map_user, Map &map_pc){
+    map_user.clear();
+    map_pc.clear();
+}
 
 int main() {
 
@@ -1246,6 +1237,7 @@ int main() {
                     system(CLS);
                     printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
+                    clearMaps(map_user, map_pc);
                     break;
                 }
             }
@@ -1263,6 +1255,7 @@ int main() {
                      system(CLS);
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
+                     clearMaps(map_user, map_pc);
                      break;
                  }
             }

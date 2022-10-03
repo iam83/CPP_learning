@@ -379,11 +379,25 @@ void printMoveTable(std::vector<std::string> const& pc_moves) {
 void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
 
     std::cout << "map size " << map.size() << "\n";
+    std::string coord_str = "";
 
     for (auto& [key, value] : map) {
         std::cout << key << ": ";
         for (int i = 0; i < static_cast<int>(value.size()); ++i) {
-            std::cout << value[i].first << "." << value[i].second << " ";
+
+            switch (value[i].first) {
+                case 0: coord_str = "A"; break;
+                case 1: coord_str = "B"; break;
+                case 2: coord_str = "C"; break;
+                case 3: coord_str = "D"; break;
+                case 4: coord_str = "E"; break;
+                case 5: coord_str = "F"; break;
+                case 6: coord_str = "G"; break;
+                case 7: coord_str = "H"; break;
+                case 8: coord_str = "I"; break;
+                case 9: coord_str = "J"; break;
+            }
+            std::cout << coord_str << value[i].second << " ";
         }
         std::cout << std::endl;
     }

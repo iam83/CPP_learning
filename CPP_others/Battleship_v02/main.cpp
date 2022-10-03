@@ -432,7 +432,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
-            std::this_thread::sleep_for(std::chrono::milliseconds(250)); //400 ms
+            //std::this_thread::sleep_for(std::chrono::milliseconds(250)); //250 ms
         }
 
         if (map_user[keyShipHit].size() == 0) {
@@ -462,7 +462,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         pc_moves.erase(pc_moves.begin() + move);
 
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(600)); //700 ms
+    //std::this_thread::sleep_for(std::chrono::milliseconds(600)); //600 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
@@ -480,6 +480,8 @@ bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
 }
 
 void createPcMoveTable(std::vector<std::string>& pc_moves) {
+
+    pc_moves.clear(); //clean before creating
 
     const std::string letters = "ABCDEFGHIJ";
     for (int i = 0; i <= 9; ++i) {
@@ -743,6 +745,10 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     return true;
 }
 
+void clearMaps(Map &map_user, Map &map_pc){
+    map_user.clear();
+    map_pc.clear();
+}
 
 int main() {
 
@@ -767,6 +773,7 @@ int main() {
         int dir{ 0 };
         createField(field_user);
         createField(field_pc);
+        
 
         if (!isAutomaticSetup()){
             //system(CLS);
@@ -824,6 +831,7 @@ int main() {
                     //system(CLS);
                     printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
+                    clearMaps(map_user, map_pc);
                     break;
                 }
             }
@@ -841,6 +849,7 @@ int main() {
                      //system(CLS);
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
+                     clearMaps(map_user, map_pc);
                      break;
                  }
             }
