@@ -99,7 +99,7 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
 
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit)
+                        if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit && field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Ship)
                             field.at(row + y[i]).at(col + x[i]) = FieldCellStates::BorderHit;
                     }
                 }
@@ -109,8 +109,8 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
 }
 
 //making vector of coords possible ships to be setup on field
-void getPossibles(std::array<std::array<int, 10>, 10> const& field,
-    std::vector<std::pair<int, int>>& vec, int& dir, int ship) {
+void getPossibles(std::array<std::array<int, 10>, 10> const &field,
+    std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
 
     dir = getRandomNumber(0, 1);
 
@@ -317,7 +317,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                         keyShipHit = key;
                     }
                 }
-                value.erase(value.begin() + i); //HERE MIGHT BE A PROBLEM!!!
+                value.erase(value.begin() + i);
             }
 
             if (value.empty()) {
@@ -745,7 +745,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
 int main() {
 
-    startMessage();
+    //startMessage();
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user; //store user main field
@@ -761,14 +761,14 @@ int main() {
 
     //game loop
     do {
-        system(CLS);
+        //system(CLS);
 
         int dir{ 0 };
         createField(field_user);
         createField(field_pc);
 
         if (!isAutomaticSetup()){
-            system(CLS);
+            //system(CLS);
             std::cout << "\tManual setup\n";
             if (!manualSetup(field_user, field_pc, map_user, ship_name)){
                 createGameField(field_user, vec, dir, map_user);
@@ -778,7 +778,7 @@ int main() {
             createGameField(field_user, vec, dir, map_user);
         }
 
-        system(CLS);
+        //system(CLS);
         std::cout << "\tGame started!\n";
 
         createGameField(field_pc, vec, dir, map_pc);
@@ -808,7 +808,7 @@ int main() {
 
             } while (!isInputValid(field_pc, coord_str));
 
-            system(CLS);
+            //system(CLS);
 
             userLastMove = coord_str;
             
@@ -820,7 +820,7 @@ int main() {
             //user move
             if (userMove(field_pc, row, col)) {
                 if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
-                    system(CLS);
+                    //system(CLS);
                     printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
                     break;
@@ -837,7 +837,7 @@ int main() {
              getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
              if (pcMove(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
-                     system(CLS);
+                     //system(CLS);
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
                      break;
@@ -847,9 +847,14 @@ int main() {
                  message_pc = "   PC missed.";
             }
 
-            system(CLS);
+            //system(CLS);
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            
+            printMap(map_user);
+            std::cout << std::endl;
+            printMap(map_pc);
+            std::cout << std::endl;
 
         }
     } while (playAgain());

@@ -223,7 +223,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 if (field_view == ShipView::Visible)
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_FIELD << " ";
+                    std::cout << c_SHIP << " "; // c_FIELD
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
                 #endif
