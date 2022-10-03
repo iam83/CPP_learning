@@ -890,6 +890,8 @@ bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
 
 void createPcMoveTable(std::vector<std::string>& pc_moves) {
 
+    pc_moves.clear(); //clean before creating
+    
     const std::string letters = "ABCDEFGHIJ";
     for (int i = 0; i <= 9; ++i) {
         for (int j = 0; j <= 9; ++j) {
