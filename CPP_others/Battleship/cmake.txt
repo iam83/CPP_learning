@@ -1,2 +1,2 @@
 g++.exe -Wall -c -g main.cpp -o battlefield.o
-g++.exe -static -static-libgcc -static-libstdc++ -lpthread -o "battlefield_10.exe" battlefield.o 
+g++.exe -static -static-libgcc -static-libstdc++ -lpthread -o "battlefield_1.4.exe" battlefield.o 
