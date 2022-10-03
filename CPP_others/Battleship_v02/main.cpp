@@ -220,39 +220,39 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
     map.emplace(ship_name, temp_vec);
 }
 
-void encodeCoords(std::string& coord, int row, int col) {
+void encodeCoords(std::string& coord_str, int row, int col) {
 
     switch (row) {
-        case 0: coord = "A"; break;
-        case 1: coord = "B"; break;
-        case 2: coord = "C"; break;
-        case 3: coord = "D"; break;
-        case 4: coord = "E"; break;
-        case 5: coord = "F"; break;
-        case 6: coord = "G"; break;
-        case 7: coord = "H"; break;
-        case 8: coord = "I"; break;
-        case 9: coord = "J"; break;
+        case 0: coord_str = "A"; break;
+        case 1: coord_str = "B"; break;
+        case 2: coord_str = "C"; break;
+        case 3: coord_str = "D"; break;
+        case 4: coord_str = "E"; break;
+        case 5: coord_str = "F"; break;
+        case 6: coord_str = "G"; break;
+        case 7: coord_str = "H"; break;
+        case 8: coord_str = "I"; break;
+        case 9: coord_str = "J"; break;
     }
 
     switch (col) {
-        case 0: coord += "0"; break;
-        case 1: coord += "1"; break;
-        case 2: coord += "2"; break;
-        case 3: coord += "3"; break;
-        case 4: coord += "4"; break;
-        case 5: coord += "5"; break;
-        case 6: coord += "6"; break;
-        case 7: coord += "7"; break;
-        case 8: coord += "8"; break;
-        case 9: coord += "9"; break;
+        case 0: coord_str += "0"; break;
+        case 1: coord_str += "1"; break;
+        case 2: coord_str += "2"; break;
+        case 3: coord_str += "3"; break;
+        case 4: coord_str += "4"; break;
+        case 5: coord_str += "5"; break;
+        case 6: coord_str += "6"; break;
+        case 7: coord_str += "7"; break;
+        case 8: coord_str += "8"; break;
+        case 9: coord_str += "9"; break;
     }
 
 }
 
-void decodeCoords(std::string coord, int &row, int &col) {
+void decodeCoords(std::string coord_str, int &row, int &col) {
 
-    switch (coord[0]) {
+    switch (coord_str[0]) {
         case 'A': row = 0; break;
         case 'B': row = 1; break;
         case 'C': row = 2; break;
@@ -264,7 +264,7 @@ void decodeCoords(std::string coord, int &row, int &col) {
         case 'I': row = 8; break;
         case 'J': row = 9; break;
     }
-    switch (coord[1]) {
+    switch (coord_str[1]) {
         case '0': col = 0; break;
         case '1': col = 1; break;
         case '2': col = 2; break;
@@ -365,24 +365,24 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     checkField(field);
 }
 
-bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& coord) { //check if user makes correct input
+bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& coord_str) { //check if user makes correct input
 
-    if ((coord[0] == 'A' || coord[0] == 'B' ||
-        coord[0] == 'C' || coord[0] == 'D' ||
-        coord[0] == 'E' || coord[0] == 'F' ||
-        coord[0] == 'G' || coord[0] == 'H' ||
-        coord[0] == 'I' || coord[0] == 'J')
+    if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
+        coord_str[0] == 'C' || coord_str[0] == 'D' ||
+        coord_str[0] == 'E' || coord_str[0] == 'F' ||
+        coord_str[0] == 'G' || coord_str[0] == 'H' ||
+        coord_str[0] == 'I' || coord_str[0] == 'J')
         &&
-        (coord[1] == '0' || coord[1] == '1' ||
-        coord[1] == '2' || coord[1] == '3' ||
-        coord[1] == '4' || coord[1] == '5' ||
-        coord[1] == '6' || coord[1] == '7' ||
-        coord[1] == '8' || coord[1] == '9')
-        && coord.size() == 2) {
+        (coord_str[1] == '0' || coord_str[1] == '1' ||
+        coord_str[1] == '2' || coord_str[1] == '3' ||
+        coord_str[1] == '4' || coord_str[1] == '5' ||
+        coord_str[1] == '6' || coord_str[1] == '7' ||
+        coord_str[1] == '8' || coord_str[1] == '9')
+        && coord_str.size() == 2) {
 
         checkField(field_pc);
         int row{ 0 }, col{ 0 };
-        decodeCoords(coord, row, col);
+        decodeCoords(coord_str, row, col);
 
         if (field_pc.at(row).at(col) == FieldCellStates::Miss ||
             field_pc.at(row).at(col) == FieldCellStates::BorderHit ||
@@ -547,13 +547,13 @@ bool isAutomaticSetup(){
     std::cout << std::endl;
 }
 
-void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord, char dir_char, int ship, std::vector<std::string> &ship_name){
+void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord_str, char dir_char, int ship, std::vector<std::string> &ship_name){
 
     std::vector<std::pair<int, int>> temp_vec;
     int row{0}; int col{0};
     int dir{0};
 
-    decodeCoords(coord, row, col);
+    decodeCoords(coord_str, row, col);
 
     if (dir_char == 'h')
         dir = Direction::Horizontal;
@@ -654,7 +654,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
 
 bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::vector<std::string> &ship_name){
 
-    std::string coord = "";
+    std::string coord_str = "";
     char dir_char = ' ';
     int ship{0};
     int row{0}; int col{0};
@@ -692,19 +692,19 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
                 std::cout << "  (eg. a0, or type 'auto'): ";
-                std::cin >> coord;
+                std::cin >> coord_str;
 
-                if(coord == "auto"){
+                if(coord_str == "auto"){
                     switchToAuto = true;
                     break;
                 }
 
-                coord[0] = std::toupper(coord[0]);
+                coord_str[0] = std::toupper(coord_str[0]);
                 
-                decodeCoords(coord, row, col);
+                decodeCoords(coord_str, row, col);
 
 
-            } while (!isInputValid(field_user, coord) || !(isValidToInstall(field_user, row, col, dir_char, ship) && isValidToInstall(field_user, row, col)));
+            } while (!isInputValid(field_user, coord_str) || !(isValidToInstall(field_user, row, col, dir_char, ship) && isValidToInstall(field_user, row, col)));
 
             field_user.at(row).at(col) = FieldCellStates::Ship;
             system(CLS);
@@ -724,7 +724,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
             } while (!isManualInputValid(dir_char) || !isValidToInstall(field_user, row, col, dir_char, ship));
 
         
-        setManualField(field_user, field_pc, map_user, coord, dir_char, ship, ship_name);
+        setManualField(field_user, field_pc, map_user, coord_str, dir_char, ship, ship_name);
         ship_bank.erase(ship_bank.begin());
         
         dir_char = ' ';
@@ -788,7 +788,7 @@ int main() {
         int row{ 0 }, col{ 0 };
         int pc_row{ 0 }, pc_col{ 0 };
 
-        std::string coord = "";
+        std::string coord_str = "";
         std::string userLastMove = "";
         std::string keyShipHit = "";
         std::string pcLastMove = "";
@@ -799,20 +799,20 @@ int main() {
 
             do {
                 std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
-                std::cin >> coord;
-                coord[0] = std::toupper(coord[0]);
-                if (coord == "Q") {
+                std::cin >> coord_str;
+                coord_str[0] = std::toupper(coord_str[0]);
+                if (coord_str == "Q") {
                     std::cout << "  See you, bye!\n\n";
                     return 0;
                 }
 
-            } while (!isInputValid(field_pc, coord));
+            } while (!isInputValid(field_pc, coord_str));
 
             system(CLS);
 
-            userLastMove = coord;
+            userLastMove = coord_str;
             
-            decodeCoords(coord, row, col);
+            decodeCoords(coord_str, row, col);
 
             checkField(field_pc);
             checkField(field_user);
