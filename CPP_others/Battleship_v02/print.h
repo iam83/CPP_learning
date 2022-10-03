@@ -1,21 +1,12 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <array>
 #include <map>
 
 #include "enums.h"
-
-#ifdef _WIN32
-#define CLS "cls"
-#include <windows.h>
-#endif
-#ifdef __APPLE__
-#define CLS "clear"
-#endif
 
 void printUserField(std::array<std::array<int, 10>, 10> const&);
 void printFields(std::array<std::array<int, 10>, 10> const&, std::array<std::array<int, 10>, 10> const&, ShipView);
