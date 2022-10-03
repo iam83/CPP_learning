@@ -4,6 +4,7 @@
 #include <array>
 #include <map>
 
+#include "enums.h"
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -21,26 +22,6 @@
 #ifdef __APPLE__
 #define CLS "clear"
 #endif
-
-
-enum Player {
-    User,
-    Pc
-};
-
-enum ShipView {
-    Invisible,
-    Visible
-};
-
-
-enum Warning{
-    TryAgain,
-    TryAgainHorizontal,
-    TryAgainVertical,
-    TryAgainWrongCoord,
-    TryAgainHitThere
-};
 
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 

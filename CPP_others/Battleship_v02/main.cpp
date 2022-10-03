@@ -24,6 +24,8 @@
 #include <map>
 #include <algorithm>
 
+#include "print.h"
+
 #ifdef _WIN32
 #define CLS "cls"
 #include <windows.h>
@@ -31,6 +33,8 @@
 #ifdef __APPLE__
 #define CLS "clear"
 #endif
+
+
 
 typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
@@ -47,44 +51,6 @@ typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 //     Col col;
 // };
 
-
-
-enum Direction {
-    Horizontal,
-    Vertical
-};
-
-enum Ship {
-
-    Submarine = 1,
-    Cruiser = 2,
-    Battleship = 3,
-    Carrier = 4
-
-};
-
-enum FieldCellStates {
-    Field,
-    Ship,
-    Hit,
-    Miss,
-    BorderHit = 7,
-    Border = 8
-};
-
-
-
-enum ConsoleColor{
-    DeepCyan = 3,
-    DarkRed = 4,
-    NormalWhite = 7,
-    Grey = 8,
-    Blue = 9,
-    Green = 10,
-    Red = 12,
-    Yellow = 14,
-};
-
 int getRandomNumber(int min, int max) {
     static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
@@ -93,8 +59,6 @@ int getRandomNumber(int min, int max) {
 void createField(std::array<std::array<int, 10>, 10>& field) {
     field.fill({ 0,0 });
 }
-
-
 
 bool inField(int row, int col)
 {
@@ -108,7 +72,6 @@ void checkField(std::array<std::array<int, 10>, 10>& field) {
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
-
     //check in boundary
     for (int row = 0; row < static_cast<int>(field.size()); ++row) {
         for (int col = 0; col < static_cast<int>(field.size()); ++col) {
