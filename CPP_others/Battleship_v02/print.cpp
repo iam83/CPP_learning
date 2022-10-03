@@ -1,7 +1,9 @@
 #include <iostream>
-#include <array>
+#include <string>
 #include <vector>
+#include <array>
 #include <map>
+
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -12,9 +14,33 @@
 #endif
 
 
+#ifdef _WIN32
+#define CLS "cls"
+#include <windows.h>
+#endif
+#ifdef __APPLE__
+#define CLS "clear"
+#endif
 
 
-typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
+enum Player {
+    User,
+    Pc
+};
+
+enum ShipView {
+    Invisible,
+    Visible
+};
+
+
+enum Warning{
+    TryAgain,
+    TryAgainHorizontal,
+    TryAgainVertical,
+    TryAgainWrongCoord,
+    TryAgainHitThere
+};
 
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
@@ -287,7 +313,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
     std::cout << std::endl;
 }
 
-void printUpdateMessage(Map map_user, Map map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
+void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user, std::map<std::string, std::vector<std::pair<int, int>>> map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
     std::cout << "       Your ships: " << map_user.size();
     std::cout << "\t\t" << message_user << std::endl;
 

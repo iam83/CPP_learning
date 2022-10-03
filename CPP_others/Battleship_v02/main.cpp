@@ -47,15 +47,7 @@ typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 //     Col col;
 // };
 
-enum Player {
-    User,
-    Pc
-};
 
-enum ShipView {
-    Invisible,
-    Visible
-};
 
 enum Direction {
     Horizontal,
@@ -80,13 +72,7 @@ enum FieldCellStates {
     Border = 8
 };
 
-enum Warning{
-    TryAgain,
-    TryAgainHorizontal,
-    TryAgainVertical,
-    TryAgainWrongCoord,
-    TryAgainHitThere
-};
+
 
 enum ConsoleColor{
     DeepCyan = 3,
