@@ -34,8 +34,6 @@
 #define CLS "clear"
 #endif
 
-
-
 typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
 // enum Row{

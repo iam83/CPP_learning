@@ -5,7 +5,6 @@
 #include <vector>
 #include <array>
 #include <map>
-
 #include "enums.h"
 
 void printUserField(std::array<std::array<int, 10>, 10> const&);
@@ -14,7 +13,7 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>>,
 void printCongrats(Player);
 void startMessage();
 void printWarning(Warning);
-void printMoveTable(std::vector<std::string> const& );
+void printMoveTable(std::vector<std::string> const&);
 void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const&);
 
 
