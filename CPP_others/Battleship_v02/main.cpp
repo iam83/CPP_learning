@@ -194,6 +194,7 @@ void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std:
     }
 
     map.emplace(ship_name, temp_vec);
+    checkField(field);
 }
 
 void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, std::vector<std::pair<int, int>>& vec, int& dir, int ship, std::string ship_name) {
@@ -218,6 +219,7 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
     }
 
     map.emplace(ship_name, temp_vec);
+    checkField(field);
 }
 
 void encodeCoords(std::string& coord_str, int row, int col) {
@@ -362,7 +364,6 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     setShips(field, map, vec, dir, Ship::Submarine, "ship1_2");
     setShips(field, map, vec, dir, Ship::Submarine, "ship1_3");
     setShips(field, map, vec, dir, Ship::Submarine, "ship1_4");
-    checkField(field);
 }
 
 bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& coord_str) { //check if user makes correct input
