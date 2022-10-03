@@ -3,8 +3,6 @@
 #include <vector>
 #include <array>
 #include <map>
-#include <thread>
-#include <chrono>
 
 #include "enums.h"
 
@@ -16,6 +14,14 @@
 #define CLS "clear"
 #endif
 
+
+#ifdef _WIN32
+#define CLS "cls"
+#include <windows.h>
+#endif
+#ifdef __APPLE__
+#define CLS "clear"
+#endif
 
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
