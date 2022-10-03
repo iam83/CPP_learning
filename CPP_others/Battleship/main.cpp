@@ -47,22 +47,22 @@ typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 //     Col col;
 // };
 
-enum class Player {
+enum Player {
     User,
     Pc
 };
 
-enum class ShipView {
+enum ShipView {
     Invisible,
     Visible
 };
 
-enum class Direction {
+enum Direction {
     Horizontal,
     Vertical
 };
 
-enum class Ship {
+enum Ship {
 
     Submarine = 1,
     Cruiser = 2,
@@ -71,7 +71,7 @@ enum class Ship {
 
 };
 
-enum class FieldCellStates {
+enum FieldCellStates {
     Field,
     Ship,
     Hit,
@@ -80,7 +80,7 @@ enum class FieldCellStates {
     Border = 8
 };
 
-enum class Warning{
+enum Warning{
     TryAgain,
     TryAgainHorizontal,
     TryAgainVertical,
@@ -138,7 +138,7 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
         // user field
         for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
-            if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
+            if (field_user.at(row).at(col) == FieldCellStates::Ship) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
@@ -148,7 +148,7 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
                 #endif
             }
             //border around ship
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::Border) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font green 10, yellow 14
                 #endif
@@ -158,7 +158,7 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
                 #endif
             }
             //ship is hit
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::Hit) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Red); //red
                 #endif
@@ -168,7 +168,7 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
                 #endif
             }
             //border around hitted ship
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::BorderHit) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
                 #endif
@@ -178,7 +178,7 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
                 #endif
             }
             //missed hit
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::Miss) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
                 #endif
@@ -241,7 +241,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 
         // user field
         for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
-            if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
+            if (field_user.at(row).at(col) == FieldCellStates::Ship) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Yellow); //set console color font green 10, yellow 14, or 22 for selected
                 #endif
@@ -251,7 +251,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //border around ship
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::Border) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font green 10, yellow 14
                 #endif
@@ -261,7 +261,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //ship is hit
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::Hit) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Red); //red
                 #endif
@@ -271,7 +271,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //border around hitted ship
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::BorderHit) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
                 #endif
@@ -281,7 +281,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //missed hit
-            else if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)) {
+            else if (field_user.at(row).at(col) == FieldCellStates::Miss) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
                 #endif
@@ -307,7 +307,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
 
         // pc field
         for (int col = 0; col < static_cast<int>(field_pc.size()); ++col) {
-            if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
+            if (field_pc.at(row).at(col) == FieldCellStates::Ship) {
                 #ifdef _WIN32
                 //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Grey);
@@ -321,7 +321,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //border around ship
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Border)) {
+            else if (field_pc.at(row).at(col) == FieldCellStates::Border) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font green 10, yellow 14
                 #endif
@@ -331,7 +331,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //ship is hit
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
+            else if (field_pc.at(row).at(col) == FieldCellStates::Hit) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::Green); //green
                 #endif
@@ -341,7 +341,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //border around hitted ship
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
+            else if (field_pc.at(row).at(col) == FieldCellStates::BorderHit) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::DarkRed); //4 dark red
                 #endif
@@ -351,7 +351,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
                 #endif
             }
             //missed hit
-            else if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Miss)) {
+            else if (field_pc.at(row).at(col) == FieldCellStates::Miss) {
                 #ifdef _WIN32
                 SetConsoleTextAttribute(hConsole, ConsoleColor::DarkRed);
                 #endif
@@ -497,11 +497,11 @@ void checkField(std::array<std::array<int, 10>, 10>& field) {
     //check in boundary
     for (int row = 0; row < static_cast<int>(field.size()); ++row) {
         for (int col = 0; col < static_cast<int>(field.size()); ++col) {
-            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Field)) {
+            if (field.at(row).at(col) == FieldCellStates::Field) {
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) == static_cast<int>(FieldCellStates::Ship))
-                            field.at(row).at(col) = static_cast<int>(FieldCellStates::Border);
+                        if (field.at(row + y[i]).at(col + x[i]) == FieldCellStates::Ship)
+                            field.at(row).at(col) = FieldCellStates::Border;
                     }
                 }
             }
@@ -519,12 +519,12 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
     for (int row = 0; row < static_cast<int>(field.size()); ++row) {
         for (int col = 0; col <static_cast<int>(field.size()); ++col) {
 
-            if (field.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
+            if (field.at(row).at(col) == FieldCellStates::Hit) {
 
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) != static_cast<int>(FieldCellStates::Hit))
-                            field.at(row + y[i]).at(col + x[i]) = static_cast<int>(FieldCellStates::BorderHit);
+                        if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit)
+                            field.at(row + y[i]).at(col + x[i]) = FieldCellStates::BorderHit;
                     }
                 }
             }
@@ -545,7 +545,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
         //horizontal check
         for (int row = 0; row < static_cast<int>(field.size()); ++row) {
             for (int col = 0; col < static_cast<int>(field.size()); ++col) {
-                if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
+                if (field.at(row).at(col) != FieldCellStates::Ship && field.at(row).at(col) != FieldCellStates::Border) {
                     if (count == 0) {
                         temp_col = col;
                         temp_row = row;
@@ -569,7 +569,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
         //vertical check
         for (int col = 0; col < static_cast<int>(field.size()); ++col) {
             for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-                if (field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border)) {
+                if (field.at(row).at(col) != FieldCellStates::Ship && field.at(row).at(col) != FieldCellStates::Border) {
                     if (count == 0) {
                         temp_col = col;
                         temp_row = row;
@@ -602,17 +602,17 @@ void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std:
         col = getRandomNumber(0, 9);
         dir = getRandomNumber(0, 1);
 
-    } while (!(field.at(row).at(col) != static_cast<int>(FieldCellStates::Ship) && field.at(row).at(col) != static_cast<int>(FieldCellStates::Border) && (row + 4) < 9 && (col + 4) < 9));
+    } while (!(field.at(row).at(col) != FieldCellStates::Ship && field.at(row).at(col) != FieldCellStates::Border && (row + 4) < 9 && (col + 4) < 9));
 
     if ((col + ship) >= 9) col = 4;
 
     for (int i = 0; i < ship; ++i) {
         if (dir == static_cast<int>(Direction::Horizontal)) { //horizontal location
-            field.at(row).at(col + i) = static_cast<int>(FieldCellStates::Ship);
+            field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
         }
         else { //vertical
-            field.at(row + i).at(col) = static_cast<int>(FieldCellStates::Ship);
+            field.at(row + i).at(col) = FieldCellStates::Ship;
             temp_vec.emplace_back(row + i, col);
         }
     }
@@ -632,11 +632,11 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
 
     for (int i = 0; i < ship; ++i) {
         if (dir == static_cast<int>(Direction::Horizontal)) {
-            field.at(row).at(col + i) = static_cast<int>(FieldCellStates::Ship);
+            field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
         }
         else {
-            field.at(row + i).at(col) = static_cast<int>(FieldCellStates::Ship);
+            field.at(row + i).at(col) = FieldCellStates::Ship;
             temp_vec.emplace_back(row + i, col);
         }
     }
@@ -710,7 +710,7 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 
     for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
         for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
-            if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit)) {
+            if (field_user.at(row).at(col) == FieldCellStates::BorderHit) {
 
                 encodeCoords(temp_coord, row, col);
 
@@ -808,9 +808,9 @@ bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& co
         int row{ 0 }, col{ 0 };
         decodeCoords(coord, row, col);
 
-        if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Miss) ||
-            field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::BorderHit) ||
-            field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Hit)) {
+        if (field_pc.at(row).at(col) == FieldCellStates::Miss ||
+            field_pc.at(row).at(col) == FieldCellStates::BorderHit ||
+            field_pc.at(row).at(col) == FieldCellStates::Hit) {
             printWarning(Warning::TryAgainHitThere);
             return false;
         }
@@ -826,15 +826,15 @@ bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& co
 
 bool userMove(std::array<std::array<int, 10>, 10>& field_pc, int row, int col) {
 
-    if (field_pc.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
-        field_pc.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
+    if (field_pc.at(row).at(col) == FieldCellStates::Ship) {
+        field_pc.at(row).at(col) = FieldCellStates::Hit;
         return true;
     }
 
     else {
-        if (field_pc.at(row).at(col) != static_cast<int>(FieldCellStates::Hit) &&
-            field_pc.at(row).at(col) != static_cast<int>(FieldCellStates::Miss)) {
-            field_pc.at(row).at(col) = static_cast<int>(FieldCellStates::Miss);
+        if (field_pc.at(row).at(col) != FieldCellStates::Hit &&
+            field_pc.at(row).at(col) != FieldCellStates::Miss) {
+            field_pc.at(row).at(col) = FieldCellStates::Miss;
             return false;
         }
         return false;
@@ -890,14 +890,13 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
 
 bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
 
-    if (field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship)) {
-        field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Hit);
+    if (field_user.at(row).at(col) == FieldCellStates::Ship) {
+        field_user.at(row).at(col) = FieldCellStates::Hit;
         return true;
     }
     else {
-        if (field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Hit) &&
-            field_user.at(row).at(col) != static_cast<int>(FieldCellStates::Miss)) {
-            field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Miss);
+        if (field_user.at(row).at(col) != FieldCellStates::Hit && field_user.at(row).at(col) != FieldCellStates::Miss) {
+            field_user.at(row).at(col) = FieldCellStates::Miss;
         }
     }
     return false;
@@ -987,11 +986,11 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<
 
     for (int i = 0; i < ship; ++i) {
         if (dir == static_cast<int>(Direction::Horizontal)) {
-            field_user.at(row).at(col + i) = static_cast<int>(FieldCellStates::Ship);
+            field_user.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
         }
         else {
-            field_user.at(row + i).at(col) = static_cast<int>(FieldCellStates::Ship);
+            field_user.at(row + i).at(col) = FieldCellStates::Ship;
             temp_vec.emplace_back(row + i, col);
         }
     }
@@ -1014,7 +1013,7 @@ bool isManualInputValid(char dir_char){
 
 bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
 
-    if(field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Ship) || field_user.at(row).at(col) == static_cast<int>(FieldCellStates::Border)){
+    if(field_user.at(row).at(col) == FieldCellStates::Ship || field_user.at(row).at(col) == FieldCellStates::Border){
         printWarning(Warning::TryAgain);
         return false;
        }
@@ -1030,14 +1029,14 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
 
     if((col + ship) < 11){
         for (int i = 0; i < ship; ++i){
-                if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
+                if(field_user.at(row).at(col + i) == FieldCellStates::Border){
                     continue;
                 }
         }
     }
     else if((row + ship) < 11){
          for (int i = 0; i < ship; ++i){
-                if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
+                if(field_user.at(row + i).at(col) == FieldCellStates::Border){
                     continue;
                 }
         }
@@ -1050,7 +1049,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     if (dir_char == 'v'){
         if ((row + ship) < 11){
                 for (int i = 0; i < ship; ++i){
-                        if(field_user.at(row + i).at(col) == static_cast<int>(FieldCellStates::Border)){
+                        if(field_user.at(row + i).at(col) == FieldCellStates::Border){
                             printWarning(Warning::TryAgainHorizontal);
                             return false;
                         }
@@ -1064,7 +1063,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     if (dir_char == 'h'){
         if((col + ship) < 11){
                 for (int i = 0; i < ship; ++i){
-                        if(field_user.at(row).at(col + i) == static_cast<int>(FieldCellStates::Border)){
+                        if(field_user.at(row).at(col + i) == FieldCellStates::Border){
                             printWarning(Warning::TryAgainVertical);
                             return false;
                         }
@@ -1131,7 +1130,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
 
             } while (!isInputValid(field_user, coord) || !(isValidToInstall(field_user, row, col, dir_char, ship) && isValidToInstall(field_user, row, col)));
 
-            field_user.at(row).at(col) = static_cast<int>(FieldCellStates::Ship);
+            field_user.at(row).at(col) = FieldCellStates::Ship;
             system(CLS);
             std::cout << "\tManual setup\n";
             printUserField(field_user);
