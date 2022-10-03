@@ -88,7 +88,6 @@ enum Warning{
     TryAgainHitThere
 };
 
-
 enum ConsoleColor{
     DeepCyan = 3,
     DarkRed = 4,
@@ -541,7 +540,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const& field,
     int count{ 0 }, temp_row{ 0 }, temp_col{ 0 };
     vec.clear();
 
-    if (dir == static_cast<int>(Direction::Horizontal)) {
+    if (dir == Direction::Horizontal) {
         //horizontal check
         for (int row = 0; row < static_cast<int>(field.size()); ++row) {
             for (int col = 0; col < static_cast<int>(field.size()); ++col) {
@@ -607,7 +606,7 @@ void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std:
     if ((col + ship) >= 9) col = 4;
 
     for (int i = 0; i < ship; ++i) {
-        if (dir == static_cast<int>(Direction::Horizontal)) { //horizontal location
+        if (dir == Direction::Horizontal) { //horizontal location
             field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
         }
@@ -631,7 +630,7 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
     int col = vec[i].second;
 
     for (int i = 0; i < ship; ++i) {
-        if (dir == static_cast<int>(Direction::Horizontal)) {
+        if (dir == Direction::Horizontal) {
             field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
         }
@@ -776,16 +775,16 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     std::map<std::string, std::vector<std::pair<int, int>>>& map) {
 
     createField(field);
-    generateFirstShip(field, map, static_cast<int>(Ship::Carrier), "ship4");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Battleship), "ship3_1");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Battleship), "ship3_2");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_1");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_2");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Cruiser), "ship2_3");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_1");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_2");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_3");
-    setShips(field, map, vec, dir, static_cast<int>(Ship::Submarine), "ship1_4");
+    generateFirstShip(field, map, Ship::Carrier, "ship4");
+    setShips(field, map, vec, dir, Ship::Battleship, "ship3_1");
+    setShips(field, map, vec, dir, Ship::Battleship, "ship3_2");
+    setShips(field, map, vec, dir, Ship::Cruiser, "ship2_1");
+    setShips(field, map, vec, dir, Ship::Cruiser, "ship2_2");
+    setShips(field, map, vec, dir, Ship::Cruiser, "ship2_3");
+    setShips(field, map, vec, dir, Ship::Submarine, "ship1_1");
+    setShips(field, map, vec, dir, Ship::Submarine, "ship1_2");
+    setShips(field, map, vec, dir, Ship::Submarine, "ship1_3");
+    setShips(field, map, vec, dir, Ship::Submarine, "ship1_4");
     checkField(field);
 }
 
@@ -980,12 +979,12 @@ void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<
     decodeCoords(coord, row, col);
 
     if (dir_char == 'h')
-        dir = static_cast<int>(Direction::Horizontal);
+        dir = Direction::Horizontal;
     else if (dir_char == 'v')
-        dir = static_cast<int>(Direction::Vertical);
+        dir = Direction::Vertical;
 
     for (int i = 0; i < ship; ++i) {
-        if (dir == static_cast<int>(Direction::Horizontal)) {
+        if (dir == Direction::Horizontal) {
             field_user.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
         }
