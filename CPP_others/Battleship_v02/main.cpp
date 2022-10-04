@@ -764,11 +764,16 @@ int main() {
     std::vector<std::pair<int, int>> vec; //store coords of where ships can be installed
     std::vector<std::string> pc_moves; //store pc moves
 
-    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
-
     //game loop
     do {
         //system(CLS);
+
+        std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
+
+        map_user.clear();
+        map_pc.clear();
+        vec.clear();
+        pc_moves.clear();
 
         int dir{ 0 };
         createField(field_user);
@@ -825,13 +830,17 @@ int main() {
             checkField(field_pc);
             checkField(field_user);
 
+            printMap(map_user);
+            std::cout << std::endl;
+            printMap(map_pc);
+            std::cout << std::endl;
+
             //user move
             if (userMove(field_pc, row, col)) {
                 if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
                     //system(CLS);
                     printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
-                    clearMaps(map_user, map_pc);
                     break;
                 }
             }
@@ -849,7 +858,6 @@ int main() {
                      //system(CLS);
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
-                     clearMaps(map_user, map_pc);
                      break;
                  }
             }
