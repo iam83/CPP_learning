@@ -769,7 +769,7 @@ int main() {
         //system(CLS);
 
         std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
-
+        
         map_user.clear();
         map_pc.clear();
         vec.clear();
