@@ -1175,6 +1175,7 @@ int main() {
 
     //game loop
     do {
+        
         system(CLS);
 
         map_user.clear();
