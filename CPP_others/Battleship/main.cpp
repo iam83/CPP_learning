@@ -194,7 +194,7 @@ void printUserField(field_t const& field_user) {
 }
 
 //print both fields, make it colorful on windows
-void printFields(field_t const& field_pc, field_t const& field_user, ShipView field_view) {
+void printFields(field_t const& field_pc, field_t const& field_user, ShipView field_view = ShipView::Invisible) {
 
     #ifdef _WIN32
     HANDLE  hConsole;
@@ -1202,7 +1202,7 @@ int main() {
 
         createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
-        printFields(field_pc, field_user, ShipView::Invisible);
+        printFields(field_pc, field_user);
 
         int row{ 0 }, col{ 0 };
         int pc_row{ 0 }, pc_col{ 0 };
@@ -1249,7 +1249,7 @@ int main() {
                 message_user = "  You missed.";
             }
 
-            printFields(field_pc, field_user, ShipView::Invisible);
+            printFields(field_pc, field_user);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
              //pc move
@@ -1267,7 +1267,7 @@ int main() {
             }
 
             system(CLS);
-            printFields(field_pc, field_user, ShipView::Invisible);
+            printFields(field_pc, field_user);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
         }
