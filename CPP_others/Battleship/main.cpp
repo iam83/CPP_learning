@@ -1271,6 +1271,7 @@ int main() {
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
         }
+        
     } while (playAgain());
 
     std::cout << std::endl;
