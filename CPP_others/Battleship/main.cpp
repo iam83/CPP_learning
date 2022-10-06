@@ -32,9 +32,9 @@
 #define CLS "clear"
 #endif
 
-typedef std::map<std::string, std::vector<std::pair<int, int>>> map_t;
-typedef std::array<std::array<int, 10>, 10> field_t;
-typedef std::vector<std::pair<int, int>> vec_pair_t;
+using map_t = std::map<std::string, std::vector<std::pair<int, int>>>;
+using field_t = std::array<std::array<int, 10>, 10>;
+using vec_pair_t = std::vector<std::pair<int, int>>;
 
 enum Player {
     User,
