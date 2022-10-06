@@ -1154,11 +1154,6 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     return true;
 }
 
-void clearMaps(Map &map_user, Map &map_pc){
-    map_user.clear();
-    map_pc.clear();
-}
-
 int main() {
 
     startMessage();
@@ -1178,6 +1173,11 @@ int main() {
     //game loop
     do {
         system(CLS);
+
+        map_user.clear();
+        map_pc.clear();
+        vec.clear();
+        pc_moves.clear();
 
         int dir{ 0 };
         createField(field_user);
@@ -1239,7 +1239,6 @@ int main() {
                     system(CLS);
                     printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
-                    clearMaps(map_user, map_pc);
                     break;
                 }
             }
@@ -1257,7 +1256,6 @@ int main() {
                      system(CLS);
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
-                     clearMaps(map_user, map_pc);
                      break;
                  }
             }
