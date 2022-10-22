@@ -1,7 +1,7 @@
 #include <iostream>
 #include <array>
 
-using arithmeticFcn = int(*)(int, int);
+using arithmeticFcn = double(*)(double, double);
 //typedef int (*arithmeticFcn)(int, int); //or like this
 
 struct arithmeticStruct {
@@ -9,22 +9,22 @@ struct arithmeticStruct {
     arithmeticFcn fcn;
 };
 
-int add(int a, int b){
+double add(double a, double b){
     return a+b;
 }
 
-int substract(int a, int b){
+double substract(double a, double b){
     return a-b;
 }
-int multiply(int a, int b){
+double multiply(double a, double b){
     return a*b;
 }
 
-int divide(int a, int b){
-    if (a > 0)
+double divide(double a, double b){
+    if (b > 0)
         return a/b;
     else
-        std::cout << "Division by 0\n";
+        std::cout << "Error. Division by 0\n";
         return 0;
 }
 
@@ -37,10 +37,12 @@ int divide(int a, int b){
 
 int main(){
 
-    int a{0}; int b{0};
+    double a{0}; double b{0};
     char sign = ' ';
-    std::array<arithmeticStruct, 4> arithmeticArray = {{{'+', add}, {'-', substract},
-                                                   {'*', multiply}, {'/', divide}}};
+    std::array<arithmeticStruct, 4> arithmeticArray = { {{'+', add},
+                                                         {'-', substract},
+                                                         {'*', multiply},
+                                                         {'/', divide}} };
 
     std::cout << "Enter two numbers: ";
     std::cin >> a >> b;
