@@ -24,8 +24,8 @@ double divide(double a, double b){
     if (b > 0)
         return a/b;
     else
-        std::cout << "Error. Division by 0\n";
-        return 0;
+        std::cerr << "Error. Division by 0\n";
+        exit(1);
 }
 
  arithmeticFcn getArithmeticFcn(const std::array<arithmeticStruct, 4> & arr, char & sign){
