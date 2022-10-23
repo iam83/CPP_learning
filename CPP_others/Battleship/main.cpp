@@ -861,8 +861,9 @@ void getPcCoord(field_t& field_user, std::vector<std::string>& pc_moves,
 
             encodeCoords(temp_pcMove, pc_row, pc_col);
 
-            it = std::find(pc_moves.begin(), pc_moves.end(), temp_pcMove);
+            //std::remove_if(pc_moves.begin(), pc_moves.end(), [temp_pcMove](const auto m){ return m == temp_pcMove; });
 
+            it = std::find(pc_moves.begin(), pc_moves.end(), temp_pcMove);
             if (it != pc_moves.end()) {
                 move = it - pc_moves.begin();
                 pcLastMove = pc_moves.at(move);
