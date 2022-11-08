@@ -6,7 +6,7 @@ int main() {
 
 
 		Car audi ("Audi", "Green", 250.0);
-
+	
 		audi.GetInfo();
 
 		audi.SetColor("Red");
