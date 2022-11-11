@@ -28,5 +28,3 @@ void Car::GetInfo() {
 	std::cout << "Speed: " << speed << std::endl;
 	std::cout << std::endl;
 }
-
-void 

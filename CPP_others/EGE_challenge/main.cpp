@@ -6,7 +6,7 @@
 int main () {
     
   std::string line;
-  std::ifstream myfile ("27989_B.txt");
+  std::ifstream myfile ("_27989_B.txt");
   std::vector <int> numbers;
 
   if (myfile.is_open())
@@ -16,7 +16,10 @@ int main () {
     }
     myfile.close();
   }
-  else std::cout << "Unable to open file";
+  else{
+    std::cout << "Unable to open file";
+    exit(-1);
+  }
   std::cout << numbers[0] << std::endl;
   numbers.erase(numbers.begin());
   int count = 0;
