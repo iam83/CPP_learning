@@ -6,7 +6,7 @@
 int main () {
     
   std::string line;
-  std::ifstream myfile ("_27989_B.txt");
+  std::ifstream myfile ("27989_B.txt");
   std::vector <int> numbers;
 
   if (myfile.is_open())
