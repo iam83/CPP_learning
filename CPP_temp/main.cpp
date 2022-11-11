@@ -1,12 +1,12 @@
 #include <iostream>
 
-int boo(){
-    return 7;
-}
-
 int main(){
+    
+    int number = 10;
+    number++;
+    std::cout << number << std::endl;
+    std::cout << "hello" << std::endl;
+    std::cout << "world" << std::endl;
 
-    std::cout << reinterpret_cast<void*>(boo) << std::endl;
-    //std::cout << boo << std::endl;
     return 0;
 }
