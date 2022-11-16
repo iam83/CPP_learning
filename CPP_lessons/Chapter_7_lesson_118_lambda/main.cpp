@@ -8,10 +8,10 @@ int main()
     std::array<std::string_view, 4> arr{ "apple", "banana", "walnut", "lemon" };
 
     // Определяем функцию непосредственно в том месте, где собираемся её использовать
-    auto found { std::find_if (arr.begin(), arr.end(),
-                            [](std::string_view str){
-                                return (str.find("nut") != std::string_view::npos);
-                            })
+    auto found { std::find_if (arr.begin(), arr.end(), [](std::string_view str){
+                                    return (str.find("nut") != std::string_view::npos);
+                                }
+                              )
 
     }; 
 
