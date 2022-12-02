@@ -13,8 +13,10 @@ public:
     }
 
     void print(){
+        std::cout << std::endl;
         std::cout << "First number: " << m_first << "\n";
         std::cout << "Second number: " << m_second << "\n";
+        std::cout << std::endl;
     }
 
 };
