@@ -10,3 +10,4 @@ x64
 *.dSYM
 *.dSYM/*
 Info.plist
+*/*.exe
