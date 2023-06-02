@@ -24,8 +24,8 @@ int main () {
   numbers.erase(numbers.begin());
   int count = 0;
 
-  for (int i = 0; i < numbers.size(); ++i){
-    for (int j = i+1; j < numbers.size(); ++j){
+  for (int i = 0; i < static_cast<int>(numbers.size()); ++i){
+    for (int j = i+1; j < static_cast<int>(numbers.size()); ++j){
       int result =  (numbers[i] * numbers[j]) % 26;
       if (result == 0){
         count++;
