@@ -24,6 +24,7 @@
 #include <iostream>
 #include <cstdint> // для std::uint8_t
 
+
 class RGBA{
 
 private:
@@ -49,7 +50,7 @@ public:
 
 int main(){
 
-    RGBA color;
+    RGBA color(250, 0);
     color.print();
 
     return 0;
