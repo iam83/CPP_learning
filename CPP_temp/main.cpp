@@ -6,6 +6,7 @@ int main(){
     number++;
     std::cout << number << std::endl;
     ++number;
+    
     std::cout << number << std::endl;
     std::cout << "hello" << std::endl;
     std::cout << "world" << std::endl;
