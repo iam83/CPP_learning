@@ -46,9 +46,9 @@ public:
         m_radius = radius;
     }
 
-    Ball(const std::string &color = "red", double radius = 20.0)
-        : m_color(color), m_radius(radius)
-    {
+    Ball(const std::string &color = "red", double radius = 20.0){
+        m_color = color;
+        m_radius = radius;
     }
 
     void print(){
