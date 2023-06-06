@@ -16,6 +16,16 @@
 
     Подсказка: Если функция print() работает некорректно, то убедитесь, что вы конвертировали std::uint8_t в int.
 
+    Следующий код функции main():
+    
+        1. int main()
+        2. {
+        3.      RGBA color(0, 135, 135);
+        4.      color.print();
+        5.
+        6.      return 0;
+        7. }
+        
     Должен выдавать следующий результат:
     r=0 g=135 b=135 a=255
 
@@ -24,14 +34,10 @@
 #include <iostream>
 #include <cstdint> // для std::uint8_t
 
-
 class RGBA{
 
 private:
-    std::uint8_t m_red;
-    std::uint8_t m_green;
-    std::uint8_t m_blue;
-    std::uint8_t m_alpha;
+    std::uint8_t m_red, m_green, m_blue, m_alpha;
 
 public:
     RGBA (std::uint8_t red = 0, std::uint8_t green = 0, std::uint8_t blue = 0, std::uint8_t alpha = 255)
@@ -50,7 +56,7 @@ public:
 
 int main(){
 
-    RGBA color(250, 0);
+    RGBA color(0, 135, 135);
     color.print();
 
     return 0;
