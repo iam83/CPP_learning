@@ -3,8 +3,9 @@
 int main(){
 
     int number = 10;
-    number++;
     
+    number++;
+
     std::cout << number << std::endl;
 
     ++number;
