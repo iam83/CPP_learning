@@ -20,34 +20,29 @@
 class Thing{ 
 private:
 
-    std::string m_color; 
-    double m_radius; 
+    std::string m_color = "blue"; 
+    double m_radius = 20.0; 
 
 public: 
 
-    // Конструктор по умолчанию без параметров 
+    Конструктор по умолчанию без параметров 
     Thing(){ 
-        m_color = "blue"; 
-        m_radius = 20.0; 
     } 
 
     // Конструктор с параметром color (для radius предоставлено значение умолчанию) 
-    Thing(const std::string &color){ 
-        m_color = color; 
-        m_radius = 20.0; 
+    Thing(const std::string &color) : m_color(color)
+    {  
     } 
 
     // Конструктор с параметром radius (для color предоставлено значение умолчанию) 
-    Thing(double radius){ 
-        m_color = "blue"; 
-        m_radius = radius; 
+    Thing(double radius) : m_radius(radius) 
+    { 
     } 
 
-    // Конструктор с параметрами color и radius 
-    Thing(const std::string &color, double radius){ 
-        m_color = color; 
-        m_radius = radius; 
-    } 
+    Thing(const std::string &color, double radius)
+        : m_color(color), m_radius(radius)
+    {    
+    }
 
     void print(){ 
         std::cout << "color: " << m_color << " and radius: " << m_radius << std::endl;
