@@ -47,8 +47,6 @@ int main(){
         std::cout << "box1 and box2 are equal\n";
     else
         std::cout << "box1 and box2 are not equal\n";
-    
-
 
     return 0;
 
