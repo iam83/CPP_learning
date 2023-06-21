@@ -3,25 +3,11 @@
 #include "check.h"
 #include "enum.h"
 
-#ifdef _WIN32
-	#include <windows.h> //for changing color in console
-	#include <conio.h> //for getch() function. used for reading key pressing
-#endif
 
-void printResult(double value, int count, std::string message, bool isSpaceAtTheEnd){
-
-    // HANDLE  hConsole;
-    // hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    // SetConsoleTextAttribute(hConsole, consoleColor);
-
+void printResult(double overall_income, double month_income, int count){
     std::cout << std::fixed << std::setprecision(2);
-    if (isSpaceAtTheEnd)
-        std::cout << message << value;
-    else
-        std::cout << message << count+1 << ": " << value;
-    if (isSpaceAtTheEnd) std::cout << "\n";
-
-    //SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
+    std::cout << "Month " << count+1 << ": " << overall_income
+              << " per month: " << month_income << "\n";
 }
 
 int main(){
@@ -34,31 +20,28 @@ int main(){
 
     for (int i = 0; i < month_amount; ++i){
 
+        //for the first month
         if (i == 0){
-
-            printResult(sum_start, i, "Month: ", false);
             month_income = (sum_start * (interest / 12.0)) / 100.0;
             overall_income = month_income + sum_start;
-            printResult(month_income, i, " per month: ", true);
+            printResult(sum_start, month_income, i);
             continue;
         }
 
-        printResult(overall_income, i, "Month: ", false);
-
+        //calculate for the rest of months
         month_income += ((month_income * (interest / 12.0))) / 100.0;
         overall_income += month_income;
 
-        printResult(month_income, i, " per month: ", true);
+        printResult(overall_income, month_income, i);
 
         
     }
 
-    
-    printResult(month_amount, 0, "\nYour overall income for ", false);
-    printResult(overall_income, 0, " month(s) is: ", false);
+    std::cout << "\nYour overall income for " << month_amount
+              << " month(s) is: " << overall_income;
 
-    printResult(month_amount, 0, "\nYour income for ", false);
-    printResult(overall_income - sum_start, 0, " month(s) is: ", false);
+    std::cout << "\nYour income for " << month_amount
+              << " month(s) is: " << overall_income - sum_start;
 
     std::cout << "\n\n";
 
