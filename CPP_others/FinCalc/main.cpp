@@ -4,6 +4,7 @@
 #include "enum.h"
 
 
+
 void printResult(double overall_income, double month_income, int count){
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Month " << count+1 << ": " << overall_income
@@ -39,13 +40,22 @@ int main(){
         
     }
 
+    #ifdef _WIN32
     std::cout << "\nYour overall income for " << month_amount
               << " month(s) is: " << overall_income;
 
     std::cout << "\nYour income for " << month_amount
               << " month(s) is: " << overall_income - sum_start;
+    #endif
 
+    #ifdef __APPLE__
+    std::cout << "\nYour overall income for " << month_amount
+              << " month(s) is: " << overall_income;
+
+    std::cout << "\nYour income for " << month_amount
+              << " month(s) is: " << "\033[32m" << overall_income - sum_start << "\032[0m\n";
     std::cout << "\n\n";
+    #endif
 
     return 0;
 

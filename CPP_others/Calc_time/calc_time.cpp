@@ -18,14 +18,20 @@ void PrintResult(int time, int frameAmount){
 	int min = min_overall % 60;
 	int days{0};
 
+	#ifdef _WIN32
 	HANDLE  hConsole;
   	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	#endif
 
 	std::cout << std::fixed << std::showpoint;
 	std::cout << std::setprecision(1); //amount of digits of floating numbers
 
 	//std::cout << std::endl;
+	
+	#ifdef _WIN32
 	SetConsoleTextAttribute(hConsole, 13); //set console color purple
+	#endif
+	
 	std::cout << "Approximate render time: ";
 
 	if (hour > 24){
