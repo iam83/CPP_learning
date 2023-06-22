@@ -18,6 +18,8 @@ int main(){
     double sum_start = EnterValues("Enter your deposit:> ");
     double month_amount = EnterValues("How many month(s)?> ");
 
+    std::cout << "Interest rate: " << interest << "%\n\n";
+
     for (int i = 0; i < month_amount; ++i){
 
         //for the first month
