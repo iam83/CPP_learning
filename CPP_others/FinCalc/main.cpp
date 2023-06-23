@@ -13,6 +13,8 @@ void printResult(double overall_income, double month_income, int count){
 
 int main(){
 
+
+
     double overall_income{0.0};
     double const interest = 10.0;
     double month_income{0.0};
