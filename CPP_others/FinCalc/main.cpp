@@ -13,10 +13,8 @@ void printResult(double overall_income, double month_income, int count){
 
 int main(){
 
-
-
     double overall_income{0.0};
-    double const interest = 10.0;
+    double const interest = 15.0;
     double month_income{0.0};
     double sum_start = EnterValues("Enter your deposit:> ");
     double month_amount = EnterValues("How many month(s)?> ");
@@ -46,15 +44,15 @@ int main(){
     std::cout << "\nYour overall income for " << month_amount
               << " month(s) is: " << overall_income;
 
-    std::cout << "\nYour income for " << month_amount
-              << " month(s) is: " << overall_income - sum_start;
+    std::cout << "\nYour net income for " << month_amount
+              << " month(s) is: " << overall_income - sum_start << "\n\n";
     #endif
 
     #ifdef __APPLE__
     std::cout << "\nYour overall income for " << month_amount
               << " month(s) is: " << overall_income;
 
-    std::cout << "\nYour income for " << month_amount
+    std::cout << "\nYour net income for " << month_amount
               << " month(s) is: " << "\033[32m" << overall_income - sum_start << "\032[0m\n";
     std::cout << "\n\n";
     #endif

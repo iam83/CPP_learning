@@ -1,5 +1,6 @@
 #pragma once
 
+//windows console colors
 enum ConsoleColor{
     DeepCyan = 3,
     DarkRed = 4,
