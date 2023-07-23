@@ -39,9 +39,7 @@ enum CColor{
     Red = 12,
     Yellow = 14,
 };
-
 #endif
-
 
 #ifdef __APPLE__
 //OSX terminal
