@@ -1,8 +1,24 @@
 #include <iostream>
 #include <iomanip>
 #include "check.h"
-#include "enum.h"
 #include <iomanip>
+#include <string>
+#include "enum.h"
+
+std::string setColor(CColor color){
+
+    std::string resultColor = "";
+
+    switch(color) {
+        case CColor::Red: resultColor = "\033[31m"; break;
+        case CColor::Green: resultColor = "\033[32m"; break;
+        case CColor::Cyan: resultColor = "\033[36m"; break;
+        case CColor::Reset: resultColor = "\033[0m"; break;
+    }
+
+    return resultColor;
+}
+
 
 void clearScreen(){
 
@@ -16,8 +32,10 @@ void clearScreen(){
 }
 
 void printResult(double overall_income, double month_income, int count){
-    std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ": " << std::put_money(overall_income * 100)
-            << " per month: " << std::put_money(month_income * 100) << "\n";
+
+    std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   "
+            << setColor(CColor::Green) << std::put_money(overall_income * 100) << setColor(CColor::Reset)
+            << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * 100) << setColor(CColor::Reset) << "\n";
 }
 
 int main(){
@@ -64,12 +82,14 @@ int main(){
     #endif
 
     #ifdef __APPLE__
-    std::cout << "\nYour overall income for " << month_amount
-              << " month(s) is: " << overall_income;
 
-    std::cout << "\nYour income for " << month_amount
-              << " month(s) is: " << "\033[32m" << overall_income - start_amount << "\033[0m\n";
+    std::cout << "\nYour overall income for " << "\033[36m" << static_cast<int>(month_amount) << "\033[0m"
+              << " month(s) at " << "\33[35m" << interest << "%" << "\033[0m" << " is: " << "\033[32m" << std::put_money(overall_income * 100) << "\033[0m";
+
+    std::cout << "\nYour income for " << "\033[36m" << static_cast<int>(month_amount) << "\033[0m"
+              << " month(s) is: " << "\033[32m" << std::put_money((overall_income - start_amount) * 100) << "\033[0m\n";
     std::cout << "\n\n";
+
     #endif
 
     return 0;
