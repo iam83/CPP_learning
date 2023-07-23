@@ -3,10 +3,9 @@
 */
 
 #include <iostream>
-#include <iomanip>
-#include "check.h"
-#include <iomanip>
+#include <iomanip> //for monetary output
 #include <string>
+#include "check.h" //check if enter is valid
 #include "ccolor.h" //for OSX terminal color
 
 
