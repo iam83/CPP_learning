@@ -29,7 +29,7 @@ int main(){
     //double sum_start = EnterValues("Enter your deposit:> ");
     //double month_amount = EnterValues("How many month(s)?> ");
 
-    double sum_start = 50000.25;
+    double sum_start = 50000.75;
     double month_amount = 12.0;
 
     //std::cout << std::fixed << std::setprecision(2);
