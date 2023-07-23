@@ -4,25 +4,37 @@
 #include "enum.h"
 #include <iomanip>
 
+void clearScreen(){
 
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    #ifdef __APPLE__
+        system("clear");
+    #endif 
+
+}
 void printResult(double overall_income, double month_income, int count){
-    std::cout << std::fixed << std::setprecision(2);
-
-    std::cout.imbue(std::locale("ru_RU.UTF-8"));
     std::cout << std::showbase << "Month " << count+1 << ": " << std::put_money(overall_income)
             << " per month: " << std::put_money(month_income) << "\n";
 }
 
 int main(){
 
+    clearScreen();
+    
     double overall_income{0.0};
     double const interest = 14.5;
-    long double month_income{0.0};
+    double month_income{0.0};
     //double sum_start = EnterValues("Enter your deposit:> ");
     //double month_amount = EnterValues("How many month(s)?> ");
-    double sum_start = 5000000.0;
+
+    double sum_start = 5000000.10;
     double month_amount = 12.0;
 
+    //std::cout << std::fixed << std::setprecision(2);
+    std::cout.imbue(std::locale("ru_RU.UTF-8"));
+    std::cout << "Start amount: " << std::put_money(sum_start) << "\n";
     std::cout << "Interest rate: " << interest << "%\n\n";
 
     for (int i = 0; i < month_amount; ++i){
