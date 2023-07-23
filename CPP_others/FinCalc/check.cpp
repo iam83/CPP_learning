@@ -20,8 +20,7 @@
 
 #include <iostream>
 #include <string>
-
-
+#include <iomanip>
 #ifdef _WIN32
 	#include <windows.h> //for changing color in console
 	#include <conio.h> //for getch() function. used for reading key pressing
