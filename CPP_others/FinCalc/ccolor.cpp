@@ -7,6 +7,10 @@
 #include "enum.h"
 #include <string>
 #include <windows.h>
+#include <iostream>
+
+
+
 
 #ifdef __APPLE__
 std::string setColor(CColor color){
@@ -26,16 +30,6 @@ std::string setColor(CColor color){
 }
 #endif
 
-/*
-    DeepCyan = 3,
-    DarkRed = 4,
-    NormalWhite = 7,
-    Grey = 8,
-    Blue = 9,
-    Green = 10,
-    Red = 12,
-    Yellow = 14,
-*/
 #ifdef _WIN32
 void setColor(HANDLE& handle, CColor color){
     

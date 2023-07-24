@@ -12,6 +12,19 @@
 #include <locale>
 #include <windows.h>
 #endif
+
+
+std::ostream& set_red(std::ostream& os) {
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, CColor::Red);
+
+    std::string myStr = "test";
+    os << myStr;
+    SetConsoleTextAttribute(hConsole, CColor::Reset);
+    return os;
+}
+
 void clearScreen(){
 
     #ifdef _WIN32
@@ -31,11 +44,11 @@ void printResult(double overall_income, double month_income, int count){
 
     std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   ";
     setColor(hConsole, CColor::Green); // for Windows console
-    std::cout << std::put_money(overall_income * 100);
+    std::cout << std::put_money(overall_income * 100.0);
     setColor(hConsole, CColor::Reset);
     std::cout << "    profit per month:  ";
     setColor(hConsole, CColor::Cyan);
-    std::cout << std::put_money(month_income * 100);
+    std::cout << std::put_money(month_income * 100.0);
     setColor(hConsole, CColor::Reset);
     std::cout << "\n";
     
@@ -50,6 +63,7 @@ void printResult(double overall_income, double month_income, int count){
 }
 
 int main(){
+
     #ifdef _WIN32
         HANDLE  hConsole;
         hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -62,14 +76,14 @@ int main(){
     double overall_income{0.0};
     double month_income{0.0};
 
-    double start_amount = EnterValues("Enter your deposit:> ");
-    double month_amount = EnterValues("How many month(s)?> ");
-    double interest = EnterValues("At what interest %?> ");
+    // double start_amount = EnterValues("Enter your deposit:> ");
+    // double month_amount = EnterValues("How many month(s)?> ");
+    // double interest = EnterValues("At what interest %?> ");
 
     //for test purpose
-    // double const interest = 15.0;
-    // double start_amount = 1000000.0;
-    // double month_amount = 12.0;
+    double const interest = 15.0;
+    double start_amount = 1000000.0;
+    double month_amount = 12.0;
 
 
     std::cout << std::fixed << std::setprecision(2);
@@ -77,8 +91,9 @@ int main(){
     #ifdef __APPLE__
     std::cout.imbue(std::locale("ru_RU.UTF-8"));
     #endif
-
     
+    std::cout << set_red;
+
     std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * 100.0) << "\n";
     std::cout << "Interest rate: " << interest << "%\n\n";
 
