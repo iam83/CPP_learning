@@ -13,12 +13,14 @@
 #include <windows.h>
 #endif
 
+/* creating custom ostream object // usage std::cout << myTest; //output: test
 
-std::ostream& set_red(std::ostream& os) {
+std::ostream& myTest(std::ostream& os) {
     std::string myStr = "test";
     os << myStr;
     return os;
 }
+*/
 
 void clearScreen(){
 
@@ -87,7 +89,6 @@ int main(){
     std::cout.imbue(std::locale("ru_RU.UTF-8"));
     #endif
     
-    std::cout << set_red;
 
     std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * 100.0) << "\n";
     std::cout << "Interest rate: " << interest << "%\n\n";
