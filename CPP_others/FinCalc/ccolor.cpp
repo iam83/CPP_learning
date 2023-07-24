@@ -9,9 +9,6 @@
 #include <windows.h>
 #include <iostream>
 
-
-
-
 #ifdef __APPLE__
 std::string setColor(CColor color){
 
