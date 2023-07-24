@@ -8,7 +8,9 @@
 #include "check.h" //check if enter is valid
 #include "ccolor.h" //for OSX terminal color
 
-
+#ifdef _WIN32
+#include <windows.h>
+#endif
 void clearScreen(){
 
     #ifdef _WIN32
@@ -16,20 +18,32 @@ void clearScreen(){
     #endif
     #ifdef __APPLE__
         system("clear");
-    #endif 
+    #endif
 
 }
 
 void printResult(double overall_income, double month_income, int count){
     #ifdef _WIN32
+
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    #endif
-    //SetConsoleTextAttribute(hConsole, CColor::Grey); // for Windows console
+    
+    setColor(hConsole, CColor::Red); // for Windows console
 
+    std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   "
+            << std::put_money(overall_income * 100)
+            << "    profit per month:  "
+            << std::put_money(month_income * 100)
+            << "\n";
+    
+
+    #endif
+
+    #ifdef __APPLE__
     std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   "
             << setColor(CColor::Green) << std::put_money(overall_income * 100) << setColor(CColor::Reset)
             << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * 100) << setColor(CColor::Reset) << "\n";
+    #endif
 }
 
 int main(){
@@ -38,29 +52,29 @@ int main(){
         hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     #endif
 
-<<<<<<< HEAD
-    double overall_income{0.0};
-    double const interest = 15.0;
-=======
     clearScreen();
 
     double overall_income{0.0};
-    //double const interest = 15.0;
->>>>>>> 8579c96a31411db3431cc52df729d58dadbf5211
     double month_income{0.0};
 
-    double start_amount = EnterValues("Enter your deposit:> ");
-    double month_amount = EnterValues("How many month(s)?> ");
-    double interest = EnterValues("At what interest %?> ");
+    // double start_amount = EnterValues("Enter your deposit:> ");
+    // double month_amount = EnterValues("How many month(s)?> ");
+    // double interest = EnterValues("At what interest %?> ");
 
     //for test purpose
-    // double start_amount = 1000000.0;
-    // double month_amount = 12.0;
+    double const interest = 15.0;
+    double start_amount = 1000000.0;
+    double month_amount = 12.0;
 
+    setColor(hConsole, CColor::Red); // for Windows console
     std::cout << std::fixed << std::setprecision(2);
-    std::cout.imbue(std::locale("ru_RU.UTF-8"));
+
+    //std::cout.imbue(std::locale("ru_RU.UTF-8"));
+
     std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * 100) << "\n";
     std::cout << "Interest rate: " << interest << "%\n\n";
+    
+    setColor(hConsole, CColor::Grey);
 
     for (int i = 0; i < month_amount; ++i){
 
@@ -84,15 +98,11 @@ int main(){
               << " month(s) is: " << overall_income;
 
     std::cout << "\nYour net income for " << month_amount
-              << " month(s) is: " << overall_income - sum_start << "\n\n";
+              << " month(s) is: " << overall_income - start_amount << "\n\n";
     #endif
 
     #ifdef __APPLE__
 
-<<<<<<< HEAD
-    std::cout << "\nYour net income for " << month_amount
-              << " month(s) is: " << "\033[32m" << overall_income - sum_start << "\032[0m\n";
-=======
     std::cout << "\nYour overall income for " << setColor(CColor::Cyan) << static_cast<int>(month_amount)
               << setColor(CColor::Reset) << " month(s) at " << setColor(CColor::Magenta) << interest << "%"
               << setColor(CColor::Reset) << " is: " << setColor(CColor::Green)
@@ -102,7 +112,6 @@ int main(){
               << setColor(CColor::Reset)
               << " month(s) is: " << setColor(CColor::Green) << std::put_money((overall_income - start_amount) * 100)
               << setColor(CColor::Reset);
->>>>>>> 8579c96a31411db3431cc52df729d58dadbf5211
     std::cout << "\n\n";
 
     #endif

@@ -41,7 +41,7 @@ double EnterValues(std::string message){
 	do {
 
         #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, ConsoleColor::DeepCyan); //set console color font bluish
+        SetConsoleTextAttribute(hConsole, CColor::DeepCyan); //set console color font bluish
         std::cout << message;
         #endif
 
@@ -50,7 +50,7 @@ double EnterValues(std::string message){
         #endif
 
         #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite); //set console color font white
+        SetConsoleTextAttribute(hConsole, CColor::NormalWhite); //set console color font white
         #endif
 
 		std::cin >> number;
@@ -61,7 +61,7 @@ double EnterValues(std::string message){
             std::cin.ignore(32767,'\n'); // и удаляем значения предыдущего ввода из входного буфера
 
             #ifdef _WIN32
-            SetConsoleTextAttribute(hConsole, ConsoleColor::Red); //set console color font red
+            SetConsoleTextAttribute(hConsole, CColor::Red); //set console color font red
             std::cout << "Only numbers please\n" << std::endl;
             #endif
 

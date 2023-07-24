@@ -31,6 +31,7 @@
 //windows console
 enum CColor{
     DeepCyan = 3,
+    Cyan = 3,
     DarkRed = 4,
     NormalWhite = 7,
     Grey = 8,
@@ -38,6 +39,7 @@ enum CColor{
     Green = 10,
     Red = 12,
     Yellow = 14,
+    Reset = 7,
 };
 #endif
 
