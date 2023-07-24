@@ -15,13 +15,8 @@
 
 
 std::ostream& set_red(std::ostream& os) {
-    HANDLE  hConsole;
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, CColor::Red);
-
     std::string myStr = "test";
     os << myStr;
-    SetConsoleTextAttribute(hConsole, CColor::Reset);
     return os;
 }
 
