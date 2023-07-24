@@ -1,9 +1,5 @@
 #pragma once
 
-<<<<<<< HEAD
-//windows console colors
-enum ConsoleColor{
-=======
 /*
 
         Colors in OSX Terminal
@@ -34,7 +30,6 @@ enum ConsoleColor{
 #ifdef _WIN32
 //windows console
 enum CColor{
->>>>>>> 8579c96a31411db3431cc52df729d58dadbf5211
     DeepCyan = 3,
     DarkRed = 4,
     NormalWhite = 7,
