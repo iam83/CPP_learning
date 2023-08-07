@@ -7,5 +7,5 @@ int main(){
     std::cout << std::numbers::phi << "\n";
     std::cout << std::format("Hello {}", temp);
     return 0;
-    
+
 }
