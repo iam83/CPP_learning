@@ -12,6 +12,7 @@
 
 #ifdef _WIN32
 #include <locale>
+
 #define FACTOR 1.0
 #endif
 
@@ -42,14 +43,10 @@ void clearScreen(){
 
 void printResult(double overall_income, double month_income, int count){
 
-    // "{:7}"
-
-    // std::cout << std::format("Month {:>3}: {:>10}  |  profit per month: {:>10.2f}",
-    //                          count+1, std::put_money(overall_income * 100), std::put_money(month_income * 100));
-
-    std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   "
-            << setColor(CColor::Green) << std::put_money(overall_income * FACTOR) << setColor(CColor::Reset)
-            << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * FACTOR) << setColor(CColor::Reset) << "\n";
+    std::cout << std::showbase << "Month "
+              << std::right << std::setw(2) << count+1 << ":   "
+              << setColor(CColor::Green) << std::put_money(overall_income * FACTOR) << setColor(CColor::Reset)
+              << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * FACTOR) << setColor(CColor::Reset) << "\n";
 }
 
 int main(){
@@ -62,14 +59,14 @@ int main(){
     double overall_income {0.0};
     double month_income {0.0};
 
-    // double start_amount = EnterValues("Enter your deposit:> ");
-    // double month_amount = EnterValues("How many month(s)?> ");
-    // double interest = EnterValues("At what interest %?> ");
+    double start_amount = EnterValues("Enter your deposit:> ");
+    double month_amount = EnterValues("How many month(s)?> ");
+    double interest = EnterValues("At what interest %?> ");
 
     //for test purpose
-    double const interest {15.0};
-    double start_amount {1'000'000.0};
-    double month_amount {12.0};
+    // double const interest {15.0};
+    // double start_amount {1'000'000.0};
+    // double month_amount {12.0};
 
 
     std::cout << std::fixed << std::setprecision(2);
@@ -77,10 +74,6 @@ int main(){
     #ifdef __APPLE__
     std::cout.imbue(std::locale("ru_RU.UTF-8"));
     #endif
-
-    std::setlocale(LC_ALL, "ru_RU");
-
-    std::cout << "привет\n";
 
     std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * FACTOR) << "\n";
     std::cout << "Interest rate: " << interest << "%\n\n";
@@ -114,7 +107,7 @@ int main(){
               << setColor(CColor::Reset);
     std::cout << "\n\n";
 
-
+    //system("pause");
     return 0;
 
 }
