@@ -6,12 +6,19 @@
 #include <iomanip> //for monetary output
 #include <string>
 #include "check.h" //check if enter is valid
-#include "ccolor.h" //for OSX terminal color
+#include "ccolor.h" //terminal color
+#include <format>
+
 
 #ifdef _WIN32
 #include <locale>
-#include <windows.h>
+#define FACTOR 1.0
 #endif
+
+#ifdef __APPLE__
+#define FACTOR 100.0
+#endif
+
 
 /* creating custom ostream object // usage std::cout << myTest; //output: test
 
@@ -34,39 +41,21 @@ void clearScreen(){
 }
 
 void printResult(double overall_income, double month_income, int count){
-    #ifdef _WIN32
 
-    HANDLE  hConsole;
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    // "{:7}"
 
-    std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   ";
-    setColor(hConsole, CColor::Green); // for Windows console
-    std::cout << std::put_money(overall_income * 100.0);
-    setColor(hConsole, CColor::Reset);
-    std::cout << "    profit per month:  ";
-    setColor(hConsole, CColor::Cyan);
-    std::cout << std::put_money(month_income * 100.0);
-    setColor(hConsole, CColor::Reset);
-    std::cout << "\n";
-    
+    // std::cout << std::format("Month {:>3}: {:>10}  |  profit per month: {:>10.2f}",
+    //                          count+1, std::put_money(overall_income * 100), std::put_money(month_income * 100));
 
-    #endif
-
-    #ifdef __APPLE__
     std::cout << std::showbase << "Month " << std::right << std::setw(2) << count+1 << ":   "
-            << setColor(CColor::Green) << std::put_money(overall_income * 100) << setColor(CColor::Reset)
-            << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * 100) << setColor(CColor::Reset) << "\n";
-    #endif
+            << setColor(CColor::Green) << std::put_money(overall_income * FACTOR) << setColor(CColor::Reset)
+            << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * FACTOR) << setColor(CColor::Reset) << "\n";
 }
 
 int main(){
 
-    #ifdef _WIN32
-        HANDLE  hConsole;
-        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        setlocale(LC_ALL, "Russian");
-        setColor(hConsole, CColor::Reset);
-    #endif
+    //setlocale(LC_ALL, "Russian");
+    setColor(CColor::Reset);
 
     clearScreen();
 
@@ -88,9 +77,12 @@ int main(){
     #ifdef __APPLE__
     std::cout.imbue(std::locale("ru_RU.UTF-8"));
     #endif
-    
 
-    std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * 100.0) << "\n";
+    std::setlocale(LC_ALL, "ru_RU");
+
+    std::cout << "привет\n";
+
+    std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * FACTOR) << "\n";
     std::cout << "Interest rate: " << interest << "%\n\n";
 
     for (int i = 0; i < month_amount; ++i){
@@ -110,40 +102,18 @@ int main(){
         
     }
 
-    #ifdef _WIN32
-    std::cout << "\nYour overall income for ";
-    setColor(hConsole, CColor::DeepCyan);
-    std::cout << month_amount;
-    setColor(hConsole, CColor::Reset);
-    std::cout << " month(s) is: ";
-    setColor(hConsole, CColor::Yellow);
-    std::cout << overall_income;
-    setColor(hConsole, CColor::Reset);
-
-    std::cout << "\nYour net income for ";
-    setColor(hConsole, CColor::Cyan);
-    std::cout << month_amount;
-    setColor(hConsole, CColor::Reset);
-    std::cout << " month(s) is: ";
-    setColor(hConsole, CColor::Green);
-    std::cout << overall_income - start_amount << "\n\n";
-    setColor(hConsole, CColor::Reset);
-    #endif
-
-    #ifdef __APPLE__
 
     std::cout << "\nYour overall income for " << setColor(CColor::Cyan) << static_cast<int>(month_amount)
               << setColor(CColor::Reset) << " month(s) at " << setColor(CColor::Magenta) << interest << "%"
               << setColor(CColor::Reset) << " is: " << setColor(CColor::Green)
-              << std::put_money(overall_income * 100.0) << setColor(CColor::Reset);
+              << std::put_money(overall_income * FACTOR) << setColor(CColor::Reset);
 
     std::cout << "\nYour income for " << setColor(CColor::Cyan) << static_cast<int>(month_amount)
               << setColor(CColor::Reset)
-              << " month(s) is: " << setColor(CColor::Green) << std::put_money((overall_income - start_amount) * 100.0)
+              << " month(s) is: " << setColor(CColor::Green) << std::put_money((overall_income - start_amount) * FACTOR)
               << setColor(CColor::Reset);
     std::cout << "\n\n";
 
-    #endif
 
     return 0;
 
