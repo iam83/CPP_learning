@@ -96,14 +96,18 @@ int main(){
     }
 
 
-    std::cout << "\nYour overall income for " << setColor(CColor::Cyan) << static_cast<int>(month_amount)
-              << setColor(CColor::Reset) << " month(s) at " << setColor(CColor::Magenta) << interest << "%"
-              << setColor(CColor::Reset) << " is: " << setColor(CColor::Green)
-              << std::put_money(overall_income * FACTOR) << setColor(CColor::Reset);
+    std::cout << "\nYour overall income for "
+              << setColor(CColor::Cyan) << static_cast<int>(month_amount)
+              << setColor(CColor::Reset) << " month(s) at "
+              << setColor(CColor::Magenta) << interest << "%"
+              << setColor(CColor::Reset) << " is: "
+              << setColor(CColor::Green) << std::put_money(overall_income * FACTOR)
+              << setColor(CColor::Reset);
 
-    std::cout << "\nYour income for " << setColor(CColor::Cyan) << static_cast<int>(month_amount)
-              << setColor(CColor::Reset)
-              << " month(s) is: " << setColor(CColor::Green) << std::put_money((overall_income - start_amount) * FACTOR)
+    std::cout << "\nYour income for "
+              << setColor(CColor::Cyan) << static_cast<int>(month_amount)
+              << setColor(CColor::Reset) << " month(s) is: "
+              << setColor(CColor::Green) << std::put_money((overall_income - start_amount) * FACTOR)
               << setColor(CColor::Reset);
     std::cout << "\n\n";
 
