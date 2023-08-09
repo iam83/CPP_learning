@@ -59,14 +59,14 @@ int main(){
     double overall_income {0.0};
     double month_income {0.0};
 
-    double start_amount = EnterValues("Enter your deposit:> ");
-    double month_amount = EnterValues("How many month(s)?> ");
-    double interest = EnterValues("At what interest %?> ");
+    // double start_amount = EnterValues("Enter your deposit:> ");
+    // double month_amount = EnterValues("How many month(s)?> ");
+    // double interest = EnterValues("At what interest %?> ");
 
     //for test purpose
-    // double const interest {15.0};
-    // double start_amount {1'000'000.0};
-    // double month_amount {12.0};
+    double const interest {15.0};
+    double start_amount {1'000'000.0};
+    double month_amount {12.0};
 
 
     std::cout << std::fixed << std::setprecision(2);
@@ -74,8 +74,9 @@ int main(){
     #ifdef __APPLE__
     std::cout.imbue(std::locale("ru_RU.UTF-8"));
     #endif
-
+    std::cout << setColor(CColor::BG_Yellow);
     std::cout << std::showbase << "\nStart amount: " << std::put_money(start_amount * FACTOR) << "\n";
+    std::cout << setColor(CColor::Reset);
     std::cout << "Interest rate: " << interest << "%\n\n";
 
     for (int i = 0; i < month_amount; ++i){
