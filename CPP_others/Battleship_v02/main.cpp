@@ -4,6 +4,8 @@
     This is a personal challenge project.
     An attempt to recreate the Battleship classic game without looking at other examples.
     The code might look a bit too spaggetti, oh well but it works lol.
+
+    this version meant to be a test site for optimizing the previous one
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -26,12 +28,12 @@
 #include <chrono>
 #include <map>
 #include <algorithm>
+
 #include "ccolor.h"
 #include "print.h"
 
 #ifdef _WIN32
 #define CLS "cls"
-#include <windows.h>
 #endif
 #ifdef __APPLE__
 #define CLS "clear"
@@ -206,7 +208,7 @@ void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, 
     getPossibles(field, vec, dir, ship);
     std::vector<std::pair<int, int>> temp_vec;
 
-    int i = rand() % vec.size(); //choose random ship position that can be definitely installed
+    int i = rand() % vec.size(); //choose random ship position where it can be definitely installed
     int row = vec[i].first;
     int col = vec[i].second;
 
@@ -306,7 +308,8 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 }
 
 //checking which ship is got hit
-bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col, std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit, std::vector<std::string>& pc_moves, Player player) {
+bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col,
+              std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit, std::vector<std::string>& pc_moves, Player player) {
 
     std::string temp_key = "";
 
@@ -357,7 +360,7 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     std::map<std::string, std::vector<std::pair<int, int>>>& map) {
 
     createField(field);
-    generateFirstShip(field, map, Ship::Carrier, "ship4");
+    generateFirstShip(field, map,  Ship::Carrier, "ship4");
     setShips(field, map, vec, dir, Ship::Battleship, "ship3_1");
     setShips(field, map, vec, dir, Ship::Battleship, "ship3_2");
     setShips(field, map, vec, dir, Ship::Cruiser, "ship2_1");
@@ -372,16 +375,16 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
 bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& coord_str) { //check if user makes correct input
 
     if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
-        coord_str[0] == 'C' || coord_str[0] == 'D' ||
-        coord_str[0] == 'E' || coord_str[0] == 'F' ||
-        coord_str[0] == 'G' || coord_str[0] == 'H' ||
-        coord_str[0] == 'I' || coord_str[0] == 'J')
+         coord_str[0] == 'C' || coord_str[0] == 'D' ||
+         coord_str[0] == 'E' || coord_str[0] == 'F' ||
+         coord_str[0] == 'G' || coord_str[0] == 'H' ||
+         coord_str[0] == 'I' || coord_str[0] == 'J')
         &&
         (coord_str[1] == '0' || coord_str[1] == '1' ||
-        coord_str[1] == '2' || coord_str[1] == '3' ||
-        coord_str[1] == '4' || coord_str[1] == '5' ||
-        coord_str[1] == '6' || coord_str[1] == '7' ||
-        coord_str[1] == '8' || coord_str[1] == '9')
+         coord_str[1] == '2' || coord_str[1] == '3' ||
+         coord_str[1] == '4' || coord_str[1] == '5' ||
+         coord_str[1] == '6' || coord_str[1] == '7' ||
+         coord_str[1] == '8' || coord_str[1] == '9')
         && coord_str.size() == 2) {
 
         checkField(field_pc);
@@ -502,11 +505,11 @@ int playAgain() {
         std::cout << "  Would you like to play again (y/n)?: ";
         std::cin >> exit;
 
-        if (exit == 'y') {
+        if (exit == 'y' || exit == 'Y') {
             return 1;
             break;
         }
-        else if (exit == 'n') {
+        else if (exit == 'n' || exit == 'N') {
             std::cout << "  Thank you for playing. See you!" << std::endl;
             return 0;
             break;
@@ -534,11 +537,11 @@ bool isAutomaticSetup(){
         std::cin >> exit;
         std::cout << std::endl;
 
-        if (exit == 'a') {
+        if (exit == 'a' || exit == 'A') {
             return true;
             break;
         }
-        else if (exit == 'm') {
+        else if (exit == 'm' || exit == 'M') {
             return false;
             break;
         }
@@ -787,15 +790,18 @@ int main() {
 
         createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
-        printFields(field_pc, field_user, ShipView::Invisible);
+        
 
         int row{ 0 }, col{ 0 };
         int pc_row{ 0 }, pc_col{ 0 };
 
+        printFields(field_pc, field_user, ShipView::Invisible, row, col);
+     
+
         std::string coord_str = "";
         std::string userLastMove = "";
-        std::string keyShipHit = "";
         std::string pcLastMove = "";
+        std::string keyShipHit = "";
         std::string message_user = "";
         std::string message_pc = "";
 
@@ -821,16 +827,18 @@ int main() {
             checkField(field_pc);
             checkField(field_user);
 
+            // THIS IS FOR DEBUGGING
             printMap(map_user);
             std::cout << std::endl;
             printMap(map_pc);
             std::cout << std::endl;
+            //
 
             //user move
             if (userMove(field_pc, row, col)) {
                 if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
                     //system(CLS);
-                    printFields(field_pc, field_user, ShipView::Visible);
+                    printFields(field_pc, field_user, ShipView::Visible, row, col);
                     printCongrats(Player::User);
                     break;
                 }
@@ -839,7 +847,7 @@ int main() {
                 message_user = "  You missed.";
             }
 
-            printFields(field_pc, field_user, ShipView::Invisible);
+            printFields(field_pc, field_user, ShipView::Invisible, row, col);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
              //pc move
@@ -847,7 +855,7 @@ int main() {
              if (pcMove(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
                      //system(CLS);
-                     printFields(field_pc, field_user, ShipView::Visible);
+                     printFields(field_pc, field_user, ShipView::Visible, row, col);
                      printCongrats(Player::Pc);
                      break;
                  }
@@ -857,13 +865,16 @@ int main() {
             }
 
             //system(CLS);
-            printFields(field_pc, field_user, ShipView::Invisible);
+            printFields(field_pc, field_user, ShipView::Invisible, row, col);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
             
-            printMap(map_user);
-            std::cout << std::endl;
-            printMap(map_pc);
-            std::cout << std::endl;
+
+            // THIS IS FOR DEBUGGING
+                printMap(map_user);
+                std::cout << std::endl;
+                printMap(map_pc);
+                std::cout << std::endl;
+            //
 
         }
     } while (playAgain());
