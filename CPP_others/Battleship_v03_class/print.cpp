@@ -327,7 +327,7 @@ void startMessage() {
     std::cout << std::endl;
     std::cout << std::endl;
 
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.3";
+    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.5";
 
     for (auto const& letter : message_start) {
         std::cout << letter;

@@ -752,7 +752,7 @@ void clearMaps(Map &map_user, Map &map_pc){
 
 int main() {
 
-    //startMessage();
+    startMessage();
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user; //store user main field

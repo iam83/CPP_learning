@@ -89,6 +89,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                  std::array<std::array<int, 10>, 10> const& field_user,
                  ShipView field_view) {
 
+
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
     const std::string separator = "        ";
@@ -132,6 +133,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
             //ship is hit
             else if (field_user.at(row).at(col) == FieldCellStates::Hit) {
                 std::cout << setColor(CColor::LightRed);
+                std::cout << setColor(CColor::Negative);
                 std::cout << c_HIT << " ";
                 std::cout << setColor(CColor::Reset);
             }
@@ -177,6 +179,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
             //ship is hit
             else if (field_pc.at(row).at(col) == FieldCellStates::Hit) {
                 std::cout << setColor(CColor::Green);
+                std::cout << setColor(CColor::Negative);
                 std::cout << c_HIT << " ";
                 std::cout << setColor(CColor::Reset);
             }
@@ -206,12 +209,27 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
     std::cout << std::endl;
 }
 
-void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user, std::map<std::string, std::vector<std::pair<int, int>>> map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
+void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user,
+                        std::map<std::string, std::vector<std::pair<int, int>>> map_pc,
+                        std::string message_user, std::string message_pc,
+                        std::string userLastMove, std::string pcLastMove){
+
+
     std::cout << "       Your ships: " << map_user.size();
+    if (message_user[2] == 'W')
+        std::cout << setColor(CColor::Green);
+    if(message_user[6] == 'h')
+        std::cout << setColor(CColor::Cyan);
     std::cout << "\t\t" << message_user << std::endl;
+    std::cout << setColor(CColor::Reset);
 
     std::cout << "         PC ships: " << map_pc.size();
+    if(message_pc[2] == 'O')
+        std::cout << setColor(CColor::Red);
+    if(message_pc[5] == 'h')
+        std::cout << setColor(CColor::Yellow);
     std::cout << "\t\t" << message_pc << std::endl;
+    std::cout << setColor(CColor::Reset);
 
     std::cout << "   Your last move: " << userLastMove << std::endl;
     std::cout << "     PC last move: " << pcLastMove << std::endl;
@@ -236,7 +254,7 @@ void printCongrats(Player player) {
     std::cout << std::endl;
 }
 
-void startMessage() {
+void startMessage(std::string version) {
 
     system(CLS);
 
@@ -245,7 +263,7 @@ void startMessage() {
     std::cout << std::endl;
     std::cout << std::endl;
 
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.3";
+    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  " + version;
 
     for (auto const& letter : message_start) {
         std::cout << letter;

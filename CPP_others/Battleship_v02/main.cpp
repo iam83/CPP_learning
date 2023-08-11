@@ -19,6 +19,8 @@
         1. Make TCP/IP client-server
 */
 
+#define _VERSION_ "1.5"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -202,7 +204,8 @@ void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std:
     checkField(field);
 }
 
-void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, std::vector<std::pair<int, int>>& vec, int& dir, int ship, std::string ship_name) {
+void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map,
+              std::vector<std::pair<int, int>>& vec, int& dir, int ship, std::string ship_name) {
 
     checkField(field);
     getPossibles(field, vec, dir, ship);
@@ -309,7 +312,8 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 
 //checking which ship is got hit
 bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col,
-              std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit, std::vector<std::string>& pc_moves, Player player) {
+              std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit,
+              std::vector<std::string>& pc_moves, Player player) {
 
     std::string temp_key = "";
 
@@ -318,8 +322,9 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
         for (int i = 0; i < static_cast<int>(value.size()); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
-                    if (player == Player::User)
+                    if (player == Player::User){
                         message = "  You hit a ship!";
+                    }
                     else {
                         message = "  PC hit your ship!";
                         keyShipHit = key;
@@ -438,7 +443,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
-            //std::this_thread::sleep_for(std::chrono::milliseconds(250)); //250 ms
+            std::this_thread::sleep_for(std::chrono::milliseconds(250)); //250 ms
         }
 
         if (map_user[keyShipHit].size() == 0) {
@@ -468,7 +473,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         pc_moves.erase(pc_moves.begin() + move);
 
     }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(600)); //600 ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(600)); //600 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
@@ -532,18 +537,27 @@ bool isAutomaticSetup(){
         std::cout << "\n\n";
         std::cout << "        Choose ship setup mode\n\n";
         std::cout << "         'a' for Automatic\n";
-        std::cout << "         'm' for Manual\n\n";
+        std::cout << "         'm' for Manual\n";
+        std::cout << "         'q' for Quit\n\n";
         std::cout << "          >: ";
         std::cin >> exit;
         std::cout << std::endl;
-
+        
         if (exit == 'a' || exit == 'A') {
+            std::cin.clear(); // 
+            std::cin.ignore(32767, '\n');
             return true;
             break;
         }
         else if (exit == 'm' || exit == 'M') {
+            std::cin.clear(); // 
+            std::cin.ignore(32767, '\n');
             return false;
             break;
+        }
+            else if(exit == 'q' || exit == 'Q'){
+            std::cout << "See you! Bye.\n\n";
+            abort();
         }
         else {
             system(CLS);
@@ -556,7 +570,8 @@ bool isAutomaticSetup(){
     std::cout << std::endl;
 }
 
-void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::string coord_str, char dir_char, int ship, std::vector<std::string> &ship_name){
+void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc,
+                    Map &map_user, std::string coord_str, char dir_char, int ship, std::vector<std::string> &ship_name){
 
     std::vector<std::pair<int, int>> temp_vec;
     int row{0}; int col{0};
@@ -664,6 +679,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
 bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::vector<std::string> &ship_name){
 
     std::string coord_str = "";
+    std::string temp {};
     char dir_char = ' ';
     int ship{0};
     int row{0}; int col{0};
@@ -688,8 +704,19 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
                 std::cout << setColor(CColor::Cyan);
                 std::cout << " ship\n";
                 std::cout << setColor(CColor::Reset);
-                std::cout << "  (eg. a0, or type 'auto'): ";
+                std::cout << "  (eg. a0, or type 'auto', 'q' for quit): ";
                 std::cin >> coord_str;
+
+
+                for(auto letter : coord_str){
+                    temp += std::tolower(letter); //converting string to lowercase
+                } 
+                coord_str = temp; temp = "";
+                
+                if(coord_str[0] == 'q'){
+                    std::cout << "See you! Bye.\n\n";
+                    exit(0);
+                }
 
                 if(coord_str == "auto"){
                     switchToAuto = true;
@@ -746,7 +773,7 @@ void clearMaps(Map &map_user, Map &map_pc){
 
 int main() {
 
-    //startMessage();
+    startMessage(_VERSION_);
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user; //store user main field
@@ -786,7 +813,9 @@ int main() {
         }
 
         system(CLS);
+        std::cout << setColor(CColor::Cyan);
         std::cout << "\tGame started!\n";
+        std::cout << setColor(CColor::Reset);
 
         createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
