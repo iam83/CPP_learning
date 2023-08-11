@@ -87,7 +87,7 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 //print both fields, make it colorful on windows
 void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                  std::array<std::array<int, 10>, 10> const& field_user,
-                 ShipView field_view, int row_last, int col_last) {
+                 ShipView field_view) {
 
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
@@ -115,20 +115,11 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
 
     for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
-        /*
 
-            if (userLastMove[0] == row && userLastMove[1] == col)
-                std::cout << setColor(CColor::Negative);
-
-        */
         // user field
         for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
             if (field_user.at(row).at(col) == FieldCellStates::Ship) {
                 std::cout << setColor(CColor::Yellow);
-
-                if (row_last == row && col_last == col) //negative the color of last move
-                    std::cout << setColor(CColor::Negative);
-
                 std::cout << c_SHIP << " ";
                 std::cout << setColor(CColor::Reset);
             }
@@ -171,10 +162,10 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
         for (int col = 0; col < static_cast<int>(field_pc.size()); ++col) {
             if (field_pc.at(row).at(col) == FieldCellStates::Ship) {
                 std::cout << setColor(CColor::DarkGrey);
-                if (field_view == ShipView::Visible)
+                if (field_view == ShipView::Visible) // make ships visible when game has ended
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_SHIP << " "; // c_FIELD
+                    std::cout << c_FIELD << " "; // use c_FIELD for game, use c_SHIP for deggging
                 std::cout << setColor(CColor::Reset);
             }
             //border around ship

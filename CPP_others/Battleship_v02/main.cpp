@@ -760,7 +760,7 @@ int main() {
 
     //game loop
     do {
-        //system(CLS);
+        system(CLS);
 
         std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
         
@@ -775,7 +775,7 @@ int main() {
         
 
         if (!isAutomaticSetup()){
-            //system(CLS);
+            system(CLS);
             std::cout << "\tManual setup\n";
             if (!manualSetup(field_user, field_pc, map_user, ship_name)){
                 createGameField(field_user, vec, dir, map_user);
@@ -785,18 +785,15 @@ int main() {
             createGameField(field_user, vec, dir, map_user);
         }
 
-        //system(CLS);
+        system(CLS);
         std::cout << "\tGame started!\n";
 
         createGameField(field_pc, vec, dir, map_pc);
         createPcMoveTable(pc_moves);
-        
+        printFields(field_pc, field_user, ShipView::Invisible);
 
         int row{ 0 }, col{ 0 };
         int pc_row{ 0 }, pc_col{ 0 };
-
-        printFields(field_pc, field_user, ShipView::Invisible, row, col);
-     
 
         std::string coord_str = "";
         std::string userLastMove = "";
@@ -818,7 +815,7 @@ int main() {
 
             } while (!isInputValid(field_pc, coord_str));
 
-            //system(CLS);
+            system(CLS);
 
             userLastMove = coord_str;
             
@@ -828,17 +825,17 @@ int main() {
             checkField(field_user);
 
             // THIS IS FOR DEBUGGING
-            printMap(map_user);
-            std::cout << std::endl;
-            printMap(map_pc);
-            std::cout << std::endl;
+                // printMap(map_user);
+                // std::cout << std::endl;
+                // printMap(map_pc);
+                // std::cout << std::endl;
             //
 
             //user move
             if (userMove(field_pc, row, col)) {
                 if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
-                    //system(CLS);
-                    printFields(field_pc, field_user, ShipView::Visible, row, col);
+                    system(CLS);
+                    printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
                     break;
                 }
@@ -847,15 +844,15 @@ int main() {
                 message_user = "  You missed.";
             }
 
-            printFields(field_pc, field_user, ShipView::Invisible, row, col);
+            printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
              //pc move
              getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
              if (pcMove(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
-                     //system(CLS);
-                     printFields(field_pc, field_user, ShipView::Visible, row, col);
+                     system(CLS);
+                     printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
                      break;
                  }
@@ -864,16 +861,16 @@ int main() {
                  message_pc = "   PC missed.";
             }
 
-            //system(CLS);
-            printFields(field_pc, field_user, ShipView::Invisible, row, col);
+            system(CLS);
+            printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
             
 
             // THIS IS FOR DEBUGGING
-                printMap(map_user);
-                std::cout << std::endl;
-                printMap(map_pc);
-                std::cout << std::endl;
+                // printMap(map_user);
+                // std::cout << std::endl;
+                // printMap(map_pc);
+                // std::cout << std::endl;
             //
 
         }
