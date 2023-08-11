@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 /*
     UPDATE:
-        14/08/2023 updated color output feature to make it cross-platform
+        11/08/2023 updated color output feature to make it cross-platform
 */
 /*
     TODO:
