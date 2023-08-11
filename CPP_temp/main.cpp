@@ -13,7 +13,7 @@ int main(){
     //std::cout << std::format("Month {:>3}: {:>10}  |  profit per month: {:>10.2f}", 20, 1000000, 200000.02456535);
     std::cout << std::endl;
     std::cout << std::endl;
-
+    
     //setlocale(LC_ALL, "Russian");
     //int temp {4096};
     //std::cout << (temp << 2);

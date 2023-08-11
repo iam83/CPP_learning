@@ -6,7 +6,10 @@
     The code might look a bit too spaggetti, oh well but it works lol.
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+    UPDATE:
+        14/08/2023 updated color output feature to make it cross-platform
+*/
 /*
     TODO:
         1. Adjust PC move to make it a bit more random when hitting User's ship.
@@ -23,7 +26,7 @@
 #include <chrono>
 #include <map>
 #include <algorithm>
-
+#include "ccolor.h"
 #include "print.h"
 
 #ifdef _WIN32
@@ -668,10 +671,6 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     // create bank of ships to be installed - 4X, 3X, 3X, 2X, 2X, 2X, 1X, 1X, 1X, 1X
     std::vector<int> ship_bank = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
 
-    #ifdef _WIN32
-    HANDLE  hConsole;
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    #endif
     bool switchToAuto = false;
 
     do {
@@ -679,21 +678,13 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
         ship = ship_bank[0];
 
         do {    
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::DeepCyan); //set console color font green 10, yellow 14, or 22 for selected
-                #endif
+                std::cout << setColor(CColor::Cyan);
                 std::cout << "  Enter start Row and Column for the ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Yellow); //set console color font green 10, yellow 14, or 22 for selected
-                #endif
+                std::cout << setColor(CColor::Yellow);
                 std::cout << ship << "X";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::DeepCyan); //set console color font green 10, yellow 14, or 22 for selected
-                #endif
+                std::cout << setColor(CColor::Cyan);
                 std::cout << " ship\n";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite); //set console color font green 10, yellow 14, or 22 for selected
-                #endif
+                std::cout << setColor(CColor::Reset);
                 std::cout << "  (eg. a0, or type 'auto'): ";
                 std::cin >> coord_str;
 
