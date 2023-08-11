@@ -265,11 +265,13 @@ void startMessage(std::string version) {
 
     const std::string message_start = "\t\tB A T T L E S H I P  by  AU  " + version;
 
+    #ifdef _WIN32
     for (auto const& letter : message_start) {
         std::cout << letter;
         std::this_thread::sleep_for(std::chrono::milliseconds(25)); //25 ms
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+    #endif
 }
 
 void printWarning(Warning warning){

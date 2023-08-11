@@ -19,7 +19,7 @@
         1. Make TCP/IP client-server
 */
 
-#define _VERSION_ "1.5"
+
 
 #include <iostream>
 #include <string>
@@ -41,6 +41,9 @@
 #define CLS "clear"
 #endif
 
+
+std::string g_VERSION = "1.5";
+
 typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
 enum Row{
@@ -55,6 +58,11 @@ struct Coord{
     Row row;
     Col col;
 };
+
+
+void exit_app(){
+    exit(0);
+}
 
 int getRandomNumber(int min, int max) {
     static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
@@ -534,6 +542,8 @@ bool isAutomaticSetup(){
     char exit;
 
     do {
+        std::cout << "\n\n\n";
+        std::cout << "\t\tB A T T L E S H I P  by  AU  " + g_VERSION;
         std::cout << "\n\n";
         std::cout << "        Choose ship setup mode\n\n";
         std::cout << "         'a' for Automatic\n";
@@ -557,7 +567,7 @@ bool isAutomaticSetup(){
         }
             else if(exit == 'q' || exit == 'Q'){
             std::cout << "See you! Bye.\n\n";
-            abort();
+            exit_app();
         }
         else {
             system(CLS);
@@ -773,7 +783,7 @@ void clearMaps(Map &map_user, Map &map_pc){
 
 int main() {
 
-    startMessage(_VERSION_);
+    //startMessage(_VERSION_);
     srand(static_cast<unsigned int>(time(0)));
 
     std::array<std::array<int, 10>, 10> field_user; //store user main field
@@ -788,7 +798,6 @@ int main() {
     //game loop
     do {
         system(CLS);
-
         std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
         
         map_user.clear();

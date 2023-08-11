@@ -10,7 +10,7 @@
 std::string setColor(CColor color){
 
     switch(color) {
-        case CColor::Reset: return "\033[0m"; break;
+        case CColor::Reset: return "\033[0m"; break; //0 original
         case CColor::Bold: return "\033[1m"; break;
         case CColor::Underline: return "\033[4m"; break;
         case CColor::Negative: return "\033[7m"; break;
