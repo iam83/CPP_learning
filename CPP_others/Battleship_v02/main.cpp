@@ -432,7 +432,7 @@ bool isInputValid(Field_t &field_pc, std::string &coord_str) { //check if user m
     return false;
 }
 
-bool move(Field_t &field, int row, int col) {
+bool isMove(Field_t &field, int row, int col) {
 
     if (field.at(row).at(col) == FieldCellStates::Ship) {
 
@@ -903,7 +903,7 @@ int main() {
 
                     //user move
                     if(!isPcHit){//if the previous PC move was not positive then execute User move
-                        if (move(field_pc, row, col)) {
+                        if (isMove(field_pc, row, col)) {
                             if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, demo_moves, Player::User)) {
                                 system(CLS); //COMMENT FOR DEBUG
                                 printFields(field_pc, field_user, ShipView::Visible);
@@ -926,7 +926,7 @@ int main() {
 
              //pc move
              getCoord(pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit, Player::Pc);
-             if (move(field_user, pc_row, pc_col)) {
+             if (isMove(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
                      system(CLS); //COMMENT FOR DEBUG
                      printFields(field_pc, field_user, ShipView::Visible);
@@ -944,8 +944,6 @@ int main() {
             system(CLS);//COMMENT FOR DEBUG
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-
-
         }
     } while (playAgain());
 
