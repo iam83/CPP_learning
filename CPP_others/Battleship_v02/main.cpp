@@ -122,7 +122,7 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
     }
 }
 
-//making vector of coords possible ships to be setup on field
+//making a vector of possible coordinates where ships can be placed on the field
 void getPossibles(std::array<std::array<int, 10>, 10> const &field,
     std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
 
