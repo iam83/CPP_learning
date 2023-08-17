@@ -194,7 +194,7 @@ void getPossibles(Field_t const &field,
     }
 }
 
-void generateFirstShip(Field_t& field, Map_t& map, int const ship, std::string const ship_name) {
+void generateFirstShip(Field_t &field, Map_t &map, int const ship, std::string const ship_name) {
 
     checkField(field);
     int row{ 0 }, col{ 0 }, dir{ 0 };
@@ -225,7 +225,7 @@ void generateFirstShip(Field_t& field, Map_t& map, int const ship, std::string c
 }
 
 void setShips(Field_t& field, Map_t& map,
-              std::vector<std::pair<int, int>>& vec, int& dir, int ship, std::string ship_name) {
+              std::vector<std::pair<int, int>> &vec, int& dir, int ship, std::string ship_name) {
 
     checkField(field);
     getPossibles(field, vec, dir, ship);
@@ -383,7 +383,7 @@ bool checkMap(Map_t &map, int row, int col,
     return false;
 }
 
-void createGameField(Field_t& field,
+void createGameField(Field_t &field,
     std::vector<std::pair<int, int>> &vec, int &dir,
     Map_t &map) {
 
@@ -400,7 +400,7 @@ void createGameField(Field_t& field,
     setShips(field, map, vec, dir, Ship::Submarine, "ship1_4");
 }
 
-bool isInputValid(Field_t& field_pc, std::string& coord_str) { //check if user makes correct input
+bool isInputValid(Field_t &field_pc, std::string &coord_str) { //check if user makes correct input
 
     if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
          coord_str[0] == 'C' || coord_str[0] == 'D' ||
@@ -446,6 +446,7 @@ bool move(Field_t &field, int row, int col) {
     else {
         if (field.at(row).at(col) != FieldCellStates::Hit &&
             field.at(row).at(col) != FieldCellStates::Miss) {
+
             field.at(row).at(col) = FieldCellStates::Miss;
             return false;
         }
@@ -454,9 +455,8 @@ bool move(Field_t &field, int row, int col) {
     return false;
 }
 
-void getCoord(std::vector<std::string>& moves,
-    Map_t map, std::string& lastMove,
-    int& row, int& col, std::string const& keyShipHit, Player player) {
+void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove, int &row, int &col,
+              std::string const &keyShipHit, Player player) {
 
     int move{ 0 };
     std::string temp_pcMove = "";

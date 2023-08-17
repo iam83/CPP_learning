@@ -286,12 +286,15 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
     
     std::cout << std::endl;
 
-    std::cout << "maps_user after pc moves\n";
-    printMap(map_user);
-    std::cout << std::endl;
-    std::cout << "maps_pc after pc moves\n";
-    printMap(map_pc);
-    std::cout << std::endl;
+
+    //DEBUGGING ONLY
+        std::cout << "maps_user after pc moves\n";
+        printMap(map_user);
+        std::cout << std::endl;
+        std::cout << "maps_pc after pc moves\n";
+        printMap(map_pc);
+        std::cout << std::endl;
+    //
 }
 
 void printCongrats(Player player) {
