@@ -382,9 +382,7 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
     return false;
 }
 
-void createGameField(Field_t &field,
-    std::vector<std::pair<int, int>> &vec, int &dir,
-    Map_t &map) {
+void createGameField(Field_t &field, std::vector<std::pair<int, int>> &vec, int &dir, Map_t &map) {
 
     createField(field);
     generateFirstShip(field, map,  Ship::Carrier, "ship4");
@@ -472,6 +470,7 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
             sleepThread(150);
         }
 
+        //HERE MIGHT BE A PROBLEM
         if (map[keyShipHit].size() == 0) {
 
             move = rand() % moves.size();
@@ -795,18 +794,6 @@ void clearMaps(Map_t &map_user, Map_t &map_pc){
     map_user.clear();
     map_pc.clear();
 }
-
-//DEBUGGING ONLY
-void TableOfDebugMoves(std::vector<std::string> &demo_moves){
-
-    const std::string letters = "ABCDEFGHIJ";
-    for (int i = 0; i <= 9; ++i) {
-        for (int j = 0; j <= 9; ++j) {
-            demo_moves.push_back(letters[i] + std::to_string(j));
-        }
-    }
-}
-//
 
 int main() {
 

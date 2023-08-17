@@ -26,7 +26,7 @@ void printMoveTable(std::vector<std::string> const& pc_moves) {
     std::cout << std::endl;
 }
 
-void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map) {
 
     std::cout << "map size " << map.size() << "\n";
     std::string coord_str = "";
@@ -206,7 +206,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                 if (field_view == ShipView::Visible) // make ships visible when game has ended
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_FIELD << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
+                    std::cout << c_SHIP << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
                 std::cout << setColor(CColor::Reset);
             }
             //border around ship
@@ -290,9 +290,11 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
     //DEBUGGING ONLY
         std::cout << "maps_user after pc moves\n";
         printMap(map_user);
+        std::cout << "map_user[\"ship4\"].size() = " << map_user["ship4"].size() << "\n";
         std::cout << std::endl;
         std::cout << "maps_pc after pc moves\n";
         printMap(map_pc);
+        std::cout << "map_pc[\"ship4\"].size() = " << map_pc["ship4"].size() << "\n";
         std::cout << std::endl;
     //
 }
