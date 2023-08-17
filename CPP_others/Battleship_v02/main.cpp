@@ -8,8 +8,9 @@
     this version meant to be a test site for optimizing the previous one
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
-/*
+/*  
     UPDATE:
+        17/08/2023 added Demo mode. PC vs PC. optimized some code
         11/08/2023 updated color output feature to make it cross-platform
 */
 /*
@@ -20,6 +21,7 @@
 /*
     TODO:
         1. Adjust PC move to make it a bit more random when hitting User's ship.
+        2. Wrap into a Class
     FEATURES:
         1. Make TCP/IP client-server
 */
@@ -46,10 +48,13 @@
 #endif
 
 
-std::string g_VERSION = "1.5";
+std::string g_VERSION = "1.55";
 
-//default TIME factor for sleep::thread. for demo mode x2. for debug put 0
-int g_TIME = 1; 
+int g_TIME = 1; //TIME factor for sleep::thread. for demo mode it will x2. for debug put 0
+
+void sleepThread(int time){
+    std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
+}
 
 typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
 
@@ -449,68 +454,56 @@ bool move(std::array<std::array<int, 10>, 10>& field, int row, int col) {
     return false;
 }
 
-void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std::string>& pc_moves,
-    std::map<std::string, std::vector<std::pair<int, int>>> map_user, std::string& pcLastMove,
-    int& pc_row, int& pc_col, std::string const& keyShipHit) {
+void getCoord(std::vector<std::string>& moves,
+    std::map<std::string, std::vector<std::pair<int, int>>> map, std::string& lastMove,
+    int& row, int& col, std::string const& keyShipHit, Player player) {
 
     int move{ 0 };
     std::string temp_pcMove = "";
     std::vector<std::string>::iterator it;
 
-    if (pc_moves.size() > 0) {
-
-        std::cout << "   PC is attacking";
+    if (moves.size() > 0) {
+        if(player == Player::Pc)
+            std::cout << "   PC is attacking";
+        else
+            std::cout << " User is attacking";
+            
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
-            std::this_thread::sleep_for(std::chrono::milliseconds(250 * g_TIME)); //250 ms
+            sleepThread(150);
         }
 
-        if (map_user[keyShipHit].size() == 0) {
+        if (map[keyShipHit].size() == 0) {
 
-            move = rand() % pc_moves.size();
-            pcLastMove = pc_moves.at(move);
-            decodeCoords(pcLastMove, pc_row, pc_col);
+            move = rand() % moves.size();
+            lastMove = moves.at(move);
+            decodeCoords(lastMove, row, col);
 
         }
         else {
 
-            pc_row = map_user[keyShipHit][0].first;
-            pc_col = map_user[keyShipHit][0].second;
+            row = map[keyShipHit][0].first;
+            col = map[keyShipHit][0].second;
 
-            encodeCoords(temp_pcMove, pc_row, pc_col);
+            encodeCoords(temp_pcMove, row, col);
 
-            it = std::find(pc_moves.begin(), pc_moves.end(), temp_pcMove);
+            it = std::find(moves.begin(), moves.end(), temp_pcMove);
 
-            if (it != pc_moves.end()) {
-                move = it - pc_moves.begin();
-                pcLastMove = pc_moves.at(move);
+            if (it != moves.end()) {
+                move = it - moves.begin();
+                lastMove = moves.at(move);
             }
 
         }
 
-        std::cout << " " << pc_moves.at(move) << std::endl;
-        pc_moves.erase(pc_moves.begin() + move);
+        std::cout << " " << moves.at(move) << std::endl;
+        moves.erase(moves.begin() + move);
 
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(600 * g_TIME)); //600 ms
+    sleepThread(300); //600 ms
 }
 
-bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
-
-    if (field_user.at(row).at(col) == FieldCellStates::Ship) {
-        field_user.at(row).at(col) = FieldCellStates::Hit;
-        return true;
-    }
-    else {
-        if (field_user.at(row).at(col) != FieldCellStates::Hit &&
-            field_user.at(row).at(col) != FieldCellStates::Miss) {   
-            field_user.at(row).at(col) = FieldCellStates::Miss;
-        }
-    }
-    return false;
-}
-
-void createPcMoveTable(std::vector<std::string>& pc_moves) {
+void createMoveTable(std::vector<std::string>& pc_moves) {
 
     pc_moves.clear(); //clean before creating
 
@@ -531,6 +524,7 @@ int playAgain() {
         std::cin >> exit;
 
         if (exit == 'y' || exit == 'Y') {
+            g_TIME = 1; //reset g_TIME to 1. otherwise it would accumulate the value from the previous runtime
             return 1;
             break;
         }
@@ -803,12 +797,12 @@ void clearMaps(Map &map_user, Map &map_pc){
 }
 
 //DEBUGGING ONLY
-void TableOfDebugMoves(std::vector<std::string> &table_debug){
+void TableOfDebugMoves(std::vector<std::string> &demo_moves){
 
     const std::string letters = "ABCDEFGHIJ";
     for (int i = 0; i <= 9; ++i) {
         for (int j = 0; j <= 9; ++j) {
-            table_debug.push_back(letters[i] + std::to_string(j));
+            demo_moves.push_back(letters[i] + std::to_string(j));
         }
     }
 }
@@ -826,8 +820,7 @@ int main() {
 
     std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
     std::vector<std::string> pc_moves{}; //store pc moves
-
-    std::vector<std::string> table_debug{};
+    std::vector<std::string> demo_moves{};
         
 
     bool demo {false};
@@ -841,7 +834,7 @@ int main() {
         map_pc.clear();
         vec.clear();
         pc_moves.clear();
-        table_debug.clear();
+        demo_moves.clear();
 
         int dir{ 0 };
         createField(field_user);
@@ -865,7 +858,7 @@ int main() {
         std::cout << setColor(CColor::Reset);
 
         createGameField(field_pc, vec, dir, map_pc);
-        createPcMoveTable(pc_moves);
+        createMoveTable(pc_moves);
         
 
         int row{ 0 }, col{ 0 };
@@ -882,121 +875,80 @@ int main() {
 
         //DEBUGGING
         // if demo mode true
-        if(demo) createPcMoveTable(table_debug);
-        std::string temp_decode{};
-        int temp_row{}, temp_col{};
+        if(demo) createMoveTable(demo_moves);
         //
 
         while (1) {
 
             system(CLS);
+
             checkField(field_pc);
             checkField(field_user);
+
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
-
             if (!isPcHit){
-                do {
-
-                    if(!demo){
-                        std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
-                        std::cin >> coord_str;
-                        coord_str[0] = std::toupper(coord_str[0]);
-                        if (coord_str == "Q") {
-                            std::cout << "  See you, bye!\n\n";
-                            return 0;
-                        }
-                    }
-                    else{
-                        //DEMO MODE Automated inputs
-                        //THIS IS FOR DEBUGGING.
-                            // sequential move
-                            // if(!table_debug.empty()){
-                            //     coord_str = table_debug.front();
-                            //     table_debug.erase(table_debug.begin());
-                            //     temp_decode = coord_str;
-                            //     decodeCoords(temp_decode, temp_row, temp_col);
-                            // }
-                            
-                            //random move
-
-                            int move{ 0 };
-                            if(!table_debug.empty()){
-                                move = rand() % table_debug.size(); 
-                                coord_str = table_debug.at(move);
-                                table_debug.erase(table_debug.begin() + move);
+                if(!demo){
+                    do {
+                            std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
+                            std::cin >> coord_str;
+                            coord_str[0] = std::toupper(coord_str[0]);
+                            if (coord_str == "Q") {
+                                std::cout << "  See you, bye!\n\n";
+                                return 0;
                             }
 
-                            std::cout << "   User is attacking";
-                            for (size_t c{}; c < 3; ++c) {
-                                std::cout << ".";
-                                std::this_thread::sleep_for(std::chrono::milliseconds(250 * g_TIME)); //250 ms
-                            }
+                    } while (!isInputValid(field_pc, coord_str));
+                
+                    userLastMove = coord_str;         
+                    decodeCoords(coord_str, row, col);
 
-                            std::cout << coord_str << std::endl;
-                            std::this_thread::sleep_for(std::chrono::milliseconds(600 * g_TIME));
+                }else{
+                    //if demo mode is chosen
+                    getCoord(demo_moves, map_pc, userLastMove, row, col, keyShipHit, Player::User);
+                }
 
-                            //skip if the move isnt valid
-                            decodeCoords(coord_str, temp_row, temp_col);
+        
+                    system(CLS);//COMMENT FOR DEBUG
 
-                            if ((field_pc.at(temp_row).at(temp_col) == FieldCellStates::Miss ||
-                                field_pc.at(temp_row).at(temp_col) == FieldCellStates::BorderHit ||
-                                field_pc.at(temp_row).at(temp_col) == FieldCellStates::Hit)
-                            )
-                            {       
+                    checkField(field_pc);
+                    checkField(field_user);
+
+                    // THIS IS FOR DEBUGGING
+                        // std::cout << "maps_user BEFORE pc moves\n";
+                        // printMap(map_user);
+                        // std::cout << std::endl;
+                        // std::cout << "maps_pc BEFORE pc moves\n";
+                        // printMap(map_pc);
+                        // std::cout << std::endl;
+                    //
+
+                    //user move
+                    if(!isPcHit){//if the previous PC move was not positive then execute User move
+                        if (move(field_pc, row, col)) {
+                            if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
+                                system(CLS); //COMMENT FOR DEBUG
+                                printFields(field_pc, field_user, ShipView::Visible);
+                                printCongrats(Player::User);
                                 break;
                             }
-                            
-                            //system("pause");
-                            //
+                            message_pc = "";
+                            continue; // continue to next iteration bc User hit positive and move was true
+                        }
+                        else {
+                            message_user = "  You missed at " + userLastMove;
+                        }            
+
+                        printFields(field_pc, field_user, ShipView::Invisible);
+                        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
                     }
 
-                } while (!isInputValid(field_pc, coord_str));
             }
 
-
-
-            system(CLS);//COMMENT FOR DEBUG
-
-            userLastMove = coord_str;         
-            decodeCoords(coord_str, row, col);
-
-            checkField(field_pc);
-            checkField(field_user);
-
-            // THIS IS FOR DEBUGGING
-                // std::cout << "maps_user BEFORE pc moves\n";
-                // printMap(map_user);
-                // std::cout << std::endl;
-                // std::cout << "maps_pc BEFORE pc moves\n";
-                // printMap(map_pc);
-                // std::cout << std::endl;
-            //
-
-
-            //user move
-            if(!isPcHit){
-                if (move(field_pc, row, col)) {
-                    if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
-                        system(CLS); //COMMENT FOR DEBUG
-                        printFields(field_pc, field_user, ShipView::Visible);
-                        printCongrats(Player::User);
-                        break;
-                    }
-                    message_pc = "";
-                    continue;
-                }
-                else {
-                    message_user = "  You missed.";
-                }            
-
-                printFields(field_pc, field_user, ShipView::Invisible);
-                printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-            }
 
              //pc move
-             getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
+             getCoord(pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit, Player::Pc);
              if (move(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
                      system(CLS); //COMMENT FOR DEBUG
@@ -1004,10 +956,11 @@ int main() {
                      printCongrats(Player::Pc);
                      break;
                  }
+                 message_user = "";
                  isPcHit = true;
             }
              else {
-                 message_pc = "   PC missed.";
+                 message_pc = "   PC missed at " + pcLastMove;
                  isPcHit = false;
             }
 

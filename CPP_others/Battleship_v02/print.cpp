@@ -215,15 +215,26 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
                         std::string userLastMove, std::string pcLastMove){
 
 
-    std::cout << "       Your ships: " << map_user.size();
-    if (message_user[2] == 'W')
+    std::cout << "  Your ships left: ";
+    if (map_user.size() <= 3)
+        std::cout << setColor(CColor::LightRed); //set a color LightRed if ships left <= 3
+    std::cout << map_user.size();
+    std::cout << setColor(CColor::Reset);
+
+    if (message_user[2] == 'W') //if you sank a ship setColor Green
         std::cout << setColor(CColor::Green);
-    if(message_user[6] == 'h')
+    if(message_user[6] == 'h') //if you hit a ship setColor Cyan
         std::cout << setColor(CColor::Cyan);
+
     std::cout << "\t\t" << message_user << std::endl;
     std::cout << setColor(CColor::Reset);
 
-    std::cout << "         PC ships: " << map_pc.size();
+    std::cout << "    PC ships left: ";
+    if (map_pc.size() <= 3)
+        std::cout << setColor(CColor::LightRed);
+    std::cout << map_pc.size();
+    std::cout << setColor(CColor::Reset);
+
     if(message_pc[2] == 'O')
         std::cout << setColor(CColor::Red);
     if(message_pc[5] == 'h')
@@ -233,7 +244,7 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
 
     std::cout << "   Your last move: " << userLastMove << std::endl;
     std::cout << "     PC last move: " << pcLastMove << std::endl;
-
+    
     std::cout << std::endl;
 }
 
