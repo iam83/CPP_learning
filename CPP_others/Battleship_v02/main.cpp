@@ -13,6 +13,11 @@
         11/08/2023 updated color output feature to make it cross-platform
 */
 /*
+    BUGS:
+    01. PC stops moving. ??? it keeps getting moves. but in message there's always last move.
+
+*/
+/*
     TODO:
         1. Adjust PC move to make it a bit more random when hitting User's ship.
     FEATURES:
@@ -450,7 +455,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         std::cout << "   PC is attacking";
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
-            std::this_thread::sleep_for(std::chrono::milliseconds(250)); //250 ms
+            //std::this_thread::sleep_for(std::chrono::milliseconds(250)); //250 ms
         }
 
         if (map_user[keyShipHit].size() == 0) {
@@ -480,7 +485,7 @@ void getPcCoord(std::array<std::array<int, 10>, 10>& field_user, std::vector<std
         pc_moves.erase(pc_moves.begin() + move);
 
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(600)); //600 ms
+    //std::this_thread::sleep_for(std::chrono::milliseconds(600)); //600 ms
 }
 
 bool pcMove(std::array<std::array<int, 10>, 10>& field_user, int row, int col) {
@@ -785,14 +790,14 @@ int main() {
     //startMessage(_VERSION_);
     srand(static_cast<unsigned int>(time(0)));
 
-    std::array<std::array<int, 10>, 10> field_user; //store user main field
-    std::array<std::array<int, 10>, 10> field_pc;   //store pc main field
+    std::array<std::array<int, 10>, 10> field_user{}; //store user main field
+    std::array<std::array<int, 10>, 10> field_pc{};   //store pc main field
 
-    std::map<std::string, std::vector<std::pair<int, int>>> map_user; //store user ships coords
-    std::map<std::string, std::vector<std::pair<int, int>>> map_pc;   //store pc ships coords
+    std::map<std::string, std::vector<std::pair<int, int>>> map_user{}; //store user ships coords
+    std::map<std::string, std::vector<std::pair<int, int>>> map_pc{};   //store pc ships coords
 
-    std::vector<std::pair<int, int>> vec; //store coords of where ships can be installed
-    std::vector<std::string> pc_moves; //store pc moves
+    std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
+    std::vector<std::string> pc_moves{}; //store pc moves
 
     //game loop
     do {
@@ -852,7 +857,7 @@ int main() {
 
             } while (!isInputValid(field_pc, coord_str));
 
-            system(CLS);
+            //system(CLS);
 
             userLastMove = coord_str;
             
@@ -862,16 +867,18 @@ int main() {
             checkField(field_user);
 
             // THIS IS FOR DEBUGGING
-                // printMap(map_user);
-                // std::cout << std::endl;
-                // printMap(map_pc);
-                // std::cout << std::endl;
+                std::cout << "maps_user BEFORE pc moves\n";
+                printMap(map_user);
+                std::cout << std::endl;
+                std::cout << "maps_pc BEFORE pc moves\n";
+                printMap(map_pc);
+                std::cout << std::endl;
             //
 
             //user move
             if (userMove(field_pc, row, col)) {
                 if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
-                    system(CLS);
+                    //system(CLS);
                     printFields(field_pc, field_user, ShipView::Visible);
                     printCongrats(Player::User);
                     break;
@@ -888,7 +895,7 @@ int main() {
              getPcCoord(field_user, pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit);
              if (pcMove(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
-                     system(CLS);
+                     //system(CLS);
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
                      break;
@@ -898,16 +905,18 @@ int main() {
                  message_pc = "   PC missed.";
             }
 
-            system(CLS);
+            //system(CLS);
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
             
 
             // THIS IS FOR DEBUGGING
-                // printMap(map_user);
-                // std::cout << std::endl;
-                // printMap(map_pc);
-                // std::cout << std::endl;
+                std::cout << "maps_user after pc moves\n";
+                printMap(map_user);
+                std::cout << std::endl;
+                std::cout << "maps_pc after pc moves\n";
+                printMap(map_pc);
+                std::cout << std::endl;
             //
 
         }
