@@ -49,14 +49,14 @@
 
 
 std::string g_VERSION = "1.55";
-
 int g_TIME = 1; //TIME factor for sleep::thread. for demo mode it will x2. for debug put 0
 
 void sleepThread(int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
 
-typedef std::map<std::string, std::vector<std::pair<int, int>>> Map;
+using Map_t = std::map<std::string, std::vector<std::pair<int, int>>>;
+using Field_t = std::array<std::array<int, 10>, 10>;
 
 enum Row{
     Row_A, Row_B, Row_C, Row_D, Row_E, Row_F, Row_G, Row_H, Row_I, Row_J
@@ -81,7 +81,7 @@ int getRandomNumber(int min, int max) {
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
 
-void createField(std::array<std::array<int, 10>, 10>& field) {
+void createField(Field_t& field) {
     field.fill({ 0,0 });
 }
 
@@ -93,7 +93,7 @@ bool inField(int row, int col)
 }
 
 //checking field's cells and fill borders around ships
-void checkField(std::array<std::array<int, 10>, 10>& field) {
+void checkField(Field_t& field) {
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
@@ -112,7 +112,7 @@ void checkField(std::array<std::array<int, 10>, 10>& field) {
     }
 }
 
-void checkHitField(std::array<std::array<int, 10>, 10>& field) {
+void checkHitField(Field_t& field) {
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
@@ -136,7 +136,7 @@ void checkHitField(std::array<std::array<int, 10>, 10>& field) {
 }
 
 //making a vector of possible coordinates where ships can be placed on the field
-void getPossibles(std::array<std::array<int, 10>, 10> const &field,
+void getPossibles(Field_t const &field,
     std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
 
     dir = getRandomNumber(0, 1);
@@ -194,7 +194,7 @@ void getPossibles(std::array<std::array<int, 10>, 10> const &field,
     }
 }
 
-void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map, int const ship, std::string const ship_name) {
+void generateFirstShip(Field_t& field, Map_t& map, int const ship, std::string const ship_name) {
 
     checkField(field);
     int row{ 0 }, col{ 0 }, dir{ 0 };
@@ -224,7 +224,7 @@ void generateFirstShip(std::array<std::array<int, 10>, 10>& field, std::map<std:
     checkField(field);
 }
 
-void setShips(std::array<std::array<int, 10>, 10>& field, std::map<std::string, std::vector<std::pair<int, int>>>& map,
+void setShips(Field_t& field, Map_t& map,
               std::vector<std::pair<int, int>>& vec, int& dir, int ship, std::string ship_name) {
 
     checkField(field);
@@ -309,7 +309,7 @@ void decodeCoords(const std::string coord_str, int &row, int &col) {
 }
 
 //remove PC moves around destroyed ship
-void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, std::vector<std::string>& pc_moves) {
+void removeMissedMoves(Field_t const &field_user, std::vector<std::string> &pc_moves) {
 
     std::string temp_coord = "";
     std::vector<std::string>::iterator it;
@@ -331,9 +331,9 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 }
 
 //checking which ship is got hit
-bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col,
-              std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit,
-              std::vector<std::string>& moves, Player player) {
+bool checkMap(Map_t &map, int row, int col,
+              Field_t &field, std::string &message, std::string &keyShipHit,
+              std::vector<std::string> &moves, Player player) {
 
     std::string temp_key = "";
 
@@ -383,9 +383,9 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
     return false;
 }
 
-void createGameField(std::array<std::array<int, 10>, 10>& field,
-    std::vector<std::pair<int, int>>& vec, int& dir,
-    std::map<std::string, std::vector<std::pair<int, int>>>& map) {
+void createGameField(Field_t& field,
+    std::vector<std::pair<int, int>> &vec, int &dir,
+    Map_t &map) {
 
     createField(field);
     generateFirstShip(field, map,  Ship::Carrier, "ship4");
@@ -400,7 +400,7 @@ void createGameField(std::array<std::array<int, 10>, 10>& field,
     setShips(field, map, vec, dir, Ship::Submarine, "ship1_4");
 }
 
-bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& coord_str) { //check if user makes correct input
+bool isInputValid(Field_t& field_pc, std::string& coord_str) { //check if user makes correct input
 
     if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
          coord_str[0] == 'C' || coord_str[0] == 'D' ||
@@ -435,7 +435,7 @@ bool isInputValid(std::array<std::array<int, 10>, 10>& field_pc, std::string& co
     return false;
 }
 
-bool move(std::array<std::array<int, 10>, 10>& field, int row, int col) {
+bool move(Field_t &field, int row, int col) {
 
     if (field.at(row).at(col) == FieldCellStates::Ship) {
 
@@ -455,7 +455,7 @@ bool move(std::array<std::array<int, 10>, 10>& field, int row, int col) {
 }
 
 void getCoord(std::vector<std::string>& moves,
-    std::map<std::string, std::vector<std::pair<int, int>>> map, std::string& lastMove,
+    Map_t map, std::string& lastMove,
     int& row, int& col, std::string const& keyShipHit, Player player) {
 
     int move{ 0 };
@@ -503,7 +503,7 @@ void getCoord(std::vector<std::string>& moves,
     sleepThread(300); //600 ms
 }
 
-void createMoveTable(std::vector<std::string>& pc_moves) {
+void createMoveTable(std::vector<std::string> &pc_moves) {
 
     pc_moves.clear(); //clean before creating
 
@@ -596,8 +596,8 @@ bool isAutomaticSetup(bool &demo){
     std::cout << std::endl;
 }
 
-void setManualField(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc,
-                    Map &map_user, std::string coord_str, char dir_char, int ship, std::vector<std::string> &ship_name){
+void setManualField(Field_t &field_user, Field_t &field_pc,
+                    Map_t &map_user, std::string coord_str, char dir_char, int ship, std::vector<std::string> &ship_name){
 
     std::vector<std::pair<int, int>> temp_vec;
     int row{0}; int col{0};
@@ -637,7 +637,7 @@ bool isManualInputValid(char dir_char){
     return false;
 }
 
-bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, int col){
+bool isValidToInstall(Field_t &field_user, int row, int col){
 
     if(field_user.at(row).at(col) == FieldCellStates::Ship || field_user.at(row).at(col) == FieldCellStates::Border){
         printWarning(Warning::TryAgain);
@@ -646,7 +646,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     return true;
 }
 
-bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, int col, char dir_char, int ship){
+bool isValidToInstall(Field_t &field_user, int row, int col, char dir_char, int ship){
     
     if ((row + ship) > 10 && (col + ship) > 10){
         printWarning(Warning::TryAgain);
@@ -702,7 +702,7 @@ bool isValidToInstall(std::array<std::array<int, 10>, 10> &field_user, int row, 
     return true;
 }
 
-bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std::array<int, 10>, 10> &field_pc, Map &map_user, std::vector<std::string> &ship_name){
+bool manualSetup(Field_t &field_user, Field_t &field_pc, Map_t &map_user, std::vector<std::string> &ship_name){
 
     std::string coord_str = "";
     std::string temp {};
@@ -792,7 +792,7 @@ bool manualSetup(std::array<std::array<int, 10>, 10> &field_user, std::array<std
     return true;
 }
 
-void clearMaps(Map &map_user, Map &map_pc){
+void clearMaps(Map_t &map_user, Map_t &map_pc){
     map_user.clear();
     map_pc.clear();
 }
@@ -813,11 +813,11 @@ int main() {
 
     srand(static_cast<unsigned int>(time(0)));
 
-    std::array<std::array<int, 10>, 10> field_user{}; //store user main field
-    std::array<std::array<int, 10>, 10> field_pc{};   //store pc main field
+    Field_t field_user{}; //store user main field
+    Field_t field_pc{};   //store pc main field
 
-    std::map<std::string, std::vector<std::pair<int, int>>> map_user{}; //store user ships coords
-    std::map<std::string, std::vector<std::pair<int, int>>> map_pc{};   //store pc ships coords
+    Map_t map_user{}; //store user ships coords
+    Map_t map_pc{};   //store pc ships coords
 
     std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
     std::vector<std::string> pc_moves{}; //store pc moves
