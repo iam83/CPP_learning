@@ -5,32 +5,15 @@
 
 int main(){
 
+    srand(static_cast<unsigned int>(time(0)));
     //system("cls");
-
-    // char temp_first[] = "ABCDEFGHIJ"; 
-    // char temp_second[] = "0123456789";
-    std::string joined = "";
-    std::string temp_first = "ABCDEFGHIJ";
-    std::string temp_second = "0123456789";
-    std::vector<std::string> moves{};
-
-    for (size_t row{}, count{}; row < 10; ++row){
-        for(size_t col{}; col < 10; ++col){
-                joined += temp_first[col];
-                joined += temp_second[row];
-                moves.push_back(joined);
-                std::cout << joined << " ";
-                joined = "";
-                if (!((++count) % 10))
-                    std::cout << std::endl;
-
-        }
+    
+    std::vector vec = {0,2,4,5,2,3,4,5,5,6};
+    std::cout << "vec.size() = " << vec.size() << "\n";
+    for(auto& move : vec){
         
-    }
-
-    for(const auto& move : moves){
-        
-        std::cout << move << " ";
+        move = rand() % vec.size();
+        std::cout << move << "\n";
 
     }
 
