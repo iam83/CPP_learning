@@ -167,7 +167,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                 if (field_view == ShipView::Visible) // make ships visible when game has ended
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_SHIP << " "; // use c_FIELD for game, use c_SHIP for deggging
+                    std::cout << c_SHIP << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
                 std::cout << setColor(CColor::Reset);
             }
             //border around ship
@@ -252,26 +252,6 @@ void printCongrats(Player player) {
     }
 
     std::cout << std::endl;
-}
-
-void startMessage(std::string version) {
-
-    system(CLS);
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  " + version;
-
-    #ifdef _WIN32
-    for (auto const& letter : message_start) {
-        std::cout << letter;
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //25 ms
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-    #endif
 }
 
 void printWarning(Warning warning){
