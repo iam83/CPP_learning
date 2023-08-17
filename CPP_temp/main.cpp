@@ -1,44 +1,16 @@
 #include <iostream>
-#include <numbers> 
-#include <format>
+#include <array>
 #include <vector>
-
 
 int main(){
 
-    //srand(static_cast<unsigned int>(time(0)));
-    system("clear");
-    
-    std::vector<std::string> vec{};
+    srand(static_cast<unsigned int>(time(0)));
+    int x = rand() % 3;
+    std::cout << "x = " << x << "\n";
+    std::array<std::pair<int, int>, 4> rnd_dir = {{{1,0}, {-1,0}, {0,1}, {0,-1}}};
 
-    std::string row = "ABCDEFGHIJ";
+    std::cout << "rnd_dir[1].first = " << rnd_dir[x].first << "\n";
+    std::cout << "rnd_dir[1].second = " << rnd_dir[x].second << "\n";
 
-
-    for (int i = 0; i <= 9; ++i) {
-        for (int j = 0; j <= 9; ++j) {
-            vec.push_back(row[i] + std::to_string(j));
-        }
-    }
-
-    for(size_t count{0}; count < vec.size(); ++count){
-        std::cout << vec[count] << " ";
-        if ((count+1) % 10 == 0)
-            std::cout << std::endl;
-
-    }
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    for(size_t i{}; i<100; ++i){
-        std::cout << i << " ";
-        if ((i+1) % 10 == 0)
-            std::cout << std::endl;
-
-    }
-
-    
-
-    return 0;
 
 }

@@ -8,6 +8,11 @@
     this version meant to be a test site for optimizing the previous one
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+    getCoord - make PC move when it hits the ship
+
+*/
 /*  
     UPDATE:
         17/08/2023 added Demo mode. PC vs PC. optimized some code
@@ -322,8 +327,7 @@ void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
 
                 it = std::find(moves.begin(), moves.end(), temp_coord);
                 if (it != moves.end()) {
-                    int del = it - moves.begin();
-                    moves.erase(moves.begin() + del);
+                    moves.erase(it);
                 }
             }
         }
@@ -332,7 +336,7 @@ void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
 
 //checking which ship is got hit
 bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message, std::string &keyShipHit,
-              std::vector<std::string> &moves, Player player) {
+              std::vector<std::string> &moves, Player player, bool &isHit) {
 
     std::string temp_key = "";
 
@@ -377,6 +381,7 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
         map.erase(temp_key);
 
     if (map.empty()) {
+        isHit = false;
         return true;
     }
 
@@ -455,11 +460,12 @@ bool isMove(Field_t &field, int row, int col) {
 }
 
 void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove, int &row, int &col,
-              std::string const &keyShipHit, Player player) {
+              std::string const &keyShipHit, Player player, bool isHit) {
 
     int move{ 0 };
     std::string temp_pcMove = "";
     std::vector<std::string>::iterator it;
+    std::array<std::pair<int, int>, 4> rnd_dir = {{{1,0}, {-1,0}, {0,1}, {0,-1}}}; //random direction for PC to choose from when it hits a ship
 
     if (moves.size() > 0) {
         if(player == Player::Pc)
@@ -472,7 +478,7 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
             sleepThread(150);
         }
 
-        if (map[keyShipHit].size() == 0) {
+        if (!isHit) {
 
             move = rand() % moves.size();
             lastMove = moves.at(move);
@@ -481,8 +487,22 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
         }
         else {
 
-            row = map[keyShipHit][0].first;
-            col = map[keyShipHit][0].second;
+            // -1, 0 left
+            // +1, 0 right
+            // 0, +1 up
+            // 0, -1 down
+
+            int x = getRandomNumber(0, 3);
+        
+            if(map[keyShipHit][0].first + rnd_dir[x].first > 0 &&
+               map[keyShipHit][0].first + rnd_dir[x].first < 9 &&
+               map[keyShipHit][0].second + rnd_dir[x].second > 0 &&
+               map[keyShipHit][0].second + rnd_dir[x].second < 9){
+
+                row = map[keyShipHit][0].first + rnd_dir[x].first;
+                col = map[keyShipHit][0].second + rnd_dir[x].second;
+
+               }
 
             encodeCoords(temp_pcMove, row, col);
 
@@ -895,7 +915,7 @@ int main() {
 
                 }else{
                     //if demo mode is chosen
-                    getCoord(demo_moves, map_pc, userLastMove, row, col, keyShipHit, Player::User);
+                    getCoord(demo_moves, map_pc, userLastMove, row, col, keyShipHit, Player::User, isPcHit);
                 }
 
                     system(CLS);//COMMENT FOR DEBUG
@@ -906,7 +926,7 @@ int main() {
                     //user move
                     if(!isPcHit){//if the previous PC move was not positive then execute User move
                         if (isMove(field_pc, row, col)) {
-                            if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, demo_moves, Player::User)) {
+                            if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, demo_moves, Player::User, isPcHit)) {
                                 system(CLS); //COMMENT FOR DEBUG
                                 printFields(field_pc, field_user, ShipView::Visible);
                                 printCongrats(Player::User);
@@ -927,9 +947,9 @@ int main() {
 
 
              //pc move
-             getCoord(pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit, Player::Pc);
+             getCoord(pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit, Player::Pc, isPcHit);
              if (isMove(field_user, pc_row, pc_col)) {
-                 if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc)) {
+                 if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc, isPcHit)) {
                      system(CLS); //COMMENT FOR DEBUG
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
