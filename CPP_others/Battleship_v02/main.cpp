@@ -823,13 +823,13 @@ int main() {
     std::vector<std::string> pc_moves{}; //store pc moves
     std::vector<std::string> demo_moves{}; //store demo mode moves
         
+    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
 
     bool demo {false};
     
     //game loop
     do {
         system(CLS);
-        std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
         
         map_user.clear();
         map_pc.clear();
@@ -910,20 +910,10 @@ int main() {
                     getCoord(demo_moves, map_pc, userLastMove, row, col, keyShipHit, Player::User);
                 }
 
-        
                     system(CLS);//COMMENT FOR DEBUG
 
                     checkField(field_pc);
                     checkField(field_user);
-
-                    // THIS IS FOR DEBUGGING
-                        // std::cout << "maps_user BEFORE pc moves\n";
-                        // printMap(map_user);
-                        // std::cout << std::endl;
-                        // std::cout << "maps_pc BEFORE pc moves\n";
-                        // printMap(map_pc);
-                        // std::cout << std::endl;
-                    //
 
                     //user move
                     if(!isPcHit){//if the previous PC move was not positive then execute User move
@@ -968,16 +958,7 @@ int main() {
             system(CLS);//COMMENT FOR DEBUG
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-            
 
-            // THIS IS FOR DEBUGGING
-                // std::cout << "maps_user after pc moves\n";
-                // printMap(map_user);
-                // std::cout << std::endl;
-                // std::cout << "maps_pc after pc moves\n";
-                // printMap(map_pc);
-                // std::cout << std::endl;
-            //
 
         }
     } while (playAgain());
