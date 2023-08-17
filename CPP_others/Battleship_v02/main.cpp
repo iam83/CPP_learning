@@ -93,7 +93,7 @@ bool inField(int row, int col)
 }
 
 //checking field's cells and fill borders around ships
-void checkField(Field_t& field) {
+void checkField(Field_t &field) {
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
@@ -250,7 +250,7 @@ void setShips(Field_t& field, Map_t& map,
     checkField(field);
 }
 
-void encodeCoords(std::string& coord_str, int row, int col) {
+void encodeCoords(std::string &coord_str, int row, int col) {
 
     switch (row) {
         case 0: coord_str = "A"; break;
@@ -331,8 +331,7 @@ void removeMissedMoves(Field_t const &field_user, std::vector<std::string> &pc_m
 }
 
 //checking which ship is got hit
-bool checkMap(Map_t &map, int row, int col,
-              Field_t &field, std::string &message, std::string &keyShipHit,
+bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message, std::string &keyShipHit,
               std::vector<std::string> &moves, Player player) {
 
     std::string temp_key = "";
