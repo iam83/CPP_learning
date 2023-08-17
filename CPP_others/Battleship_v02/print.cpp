@@ -16,10 +16,10 @@
 #endif
 
 //DEBUGGING 
-void printMoveTable(std::vector<std::string> const& pc_moves) {
+void printMoveTable(std::vector<std::string> const &moves) {
     int a{ 0 };
-    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
-        std::cout << pc_moves[i] << " ";
+    for (int i = 0; i < static_cast<int>(moves.size()); ++i) {
+        std::cout << moves[i] << " ";
         ++a;
         if (a % 10 == 0) std::cout << std::endl;
     }
@@ -251,7 +251,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
 void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user,
                         std::map<std::string, std::vector<std::pair<int, int>>> map_pc,
                         std::string message_user, std::string message_pc,
-                        std::string userLastMove, std::string pcLastMove){
+                        std::string userLastMove, std::string pcLastMove, std::vector<std::string> pc_moves){
 
 
     std::cout << "  Your ships left: ";
@@ -290,11 +290,10 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
     //DEBUGGING ONLY
         std::cout << "maps_user after pc moves\n";
         printMap(map_user);
-        std::cout << "map_user[\"ship4\"].size() = " << map_user["ship4"].size() << "\n";
+        printMoveTable(pc_moves);
         std::cout << std::endl;
         std::cout << "maps_pc after pc moves\n";
         printMap(map_pc);
-        std::cout << "map_pc[\"ship4\"].size() = " << map_pc["ship4"].size() << "\n";
         std::cout << std::endl;
     //
 }
@@ -310,7 +309,7 @@ void printCongrats(Player player) {
 
     for (auto const& letter : message_congrats) {
         std::cout << letter;
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //400 ms
+        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //25 ms
     }
 
     std::cout << std::endl;

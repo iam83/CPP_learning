@@ -309,21 +309,21 @@ void decodeCoords(const std::string coord_str, int &row, int &col) {
 }
 
 //remove PC moves around destroyed ship
-void removeMissedMoves(Field_t const &field_user, std::vector<std::string> &pc_moves) {
+void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
 
     std::string temp_coord = "";
     std::vector<std::string>::iterator it;
 
-    for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
-        for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
-            if (field_user.at(row).at(col) == FieldCellStates::BorderHit) {
+    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+            if (field.at(row).at(col) == FieldCellStates::BorderHit) {
 
                 encodeCoords(temp_coord, row, col);
 
-                it = std::find(pc_moves.begin(), pc_moves.end(), temp_coord);
-                if (it != pc_moves.end()) {
-                    int del = it - pc_moves.begin();
-                    pc_moves.erase(pc_moves.begin() + del);
+                it = std::find(moves.begin(), moves.end(), temp_coord);
+                if (it != moves.end()) {
+                    int del = it - moves.begin();
+                    moves.erase(moves.begin() + del);
                 }
             }
         }
@@ -359,12 +359,13 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
 
                 if (player == Player::User) {
                     message = "  Wow! You sank a ship!";
+                    removeMissedMoves(field, moves);
                     checkHitField(field);
                 }
                 else {
                     message = "  Oops, PC sank your ship!";
-                    checkHitField(field);
                     removeMissedMoves(field, moves);
+                    checkHitField(field);
                 }
 
                 temp_key = key;
@@ -379,6 +380,7 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
         return true;
     }
 
+    //checkField(field);
     return false;
 }
 
@@ -470,7 +472,6 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
             sleepThread(150);
         }
 
-        //HERE MIGHT BE A PROBLEM
         if (map[keyShipHit].size() == 0) {
 
             move = rand() % moves.size();
@@ -501,14 +502,14 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
     sleepThread(300); //600 ms
 }
 
-void createMoveTable(std::vector<std::string> &pc_moves) {
+void createMoveTable(std::vector<std::string> &moves) {
 
-    pc_moves.clear(); //clean before creating
+    moves.clear(); //clean before creating
 
     const std::string letters = "ABCDEFGHIJ";
     for (int i = 0; i <= 9; ++i) {
         for (int j = 0; j <= 9; ++j) {
-            pc_moves.push_back(letters[i] + std::to_string(j));
+            moves.push_back(letters[i] + std::to_string(j));
         }
     }
 }
@@ -561,13 +562,14 @@ bool isAutomaticSetup(bool &demo){
         if (exit == 'a' || exit == 'A') {
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
+            demo = false;
             return true;
             break;
         }
         else if (exit == 'm' || exit == 'M') {
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
-            demo = {false};
+            demo = false;
             return false;
             break;
         }
@@ -873,7 +875,7 @@ int main() {
             checkField(field_user);
 
             printFields(field_pc, field_user, ShipView::Invisible);
-            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove, pc_moves);
 
             if (!isPcHit){
                 if(!demo){
@@ -918,7 +920,7 @@ int main() {
                         }            
 
                         printFields(field_pc, field_user, ShipView::Invisible);
-                        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+                        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove, pc_moves);
                     }
 
             }
@@ -943,7 +945,7 @@ int main() {
 
             system(CLS);//COMMENT FOR DEBUG
             printFields(field_pc, field_user, ShipView::Invisible);
-            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove, pc_moves);
         }
     } while (playAgain());
 
