@@ -15,6 +15,45 @@
 #define CLS "clear"
 #endif
 
+//DEBUGGING 
+void printMoveTable(std::vector<std::string> const& pc_moves) {
+    int a{ 0 };
+    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
+        std::cout << pc_moves[i] << " ";
+        ++a;
+        if (a % 10 == 0) std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
+
+    std::cout << "map size " << map.size() << "\n";
+    std::string coord_str = "";
+
+    for (auto& [key, value] : map) {
+        std::cout << key << ": ";
+        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
+
+            switch (value[i].first) {
+                case 0: coord_str = "A"; break;
+                case 1: coord_str = "B"; break;
+                case 2: coord_str = "C"; break;
+                case 3: coord_str = "D"; break;
+                case 4: coord_str = "E"; break;
+                case 5: coord_str = "F"; break;
+                case 6: coord_str = "G"; break;
+                case 7: coord_str = "H"; break;
+                case 8: coord_str = "I"; break;
+                case 9: coord_str = "J"; break;
+            }
+            std::cout << coord_str << value[i].second << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+//
 
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
@@ -167,7 +206,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                 if (field_view == ShipView::Visible) // make ships visible when game has ended
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_SHIP << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
+                    std::cout << c_FIELD << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
                 std::cout << setColor(CColor::Reset);
             }
             //border around ship
@@ -246,6 +285,13 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
     std::cout << "     PC last move: " << pcLastMove << std::endl;
     
     std::cout << std::endl;
+
+    std::cout << "maps_user after pc moves\n";
+    printMap(map_user);
+    std::cout << std::endl;
+    std::cout << "maps_pc after pc moves\n";
+    printMap(map_pc);
+    std::cout << std::endl;
 }
 
 void printCongrats(Player player) {
@@ -287,41 +333,4 @@ void printWarning(Warning warning){
             break;
     }
     std::cout << setColor(CColor::Reset);
-}
-
-void printMoveTable(std::vector<std::string> const& pc_moves) {
-    int a{ 0 };
-    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
-        std::cout << pc_moves[i] << " ";
-        ++a;
-        if (a % 10 == 0) std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-
-void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
-
-    std::cout << "map size " << map.size() << "\n";
-    std::string coord_str = "";
-
-    for (auto& [key, value] : map) {
-        std::cout << key << ": ";
-        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
-
-            switch (value[i].first) {
-                case 0: coord_str = "A"; break;
-                case 1: coord_str = "B"; break;
-                case 2: coord_str = "C"; break;
-                case 3: coord_str = "D"; break;
-                case 4: coord_str = "E"; break;
-                case 5: coord_str = "F"; break;
-                case 6: coord_str = "G"; break;
-                case 7: coord_str = "H"; break;
-                case 8: coord_str = "I"; break;
-                case 9: coord_str = "J"; break;
-            }
-            std::cout << coord_str << value[i].second << " ";
-        }
-        std::cout << std::endl;
-    }
 }

@@ -333,7 +333,7 @@ void removeMissedMoves(std::array<std::array<int, 10>, 10> const& field_user, st
 //checking which ship is got hit
 bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int row, int col,
               std::array<std::array<int, 10>, 10> &field, std::string& message, std::string& keyShipHit,
-              std::vector<std::string>& pc_moves, Player player) {
+              std::vector<std::string>& moves, Player player) {
 
     std::string temp_key = "";
 
@@ -365,7 +365,7 @@ bool checkMap(std::map<std::string, std::vector<std::pair<int, int>>> &map, int 
                 else {
                     message = "  Oops, PC sank your ship!";
                     checkHitField(field);
-                    removeMissedMoves(field, pc_moves);
+                    removeMissedMoves(field, moves);
                 }
 
                 temp_key = key;
@@ -569,6 +569,7 @@ bool isAutomaticSetup(bool &demo){
         else if (exit == 'm' || exit == 'M') {
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
+            demo = {false};
             return false;
             break;
         }
@@ -820,7 +821,7 @@ int main() {
 
     std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
     std::vector<std::string> pc_moves{}; //store pc moves
-    std::vector<std::string> demo_moves{};
+    std::vector<std::string> demo_moves{}; //store demo mode moves
         
 
     bool demo {false};
@@ -927,7 +928,7 @@ int main() {
                     //user move
                     if(!isPcHit){//if the previous PC move was not positive then execute User move
                         if (move(field_pc, row, col)) {
-                            if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, pc_moves, Player::User)) {
+                            if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, demo_moves, Player::User)) {
                                 system(CLS); //COMMENT FOR DEBUG
                                 printFields(field_pc, field_user, ShipView::Visible);
                                 printCongrats(Player::User);
