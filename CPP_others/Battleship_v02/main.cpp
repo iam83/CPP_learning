@@ -131,7 +131,7 @@ int getRandomNumber(int min, int max) {
 }
 
 void createField(Field_t& field) {
-    field.fill({ 0,0 });
+    field.fill({0});
 }
 
 bool inField(int row, int col)
