@@ -6,12 +6,13 @@ class Field {
 public:
     std::array<std::array<int, 10>, 10> field;
 
-    Field(int x) {
-        field.fill({x})
+    Field() {
+        field.fill({});
     }
 
     void changeCell(int row, int col, int value){
             field[row][col] = value;
+    }
 
 };
 
@@ -107,8 +108,8 @@ public:
 int main() {
 
     // Create two objects of MyClass
-    Field field_pc(0);
-    Field field_user(0);
+    Field field_pc;
+    Field field_user;
 
     Game game;
     game.printObjectsField(field_pc, field_user);
