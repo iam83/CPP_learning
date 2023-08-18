@@ -7,11 +7,12 @@ public:
     std::array<std::array<int, 10>, 10> field;
 
     Field(int x) {
-        field.fill({x});
+        field.fill({x})
     }
+
     void changeCell(int row, int col, int value){
             field[row][col] = value;
-    }
+
 };
 
 // Function to print two objects of MyClass simultaneously
@@ -104,7 +105,7 @@ public:
 
 
 int main() {
-    
+
     // Create two objects of MyClass
     Field field_pc(0);
     Field field_user(0);
