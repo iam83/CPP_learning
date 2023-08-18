@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-    getCoord - make PC move when it hits the ship
+    !!!! URGENT !!!! getCoord - make PC move when it hits the ship
 
 */
 /*  
