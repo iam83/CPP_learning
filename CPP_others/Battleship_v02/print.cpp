@@ -15,6 +15,8 @@
 #define CLS "clear"
 #endif
 
+
+
 //DEBUGGING 
 void printMoveTable(std::vector<std::string> const &moves) {
     int a{ 0 };
@@ -54,6 +56,25 @@ void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map
 }
 
 //
+
+void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
+                const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
+                const std::vector<std::string> &pc_moves, const bool &isPcHit, const bool &isHit){
+
+    //DEBUGGING ONLY
+        std::cout << "isPcHit = " << isPcHit << "\n";
+        std::cout << "isHit = " << isHit << "\n";
+        std::cout << "maps_user after pc moves\n";
+        printMap(map_user);
+        printMoveTable(pc_moves);
+        std::cout << std::endl;
+        std::cout << "maps_pc after pc moves\n";
+        printMap(map_pc);
+        std::cout << std::endl;
+    //
+
+}
+
 
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
@@ -127,7 +148,6 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                  std::array<std::array<int, 10>, 10> const& field_user,
                  ShipView field_view) {
-
 
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
@@ -248,10 +268,10 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
     std::cout << std::endl;
 }
 
-void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user,
-                        std::map<std::string, std::vector<std::pair<int, int>>> map_pc,
-                        std::string message_user, std::string message_pc,
-                        std::string userLastMove, std::string pcLastMove, std::vector<std::string> pc_moves){
+void printUpdateMessage(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
+                        const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
+                        const std::string &message_user, const std::string &message_pc,
+                        const std::string &userLastMove, const std::string &pcLastMove){
 
 
     std::cout << "  Your ships left: ";
@@ -285,17 +305,6 @@ void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> 
     std::cout << "     PC last move: " << pcLastMove << std::endl;
     
     std::cout << std::endl;
-
-
-    //DEBUGGING ONLY
-        std::cout << "maps_user after pc moves\n";
-        printMap(map_user);
-        printMoveTable(pc_moves);
-        std::cout << std::endl;
-        std::cout << "maps_pc after pc moves\n";
-        printMap(map_pc);
-        std::cout << std::endl;
-    //
 }
 
 void printCongrats(Player player) {
