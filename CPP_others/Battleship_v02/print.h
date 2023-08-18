@@ -9,9 +9,6 @@
 
 
 
-void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>>&,
-                const std::map<std::string, std::vector<std::pair<int, int>>>&,
-                const std::vector<std::string>&, const bool&, const bool&); //FOR DEBIGGING
 
 void printUserField(std::array<std::array<int, 10>, 10> const&);
 void printFields(std::array<std::array<int, 10>, 10> const&, std::array<std::array<int, 10>, 10> const&, ShipView);

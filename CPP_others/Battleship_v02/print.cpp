@@ -55,25 +55,6 @@ void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map
     }
 }
 
-//
-
-void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
-                const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
-                const std::vector<std::string> &pc_moves, const bool &isPcHit, const bool &isHit){
-
-    //DEBUGGING ONLY
-        std::cout << "isPcHit = " << isPcHit << "\n";
-        std::cout << "isHit = " << isHit << "\n";
-        std::cout << "maps_user after pc moves\n";
-        printMap(map_user);
-        printMoveTable(pc_moves);
-        std::cout << std::endl;
-        std::cout << "maps_pc after pc moves\n";
-        printMap(map_pc);
-        std::cout << std::endl;
-    //
-
-}
 
 
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {

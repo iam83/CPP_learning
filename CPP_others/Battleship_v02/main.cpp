@@ -56,11 +56,34 @@ using Map_t = std::map<std::string, std::vector<std::pair<int, int>>>;
 using Field_t = std::array<std::array<int, 10>, 10>;
 
 std::string g_VERSION = "1.55";
-int g_TIME = 1; //TIME factor for sleep::thread. for demo mode it will x2. for debug put 0
+int g_TIME = 0; //TIME factor for sleep::thread. for demo mode it will x2. for debug put 0
+
 
 void sleepThread(int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
+
+// struct of boolean states
+struct States_b{
+    bool isPcHit {false};    //use to check if a move is hit or miss.
+    bool isHit {false};      //use to check if a hit happened in getCoord and CheckMap
+};
+
+
+struct PlayerShipHit{
+
+    Player player;
+    std::string str_keyShipHit{};
+    bool isPartlyHit{};             //use to mark if a ship was partly hit
+
+        PlayerShipHit(Player Player, std::string Str_keyShipHit, bool IsPartlyHit) { 
+            player = Player;
+            str_keyShipHit = Str_keyShipHit;
+            isPartlyHit = IsPartlyHit; 
+    }
+};
+
+
 
 enum Row{
     Row_A, Row_B, Row_C, Row_D, Row_E, Row_F, Row_G, Row_H, Row_I, Row_J
@@ -74,6 +97,28 @@ struct Coord{
     Row row;
     Col col;
 };
+
+ //DEBUGGING ONLY
+void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
+                const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
+                const std::vector<std::string> &pc_moves, const States_b states,
+                const PlayerShipHit &user, const PlayerShipHit &pc){
+
+        std::cout << "maps_user after pc moves\n";
+        printMap(map_user);
+        printMoveTable(pc_moves);
+        std::cout << std::endl;
+        std::cout << "maps_pc after pc moves\n";
+        printMap(map_pc);
+        std::cout << std::endl;
+
+        std::cout << "isPcHit = " << states.isPcHit << "\n";
+        std::cout << "isHit = " << states.isHit << "\n";
+        std::cout << "isPartlyHit user = " << user.isPartlyHit << "\n";
+        std::cout << "isPartlyHit pc = " << pc.isPartlyHit << "\n";
+
+}
+////
 
 
 void exit_app(){
@@ -334,8 +379,8 @@ void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
 }
 
 //checking which ship is got hit
-bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message, std::string &keyShipHit,
-              std::vector<std::string> &moves, Player player, bool &isPcHit, bool &isHit) {
+bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message, PlayerShipHit &player,
+              std::vector<std::string> &moves, States_b &states) {
 
     std::string temp_key = "";
 
@@ -344,26 +389,28 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
         for (int i = 0; i < static_cast<int>(value.size()); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
-                    if (player == Player::User){
+                    if (player.player == Player::User){
                         message = "  You hit a ship!";
-                        keyShipHit = key;
-                        isHit = true;
+                        player.str_keyShipHit = key;
+                        states.isHit = true;
+                        player.isPartlyHit = true;
                     }
                     else {
                         std::string coord_str = "";
                         encodeCoords(coord_str, value[i].first, value[i].second);
                         message = "  PC hit your ship at " + coord_str;
-                        keyShipHit = key;
-                        isPcHit = true;
-                        isHit = true;
+                        player.str_keyShipHit = key;
+                        states.isPcHit = true;
+                        states.isHit = true;
+                        player.isPartlyHit = true;
                     }
                 }
                 value.erase(value.begin() + i);
             }
 
-            if (value.empty()) {
+            if (value.empty()) { //if all cells from a ship were hit
 
-                if (player == Player::User) {
+                if (player.player == Player::User) {
                     message = "  Wow! You sank a ship!";
                     removeMissedMoves(field, moves);
                     checkHitField(field);
@@ -374,7 +421,8 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
                     checkHitField(field);
                 }
 
-                isHit = true;
+                player.isPartlyHit = false;
+                states.isHit = true;
                 temp_key = key;
             }
         }
@@ -384,7 +432,7 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
         map.erase(temp_key);
 
     if (map.empty()) {
-        isHit = false;
+        states.isHit = false;
         checkField(field);
         return true;
     }
@@ -463,37 +511,25 @@ bool isMove(Field_t &field, int row, int col) {
     return false;
 }
 
-void createTempMoves(std::vector<std::pair<int, int>> &temp_moves, const Field_t &field, int row, int col){
-
-    const int y[] = { -1, 1, 0,  0 };// 8 directions
-    const int x[] = {  0, 0, 1, -1 };// for checking
-
-    if (field.at(row).at(col) == FieldCellStates::Hit) {
-
-        for (int i = 0; i < 8; ++i) { // looking around cell
-            if (inField(row + y[i], col + x[i])) {
-                if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit &&
-                    field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Ship &&
-                    field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Miss){
-                    temp_moves.push_back({(row + y[i]), (col + x[i])});
-                }
-            }
-        }
-    }
-}
-
-
-void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove, int &row, int &col,
-              std::string const &keyShipHit, Player player, bool isHit) {
+void getCoord(std::vector<std::string> &moves, const Field_t &field,
+              Map_t map, std::string &lastMove, int &row, int &col,
+              PlayerShipHit &player, States_b &states) {
 
     int move{ 0 };
     std::string temp_pcMove = "";
     std::vector<std::string>::iterator it;
-    std::array<std::pair<int, int>, 4> rnd_dir = {{{1,0}, {-1,0}, {0,1}, {0,-1}}}; //random direction for PC to choose from when it hits a ship
 
+    std::vector<std::pair<int, int>> temp_moves{}; //store temporary moves around the wounded ship
+   
+    // -1, 0 left
+    // +1, 0 right
+    // 0, +1 up
+    // 0, -1 down
+    const int y[] = { -1, 1, 0,  0 };// 4 directions
+    const int x[] = {  0, 0, 1, -1 };// for checking
 
     if (moves.size() > 0) {
-        if(player == Player::Pc)
+        if(player.player == Player::Pc)
             std::cout << "   PC is attacking";
         else
             std::cout << " User is attacking";
@@ -503,7 +539,9 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
             sleepThread(150);
         }
 
-        if (!isHit || map[keyShipHit].size() == 0) {
+        //(map[keyShipHit.pc].size() == 0 && map[keyShipHit.user].size() == 0) ||
+
+        if (!states.isHit || !player.isPartlyHit) {
 
             move = rand() % moves.size();
             lastMove = moves.at(move);
@@ -512,24 +550,58 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
         }
 
         else {
+            // if field cell is marked as hit ship then go and check around for possible moves
+            // if (field.at(row).at(col) == FieldCellStates::Hit)
+                for (int i = 0; i < 8; ++i) { // looking around cell
+                    if (inField(row + y[i], col + x[i])) {
+                        if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit &&
+                            field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Miss &&
+                            field.at(row + y[i]).at(col + x[i]) != FieldCellStates::BorderHit){
 
-            // -1, 0 left
-            // +1, 0 right
-            // 0, +1 up
-            // 0, -1 down
+                                temp_moves.push_back({(row + y[i]), (col + x[i])}); // if moves are found add them into temp vector
 
-            int x = getRandomNumber(0, 3);
+                            }
+                    }
 
+                for (size_t i{}; i < map[player.str_keyShipHit].size(); ++i){
+                     temp_moves.push_back({map[player.str_keyShipHit][i].first, map[player.str_keyShipHit][i].second});
+                    }
+                }
 
-            if(map[keyShipHit][0].first + rnd_dir[x].first > 0 &&
-               map[keyShipHit][0].first + rnd_dir[x].first < 9 &&
-               map[keyShipHit][0].second + rnd_dir[x].second > 0 &&
-               map[keyShipHit][0].second + rnd_dir[x].second < 9){
+                //DEBUGGING
+                //std::sort( temp_moves.begin(), temp_moves.end() );
+                //temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
 
-                row = map[keyShipHit][0].first + rnd_dir[x].first;
-                col = map[keyShipHit][0].second + rnd_dir[x].second;
+                std::cout << "moves before sort ";
+                    for (auto const &move : temp_moves){
+                        encodeCoords(temp_pcMove, move.first, move.second);
+                        std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
+                    }
+                    std::cout << std::endl;
+                //
 
-               }
+                std::sort( temp_moves.begin(), temp_moves.end() );
+                temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
+
+                std::cout << "moves ";
+                    for (auto const &move : temp_moves){
+                        encodeCoords(temp_pcMove, move.first, move.second);
+                        std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
+                    }
+                    std::cout << std::endl;
+                    system("pause");
+
+                int x{};
+                if (temp_moves.size() > 1)
+                    x = rand() % temp_moves.size(); //then randomly from choose from the temp vector a possible move
+                else
+                    x = 0;
+
+                if (!temp_moves.empty()){
+                    row = temp_moves[x].first; // and apply
+                    col = temp_moves[x].second;// both it here
+                }
+            
             // row = map[keyShipHit][0].first;
             // col = map[keyShipHit][0].second;
 
@@ -546,6 +618,17 @@ void getCoord(std::vector<std::string> &moves, Map_t map, std::string &lastMove,
 
         std::cout << " " << moves.at(move) << std::endl;
         moves.erase(moves.begin() + move);
+
+        //DEBUGGING
+            if (player.player == Player::Pc) std::cout << "pc ";
+            else std::cout << "user ";
+            std::cout << player.str_keyShipHit << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << "\n";
+            system("pause");
+        //
+
+        if (map[player.str_keyShipHit].size() == 0){
+            player.isPartlyHit = false;
+        }
 
     }
     sleepThread(300); //600 ms
@@ -859,14 +942,18 @@ int main() {
     std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
     std::vector<std::string> pc_moves{}; //store pc moves
     std::vector<std::string> demo_moves{}; //store demo mode moves
-    std::vector<std::pair<int, int>> temp_around_moves{}; //temorory store for possible moves around hit cell
 
     std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
+
+    States_b states; //holds boolean states: isHit, isPcHit, isPartlyHit
 
     bool demo {false};
     
     //game loop
     do {
+
+        //game setup//
+
         system(CLS);
         
         map_user.clear();
@@ -906,12 +993,12 @@ int main() {
         std::string coord_str = "";
         std::string userLastMove = "";
         std::string pcLastMove = "";
-        std::string keyShipHit = ""; //store ship name of the hit ship. it's used in map container
+        //std::string keyShipHit = ""; //store ship name of the hit ship. it's used in map container
         std::string message_user = "";
         std::string message_pc = "";
 
-        bool isPcHit {false}; //use to check if a move is hit or miss.
-        bool isHit {false}; //use to check if a hit happened in getCoord and CheckMap
+        PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
+        PlayerShipHit pcKeyShipHit(Player::Pc, "", false);
 
         //DEBUGGING
         // if demo mode true
@@ -928,9 +1015,9 @@ int main() {
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
             
             //DEBUGGING
-            printDebug(map_user, map_pc, pc_moves, isPcHit, isHit);
+            printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
 
-            if (!isPcHit){
+            if (!states.isPcHit){
                 if(!demo){
                     do {
                             std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
@@ -948,15 +1035,15 @@ int main() {
 
                 }else{
                     //if demo mode is chosen
-                    getCoord(demo_moves, map_pc, userLastMove, row, col, keyShipHit, Player::User, isHit);
+                    getCoord(demo_moves, field_pc, map_pc, userLastMove, row, col, userKeyShipHit, states);
                 }
 
                     //system(CLS);//COMMENT FOR DEBUG
 
                     //user move
-                    if(!isPcHit){//if the previous PC move was not positive then execute User move
+                    if(!states.isPcHit){//if the previous PC move was not positive then execute User move
                         if (isMove(field_pc, row, col)) {
-                            if (checkMap(map_pc, row, col, field_pc, message_user, keyShipHit, demo_moves, Player::User, isPcHit, isHit)) {
+                            if (checkMap(map_pc, row, col, field_pc, message_user, userKeyShipHit, demo_moves, states)) {
                                 //system(CLS); //COMMENT FOR DEBUG
                                 printFields(field_pc, field_user, ShipView::Visible);
                                 printCongrats(Player::User);
@@ -967,34 +1054,34 @@ int main() {
                         }
                         else {
                             message_user = "  You missed at " + userLastMove;
-                            isHit = false;
+                            states.isHit = false;
                         }
 
                         printFields(field_pc, field_user, ShipView::Invisible);
                         printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
                         //DEBUGGING
-                        printDebug(map_user, map_pc, pc_moves, isPcHit, isHit);
+                        printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
                     }
 
             }
 
 
              //pc move
-             getCoord(pc_moves, map_user, pcLastMove, pc_row, pc_col, keyShipHit, Player::Pc, isHit);
+             getCoord(pc_moves, field_user, map_user, pcLastMove, pc_row, pc_col, pcKeyShipHit, states);
              if (isMove(field_user, pc_row, pc_col)) {
-                 if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, keyShipHit, pc_moves, Player::Pc, isPcHit, isHit)) {
+                 if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, pcKeyShipHit, pc_moves, states)) {
                      //system(CLS); //COMMENT FOR DEBUG
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
                      break;
                  }
                  message_user = "";
-                 isPcHit = true;
+                 states.isPcHit = true;
             }
              else {
                  message_pc = "   PC missed at " + pcLastMove;
-                 isHit = false;
-                 isPcHit = false;
+                 states.isHit = false;
+                 states.isPcHit = false;
             }
 
 
