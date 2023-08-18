@@ -1,5 +1,7 @@
 #include <iostream>
 #include <array>
+#include "enums.h"
+#include "ccolor.h"
 
 // Define a class with a two-dimensional array
 class Field {
@@ -102,12 +104,36 @@ public:
         std::cout << std::endl;
     }
 
+    void printWarning(Warning warning){
+
+    std::cout << setColor(CColor::LightRed);
+
+    switch(warning){
+        case Warning::TryAgain:
+            std::cout << "  WARNING: You cannot install this ship there. Try again.\n";
+            break;
+        case Warning::TryAgainHorizontal:
+            std::cout << "  WARNING: You cannot install this ship there. Try horizontal direction.\n";
+            break;
+        case Warning::TryAgainVertical:
+            std::cout << "  WARNING: You cannot install a ship there. Try vertical direction.\n";
+            break;
+        case Warning::TryAgainWrongCoord:
+            std::cout << "  WARNING: Wrong coordinates! Try again.\n";
+            break;
+        case Warning::TryAgainHitThere:
+            std::cout << "  WARNING: You've already hit there! Try again.\n";
+            break;
+    }
+    std::cout << setColor(CColor::Reset);
+}
+
 };
 
 
 int main() {
 
-    // Create two objects of MyClass
+    // Create two objects of Field
     Field field_pc;
     Field field_user;
 
@@ -120,5 +146,7 @@ int main() {
     game.printObjectsField(field_pc, field_user);
     //printObjectsField(field_pc, field_user);
 
+    game.printWarning(Warning::TryAgain);
+   
     return 0;
 }
