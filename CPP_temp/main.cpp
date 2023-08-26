@@ -5,19 +5,20 @@
 
 // Define a class with a two-dimensional array
 class Field {
-public:
-    std::array<std::array<int, 10>, 10> field;
+    public:
+        std::array<std::array<int, 10>, 10> field;
 
-    Field() {
-        field.fill({});
-    }
+        Field() {
+            field.fill({});
+        }
 
-    void changeCell(int row, int col, int value){
-            field[row][col] = value;
-    }
-};
+        void changeCell(int row, int col, int value){
+                field[row][col] = value;
+        }
+    };
 
-// Function to print two objects of MyClass simultaneously
+
+    // Function to print two objects of MyClass simultaneously
 void printObjectsField(const Field& field_pc, const Field& field_user) {
 
     std::cout << std::endl;
@@ -132,25 +133,18 @@ public:
 
 int main() {
 
-    // Create two objects of Field
+    // Create two objects of class Field
     Field field_pc;
     Field field_user;
-    int x {0};
 
     Game game;
     game.printObjectsField(field_pc, field_user);
 
-    x++;
-
     field_pc.changeCell(7, 3, 8);
     field_user.changeCell(2, 6, 5);
-    
-    x++;
 
     game.printObjectsField(field_pc, field_user);
     //printObjectsField(field_pc, field_user);
-
-    x++;
 
     game.printWarning(Warning::TryAgain);
    
