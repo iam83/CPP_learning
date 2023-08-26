@@ -135,15 +135,22 @@ int main() {
     // Create two objects of Field
     Field field_pc;
     Field field_user;
+    int x {0};
 
     Game game;
     game.printObjectsField(field_pc, field_user);
 
+    x++;
+
     field_pc.changeCell(7, 3, 8);
     field_user.changeCell(2, 6, 5);
     
+    x++;
+
     game.printObjectsField(field_pc, field_user);
     //printObjectsField(field_pc, field_user);
+
+    x++;
 
     game.printWarning(Warning::TryAgain);
    

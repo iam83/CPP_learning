@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-    !!!! URGENT !!!! getCoord - make PC move when it hits the ship
+    !!!! URGENT !!!! getCoord - make PC move when it hits the ship but with random coord chosen within possible range
 
 */
 /*  
@@ -74,12 +74,15 @@ struct PlayerShipHit{
 
     Player player;
     std::string str_keyShipHit{};
+    int temp_row{0}, temp_col{0};
+    //bool firstHit{false};
+
     bool isPartlyHit{};             //use to mark if a ship was partly hit
 
         PlayerShipHit(Player Player, std::string Str_keyShipHit, bool IsPartlyHit) { 
             player = Player;
             str_keyShipHit = Str_keyShipHit;
-            isPartlyHit = IsPartlyHit; 
+            isPartlyHit = IsPartlyHit;
     }
 };
 
@@ -394,6 +397,8 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
                         player.str_keyShipHit = key;
                         states.isHit = true;
                         player.isPartlyHit = true;
+                        player.temp_row = row;
+                        player.temp_col = col;
                     }
                     else {
                         std::string coord_str = "";
@@ -403,6 +408,8 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
                         states.isPcHit = true;
                         states.isHit = true;
                         player.isPartlyHit = true;
+                        player.temp_row = row;
+                        player.temp_col = col;
                     }
                 }
                 value.erase(value.begin() + i);
@@ -540,8 +547,10 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
         }
 
         //(map[keyShipHit.pc].size() == 0 && map[keyShipHit.user].size() == 0) ||
-
-        if (!states.isHit || !player.isPartlyHit) {
+        
+        
+        // if (!states.isHit || !player.isPartlyHit)
+        if (!player.isPartlyHit) {
 
             move = rand() % moves.size();
             lastMove = moves.at(move);
@@ -549,24 +558,36 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
 
         }
 
-        else {
-            // if field cell is marked as hit ship then go and check around for possible moves
-            // if (field.at(row).at(col) == FieldCellStates::Hit)
-                for (int i = 0; i < 8; ++i) { // looking around cell
-                    if (inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit &&
-                            field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Miss &&
-                            field.at(row + y[i]).at(col + x[i]) != FieldCellStates::BorderHit){
+        else {  
 
-                                temp_moves.push_back({(row + y[i]), (col + x[i])}); // if moves are found add them into temp vector
+                // DEBUGGING
+                std::cout << "  temp_row: " << player.temp_row << " temp_col: " << player.temp_col << "\n";
 
-                            }
-                    }
+                if (map[player.str_keyShipHit].size() != 1 && map[player.str_keyShipHit].size() != 2) { //use search for possible coords only for the first time
 
-                for (size_t i{}; i < map[player.str_keyShipHit].size(); ++i){
-                     temp_moves.push_back({map[player.str_keyShipHit][i].first, map[player.str_keyShipHit][i].second});
+                // if field cell is marked as hit ship then go and check around for possible moves
+                // if (field.at(row).at(col) == FieldCellStates::Hit)
+                    for (int i = 0; i < 8; ++i) { // looking around cell
+                        if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
+                            if (field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Hit &&
+                                field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Miss &&
+                                field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::BorderHit){
+
+                                    temp_moves.push_back({(player.temp_row + y[i]), (player.temp_col + x[i])}); // if moves are found add them into temp vector
+
+                                }
+                        }
+
                     }
                 }
+
+                // then if ship is hit twice then use its exact coordinates to prevent hitting wrong cells
+                //      . . . . x x X. . 
+                //
+                // for example if a ship is longer than 2 cells then add other possible moves from its coordinates.
+                for (size_t i{}; i < map[player.str_keyShipHit].size(); ++i){
+                     temp_moves.push_back({map[player.str_keyShipHit][i].first, map[player.str_keyShipHit][i].second}); 
+                    }
 
                 //DEBUGGING
                 //std::sort( temp_moves.begin(), temp_moves.end() );
@@ -579,7 +600,8 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                     }
                     std::cout << std::endl;
                 //
-
+                
+                //removes duplicates that are added from above
                 std::sort( temp_moves.begin(), temp_moves.end() );
                 temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
 
