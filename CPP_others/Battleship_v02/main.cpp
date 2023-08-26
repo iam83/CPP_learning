@@ -101,6 +101,24 @@ struct Coord{
     Col col;
 };
 
+
+
+struct Ship{
+
+    std::string name{};
+    ShipType ship_type;
+    Coord coord;
+    Direction dir;
+
+    Ship(std::string Name, ShipType ship_type, Coord Coord, Direction Dir){
+        name = Name;
+        coord = Coord;
+        dir = Dir;
+    }
+
+};
+
+
  //DEBUGGING ONLY
 void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
                 const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
@@ -451,16 +469,16 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
 void createGameField(Field_t &field, std::vector<std::pair<int, int>> &vec, int &dir, Map_t &map) {
 
     createField(field);
-    generateFirstShip(field, map,  Ship::Carrier, "ship4");
-    setShips(field, map, vec, dir, Ship::Battleship, "ship3_1");
-    setShips(field, map, vec, dir, Ship::Battleship, "ship3_2");
-    setShips(field, map, vec, dir, Ship::Cruiser, "ship2_1");
-    setShips(field, map, vec, dir, Ship::Cruiser, "ship2_2");
-    setShips(field, map, vec, dir, Ship::Cruiser, "ship2_3");
-    setShips(field, map, vec, dir, Ship::Submarine, "ship1_1");
-    setShips(field, map, vec, dir, Ship::Submarine, "ship1_2");
-    setShips(field, map, vec, dir, Ship::Submarine, "ship1_3");
-    setShips(field, map, vec, dir, Ship::Submarine, "ship1_4");
+    generateFirstShip(field, map,  ShipType::Carrier, "ship4");
+    setShips(field, map, vec, dir, ShipType::Battleship, "ship3_1");
+    setShips(field, map, vec, dir, ShipType::Battleship, "ship3_2");
+    setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_1");
+    setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_2");
+    setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_3");
+    setShips(field, map, vec, dir, ShipType::Submarine, "ship1_1");
+    setShips(field, map, vec, dir, ShipType::Submarine, "ship1_2");
+    setShips(field, map, vec, dir, ShipType::Submarine, "ship1_3");
+    setShips(field, map, vec, dir, ShipType::Submarine, "ship1_4");
 }
 
 bool isInputValid(Field_t &field_pc, std::string &coord_str) { //check if user makes correct input

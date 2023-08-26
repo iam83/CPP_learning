@@ -21,7 +21,7 @@ enum Direction {
     Vertical
 };
 
-enum Ship {
+enum ShipType {
 
     Submarine = 1,
     Cruiser = 2,
