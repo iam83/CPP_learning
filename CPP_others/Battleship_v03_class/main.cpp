@@ -11,6 +11,13 @@
 #include "print.h"
 #include "ccolor.h"
 
+#ifdef _WIN32
+#define CLS "cls"
+#endif
+#ifdef __APPLE__
+#define CLS "clear"
+#endif
+
 
 int g_TIME = 0; //TIME factor for sleep::thread. for demo mode it will x2. for debug put 0
 
@@ -22,12 +29,12 @@ class Field{
     //class for field object
     //it creates, update and keep a field
 
+private:
+
     struct Ship{
         //struct for ship
         //it stores name, length, vec of coords, direction and maybe some other attributes of a shiop
     };
-
-private:
 
     struct PlayerShipHit{
 
@@ -130,85 +137,7 @@ private:
         }
     }
 
-
- public:
-
-    Field_t field{}; //store user main field
-    Map_t map{}; //store user ships coords
-
-    std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
-    std::vector<std::string> pc_moves{}; //store pc moves
-    std::vector<std::string> demo_moves{}; //store demo mode moves
-
-    int row{ 0 }, col{ 0 };
-    int dir{ 0 };
-
-    std::string coord_str = "";
-    std::string userLastMove = "";
-    std::string pcLastMove = "";
-    //std::string keyShipHit = ""; //store ship name of the hit ship. it's used in map container
-    std::string message_user = "";
-    std::string message_pc = "";
-
-
-    //PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
-
-    Field(){
-        createField();
-        createGameField();
-    }
-
-    void createField() {
-        field.fill({0});
-    }
-
-
-
-//checking field's cells and fill borders around ships
-    void checkField() {
-
-        const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
-        const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
-        //check in boundary
-        for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-            for (int col = 0; col < static_cast<int>(field.size()); ++col) {
-                if (field.at(row).at(col) == FieldCellStates::EmptyField) {
-                    for (int i = 0; i < 8; ++i) { // looking around cell
-                        if (inField(row + y[i], col + x[i])) {
-                            if (field.at(row + y[i]).at(col + x[i]) == FieldCellStates::Ship)
-                                field.at(row).at(col) = FieldCellStates::Border;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    void checkHitField() {
-
-        const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
-        const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
-
-        //check in boundary
-
-        for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-            for (int col = 0; col <static_cast<int>(field.size()); ++col) {
-
-                if (field.at(row).at(col) == FieldCellStates::Hit) {
-
-                    for (int i = 0; i < 8; ++i) { // looking around cell
-                        if (inField(row + y[i], col + x[i])) {
-                            if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit && field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Ship)
-                                field.at(row + y[i]).at(col + x[i]) = FieldCellStates::BorderHit;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    //making a vector of possible coordinates where ships can be placed on the field
-    void getPossibles(Field_t const &field,
+void getPossibles(Field_t const &field,
         std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
 
         dir = getRandomNumber(0, 1);
@@ -322,8 +251,108 @@ private:
         checkField();
     }
 
-   
 
+    void checkField() {
+
+        const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
+        const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
+        //check in boundary
+        for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+            for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+                if (field.at(row).at(col) == FieldCellStates::EmptyField) {
+                    for (int i = 0; i < 8; ++i) { // looking around cell
+                        if (inField(row + y[i], col + x[i])) {
+                            if (field.at(row + y[i]).at(col + x[i]) == FieldCellStates::Ship)
+                                field.at(row).at(col) = FieldCellStates::Border;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void checkHitField() {
+
+        const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
+        const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
+
+        //check in boundary
+
+        for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+            for (int col = 0; col <static_cast<int>(field.size()); ++col) {
+
+                if (field.at(row).at(col) == FieldCellStates::Hit) {
+
+                    for (int i = 0; i < 8; ++i) { // looking around cell
+                        if (inField(row + y[i], col + x[i])) {
+                            if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit && field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Ship)
+                                field.at(row + y[i]).at(col + x[i]) = FieldCellStates::BorderHit;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void createField() {
+        field.fill({0});
+    }
+
+    void createGameField() {
+
+        createField();
+        generateFirstShip(field, map,  ShipType::Carrier, "ship4");
+        setShips(field, map, vec, dir, ShipType::Battleship, "ship3_1");
+        setShips(field, map, vec, dir, ShipType::Battleship, "ship3_2");
+        setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_1");
+        setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_2");
+        setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_3");
+        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_1");
+        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_2");
+        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_3");
+        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_4");
+    }
+
+
+    void createMoveTable() {
+
+        moves.clear(); //clean before creating
+
+        const std::string letters = "ABCDEFGHIJ";
+        for (int i = 0; i <= 9; ++i) {
+            for (int j = 0; j <= 9; ++j) {
+                moves.push_back(letters[i] + std::to_string(j));
+            }
+        }
+    }
+
+
+ public:
+
+    Field_t field{}; //store user main field
+    Map_t map{}; //store user ships coords
+
+    std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
+    std::vector<std::string> moves{}; //store pc moves
+
+    int row{ 0 }, col{ 0 };
+    int dir{ 0 };
+
+    std::string coord_str = "";
+    std::string userLastMove = "";
+    std::string pcLastMove = "";
+    //std::string keyShipHit = ""; //store ship name of the hit ship. it's used in map container
+    std::string message_user = "";
+    std::string message_pc = "";
+
+    //PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
+
+    Field(){
+        createField();
+        createGameField();
+        createMoveTable();
+    }
+    
     //remove PC moves around destroyed ship
     void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
 
@@ -412,20 +441,6 @@ private:
         return false;
     }
 
-    void createGameField() {
-
-        createField();
-        generateFirstShip(field, map,  ShipType::Carrier, "ship4");
-        setShips(field, map, vec, dir, ShipType::Battleship, "ship3_1");
-        setShips(field, map, vec, dir, ShipType::Battleship, "ship3_2");
-        setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_1");
-        setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_2");
-        setShips(field, map, vec, dir, ShipType::Cruiser, "ship2_3");
-        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_1");
-        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_2");
-        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_3");
-        setShips(field, map, vec, dir, ShipType::Submarine, "ship1_4");
-    }
 
     bool isInputValid(Field_t &field_pc, std::string &coord_str) { //check if user makes correct input
 
@@ -620,24 +635,57 @@ private:
         sleepThread(300); //600 ms
     }
 
-    void createMoveTable(std::vector<std::string> &moves) {
-
-        moves.clear(); //clean before creating
-
-        const std::string letters = "ABCDEFGHIJ";
-        for (int i = 0; i <= 9; ++i) {
-            for (int j = 0; j <= 9; ++j) {
-                moves.push_back(letters[i] + std::to_string(j));
-            }
-        }
+    void clearAll(){
+        map.clear();
+        moves.clear();
+        vec.clear();
     }
-
 };
 
 
 class Game{
     //class for print function etc.
 public:
+
+    //DEBUGGING 
+    void printMoveTable(Field object) {
+        int a{ 0 };
+        for (int i = 0; i < static_cast<int>(object.moves.size()); ++i) {
+            std::cout << object.moves[i] << " ";
+            ++a;
+            if (a % 10 == 0) std::cout << std::endl;
+        }
+        std::cout << std::endl;
+    }
+
+    int playAgain() {
+
+    char exit;
+
+    do {
+        std::cout << "  Would you like to play again (y/n)?: ";
+        std::cin >> exit;
+
+        if (exit == 'y' || exit == 'Y') {
+            g_TIME = 1; //reset g_TIME to 1. otherwise it would accumulate the value from the previous runtime
+            return 1;
+            break;
+        }
+        else if (exit == 'n' || exit == 'N') {
+            std::cout << "  Thank you for playing. See you!" << std::endl;
+            return 0;
+            break;
+        }
+        else {
+            std::cin.clear(); // 
+            std::cin.ignore(32767, '\n');
+        }
+
+    } while (1);
+
+    std::cout << std::endl;
+}
+
     void printFields(const Field& field_pc, const Field& field_user,
                     ShipView field_view) {
 
@@ -773,6 +821,137 @@ int main(){
     Field field_pc;
 
     game.printFields(field_pc, field_user, ShipView::Visible);
+
+
+    bool demo {false};
+    
+    //game loop
+    do {
+
+        //game setup//
+
+        system(CLS);
+
+        field_pc.clearAll();
+        field_user.clearAll();
+
+        createField(field_user);
+        createField(field_pc);
+        
+
+        if (!isAutomaticSetup(demo)){
+            system(CLS);
+            std::cout << "\tManual setup\n";
+            if (!manualSetup(field_user, field_pc, map_user, ship_name)){
+                createGameField(field_user, vec, dir, map_user);
+            }
+        }else{
+            std::cout << "\tAutomatic setup\n";
+            createGameField(field_user, vec, dir, map_user);
+        }
+
+        system(CLS);
+        std::cout << setColor(CColor::Cyan);
+        std::cout << "\tGame started!\n";
+        std::cout << setColor(CColor::Reset);
+
+        createGameField(field_pc, vec, dir, map_pc);
+        createMoveTable(pc_moves);
+
+        //DEBUGGING
+        // if demo mode true
+        if(demo) createMoveTable(demo_moves);
+        //
+
+        while (1) {
+
+            //system(CLS);//COMMENT FOR DEBUGGING
+            checkField(field_pc);
+            checkField(field_user);
+
+            printFields(field_pc, field_user, ShipView::Invisible);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            
+            //DEBUGGING
+            printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
+
+            if (!states.isPcHit){
+                if(!demo){
+                    do {
+                            std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
+                            std::cin >> coord_str;
+                            coord_str[0] = std::toupper(coord_str[0]);
+                            if (coord_str == "Q") {
+                                std::cout << "  See you, bye!\n\n";
+                                return 0;
+                            }
+
+                    } while (!isInputValid(field_pc, coord_str));
+                
+                    userLastMove = coord_str;         
+                    decodeCoords(coord_str, row, col);
+
+                }else{
+                    //if demo mode is chosen
+                    getCoord(demo_moves, field_pc, map_pc, userLastMove, row, col, userKeyShipHit, states);
+                }
+
+                    //system(CLS);//COMMENT FOR DEBUG
+
+                    //user move
+                    if(!states.isPcHit){//if the previous PC move was not positive then execute User move
+                        if (isMove(field_pc, row, col)) {
+                            if (checkMap(map_pc, row, col, field_pc, message_user, userKeyShipHit, demo_moves, states)) {
+                                //system(CLS); //COMMENT FOR DEBUG
+                                printFields(field_pc, field_user, ShipView::Visible);
+                                printCongrats(Player::User);
+                                break;
+                            }
+                            message_pc = "";
+                            continue; // continue to next iteration bc User hit positive and move was true
+                        }
+                        else {
+                            message_user = "  You missed at " + userLastMove;
+                            states.isHit = false;
+                        }
+
+                        printFields(field_pc, field_user, ShipView::Invisible);
+                        printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+                        //DEBUGGING
+                        printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
+                    }
+
+            }
+
+
+             //pc move
+             getCoord(pc_moves, field_user, map_user, pcLastMove, pc_row, pc_col, pcKeyShipHit, states);
+             if (isMove(field_user, pc_row, pc_col)) {
+                 if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, pcKeyShipHit, pc_moves, states)) {
+                     //system(CLS); //COMMENT FOR DEBUG
+                     printFields(field_pc, field_user, ShipView::Visible);
+                     printCongrats(Player::Pc);
+                     break;
+                 }
+                 message_user = "";
+                 states.isPcHit = true;
+            }
+             else {
+                 message_pc = "   PC missed at " + pcLastMove;
+                 states.isHit = false;
+                 states.isPcHit = false;
+            }
+
+
+            checkField(field_pc);
+            checkField(field_user);
+
+            printFields(field_pc, field_user, ShipView::Invisible);
+            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            //system(CLS);//COMMENT FOR DEBUG
+        }
+    } while (game.playAgain());
+
 
     return 0;
 }

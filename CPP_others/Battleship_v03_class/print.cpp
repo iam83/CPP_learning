@@ -17,16 +17,7 @@
 
 
 
-//DEBUGGING 
-void printMoveTable(std::vector<std::string> const &moves) {
-    int a{ 0 };
-    for (int i = 0; i < static_cast<int>(moves.size()); ++i) {
-        std::cout << moves[i] << " ";
-        ++a;
-        if (a % 10 == 0) std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
+
 
 void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map) {
 
