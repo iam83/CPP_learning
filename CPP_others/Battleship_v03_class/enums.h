@@ -1,3 +1,5 @@
+#pragma once
+
 enum Player {
     User,
     Pc
@@ -21,7 +23,7 @@ enum Direction {
     Vertical
 };
 
-enum Ship {
+enum ShipType {
 
     Submarine = 1,
     Cruiser = 2,
@@ -31,21 +33,10 @@ enum Ship {
 };
 
 enum FieldCellStates {
-    Field,
+    EmptyField,
     Ship,
     Hit,
     Miss,
     BorderHit = 7,
     Border = 8
-};
-
-enum ConsoleColor{
-    DeepCyan = 3,
-    DarkRed = 4,
-    NormalWhite = 7,
-    Grey = 8,
-    Blue = 9,
-    Green = 10,
-    Red = 12,
-    Yellow = 14,
 };

@@ -5,24 +5,60 @@
 #include <map>
 #include <thread>
 #include <chrono>
-
+#include "ccolor.h"
 #include "enums.h"
 
 #ifdef _WIN32
 #define CLS "cls"
-#include <windows.h>
 #endif
 #ifdef __APPLE__
 #define CLS "clear"
 #endif
 
 
+
+//DEBUGGING 
+void printMoveTable(std::vector<std::string> const &moves) {
+    int a{ 0 };
+    for (int i = 0; i < static_cast<int>(moves.size()); ++i) {
+        std::cout << moves[i] << " ";
+        ++a;
+        if (a % 10 == 0) std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const &map) {
+
+    std::cout << "map size " << map.size() << "\n";
+    std::string coord_str = "";
+
+    for (auto& [key, value] : map) {
+        std::cout << key << ": ";
+        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
+
+            switch (value[i].first) {
+                case 0: coord_str = "A"; break;
+                case 1: coord_str = "B"; break;
+                case 2: coord_str = "C"; break;
+                case 3: coord_str = "D"; break;
+                case 4: coord_str = "E"; break;
+                case 5: coord_str = "F"; break;
+                case 6: coord_str = "G"; break;
+                case 7: coord_str = "H"; break;
+                case 8: coord_str = "I"; break;
+                case 9: coord_str = "J"; break;
+            }
+            std::cout << coord_str << value[i].second << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+
+
 void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
-    #ifdef _WIN32
-    HANDLE  hConsole;
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    #endif
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
     const std::string separator = "        ";
@@ -43,67 +79,43 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 
     for (int row = 0; row < static_cast<int>(field_user.size()); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
-
+        
         // user field
         for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
             if (field_user.at(row).at(col) == FieldCellStates::Ship) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, 14); //set console color font green 10, yellow 14, or 22 for selected
-                #endif
+                std::cout << setColor(CColor::Yellow);
                 std::cout << c_SHIP << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //border around ship
             else if (field_user.at(row).at(col) == FieldCellStates::Border) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font green 10, yellow 14
-                #endif
+                std::cout << setColor(CColor::DarkGrey);
                 std::cout << c_BORDER << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //ship is hit
             else if (field_user.at(row).at(col) == FieldCellStates::Hit) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Red); //red
-                #endif
+                std::cout << setColor(CColor::LightRed);
                 std::cout << c_HIT << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //border around hitted ship
             else if (field_user.at(row).at(col) == FieldCellStates::BorderHit) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
-                #endif
+                std::cout << setColor(CColor::Blue);
                 std::cout << c_BORDERHIT << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //missed hit
             else if (field_user.at(row).at(col) == FieldCellStates::Miss) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
-                #endif
+                std::cout << setColor(CColor::Blue);
                 std::cout << c_MISS << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //just empty field
             else {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font grey 8,
-                #endif
+                std::cout << setColor(CColor::DarkGrey);
                 std::cout << c_FIELD << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
         }
 
@@ -114,12 +126,10 @@ void printUserField(std::array<std::array<int, 10>, 10> const& field_user) {
 }
 
 //print both fields, make it colorful on windows
-void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array<std::array<int, 10>, 10> const& field_user, ShipView field_view) {
+void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
+                 std::array<std::array<int, 10>, 10> const& field_user,
+                 ShipView field_view) {
 
-    #ifdef _WIN32
-    HANDLE  hConsole;
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    #endif
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
     const std::string separator = "        ";
@@ -150,63 +160,40 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
         // user field
         for (int col = 0; col < static_cast<int>(field_user.size()); ++col) {
             if (field_user.at(row).at(col) == FieldCellStates::Ship) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Yellow); //set console color font green 10, yellow 14, or 22 for selected
-                #endif
+                std::cout << setColor(CColor::Yellow);
                 std::cout << c_SHIP << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //border around ship
             else if (field_user.at(row).at(col) == FieldCellStates::Border) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font green 10, yellow 14
-                #endif
+                std::cout << setColor(CColor::DarkGrey);
                 std::cout << c_BORDER << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //ship is hit
             else if (field_user.at(row).at(col) == FieldCellStates::Hit) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Red); //red
-                #endif
+                std::cout << setColor(CColor::LightRed);
+                std::cout << setColor(CColor::Negative);
                 std::cout << c_HIT << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //border around hitted ship
             else if (field_user.at(row).at(col) == FieldCellStates::BorderHit) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
-                #endif
+                std::cout << setColor(CColor::Blue);
                 std::cout << c_BORDERHIT << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //missed hit
             else if (field_user.at(row).at(col) == FieldCellStates::Miss) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Blue);
-                #endif
+                std::cout << setColor(CColor::Blue);
                 std::cout << c_MISS << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //just empty field
             else {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font grey 8,
-                #endif
+                std::cout << setColor(CColor::DarkGrey);
                 std::cout << c_FIELD << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
         }
 
@@ -216,88 +203,88 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc, std::array
         // pc field
         for (int col = 0; col < static_cast<int>(field_pc.size()); ++col) {
             if (field_pc.at(row).at(col) == FieldCellStates::Ship) {
-                #ifdef _WIN32
-                //set console color font green 10, yellow 14, 11 light blue, 13 magenta, 9 dark blue or 22 for selected
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey);
-                #endif
-                if (field_view == ShipView::Visible)
+                std::cout << setColor(CColor::DarkGrey);
+                if (field_view == ShipView::Visible) // make ships visible when game has ended
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_SHIP << " "; // c_FIELD
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                    std::cout << c_SHIP << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
+                std::cout << setColor(CColor::Reset);
             }
             //border around ship
             else if (field_pc.at(row).at(col) == FieldCellStates::Border) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font green 10, yellow 14
-                #endif
+                std::cout << setColor(CColor::DarkGrey);
                 std::cout << c_BORDER << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //ship is hit
             else if (field_pc.at(row).at(col) == FieldCellStates::Hit) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Green); //green
-                #endif
+                std::cout << setColor(CColor::Green);
+                std::cout << setColor(CColor::Negative);
                 std::cout << c_HIT << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //border around hitted ship
             else if (field_pc.at(row).at(col) == FieldCellStates::BorderHit) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::DarkRed); //4 dark red
-                #endif
+                std::cout << setColor(CColor::LightRed);
                 std::cout << c_BORDERHIT << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //missed hit
             else if (field_pc.at(row).at(col) == FieldCellStates::Miss) {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::DarkRed);
-                #endif
+                std::cout << setColor(CColor::LightRed);
                 std::cout << c_MISS << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
             //just empty field
             else {
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::Grey); //set console color font grey 8,
-                #endif
+                std::cout << setColor(CColor::DarkGrey);
                 std::cout << c_FIELD << " ";
-                #ifdef _WIN32
-                SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite);
-                #endif
+                std::cout << setColor(CColor::Reset);
             }
         }
         std::cout << std::endl;
     }
 
-    #ifdef _WIN32
-    SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite); //set console color font white 7,
-    #endif
+    std::cout << setColor(CColor::Reset);
     std::cout << std::endl;
 }
 
-void printUpdateMessage(std::map<std::string, std::vector<std::pair<int, int>>> map_user, std::map<std::string, std::vector<std::pair<int, int>>> map_pc, std::string message_user, std::string message_pc, std::string userLastMove, std::string pcLastMove) {
-    std::cout << "       Your ships: " << map_user.size();
-    std::cout << "\t\t" << message_user << std::endl;
+void printUpdateMessage(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
+                        const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
+                        const std::string &message_user, const std::string &message_pc,
+                        const std::string &userLastMove, const std::string &pcLastMove){
 
-    std::cout << "         PC ships: " << map_pc.size();
+
+    std::cout << "  Your ships left: ";
+    if (map_user.size() <= 3)
+        std::cout << setColor(CColor::LightRed); //set a color LightRed if ships left <= 3
+    std::cout << map_user.size();
+    std::cout << setColor(CColor::Reset);
+
+    if (message_user[2] == 'W') //if you sank a ship setColor Green
+        std::cout << setColor(CColor::Green);
+    if(message_user[6] == 'h') //if you hit a ship setColor Cyan
+        std::cout << setColor(CColor::Cyan);
+
+    std::cout << "\t\t" << message_user << std::endl;
+    std::cout << setColor(CColor::Reset);
+
+    std::cout << "    PC ships left: ";
+    if (map_pc.size() <= 3)
+        std::cout << setColor(CColor::LightRed);
+    std::cout << map_pc.size();
+    std::cout << setColor(CColor::Reset);
+
+    if(message_pc[2] == 'O')
+        std::cout << setColor(CColor::Red);
+    if(message_pc[5] == 'h')
+        std::cout << setColor(CColor::Yellow);
     std::cout << "\t\t" << message_pc << std::endl;
+    std::cout << setColor(CColor::Reset);
 
     std::cout << "   Your last move: " << userLastMove << std::endl;
     std::cout << "     PC last move: " << pcLastMove << std::endl;
-
+    
     std::cout << std::endl;
 }
 
@@ -312,37 +299,15 @@ void printCongrats(Player player) {
 
     for (auto const& letter : message_congrats) {
         std::cout << letter;
-        std::this_thread::sleep_for(std::chrono::milliseconds(25)); //400 ms
-    }
-
-    std::cout << std::endl;
-}
-
-void startMessage() {
-
-    system(CLS);
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    const std::string message_start = "\t\tB A T T L E S H I P  by  AU  1.5";
-
-    for (auto const& letter : message_start) {
-        std::cout << letter;
         std::this_thread::sleep_for(std::chrono::milliseconds(25)); //25 ms
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+
+    std::cout << std::endl;
 }
 
 void printWarning(Warning warning){
 
-    #ifdef _WIN32
-    HANDLE  hConsole;
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, ConsoleColor::DarkRed); //dark red 4
-    #endif
+    std::cout << setColor(CColor::LightRed);
 
     switch(warning){
         case Warning::TryAgain:
@@ -361,44 +326,5 @@ void printWarning(Warning warning){
             std::cout << "  WARNING: You've already hit there! Try again.\n";
             break;
     }
-     #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, ConsoleColor::NormalWhite); //normal white
-    #endif
-}
-
-void printMoveTable(std::vector<std::string> const& pc_moves) {
-    int a{ 0 };
-    for (int i = 0; i < static_cast<int>(pc_moves.size()); ++i) {
-        std::cout << pc_moves[i] << " ";
-        ++a;
-        if (a % 10 == 0) std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-
-void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const& map) {
-
-    std::cout << "map size " << map.size() << "\n";
-    std::string coord_str = "";
-
-    for (auto& [key, value] : map) {
-        std::cout << key << ": ";
-        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
-
-            switch (value[i].first) {
-                case 0: coord_str = "A"; break;
-                case 1: coord_str = "B"; break;
-                case 2: coord_str = "C"; break;
-                case 3: coord_str = "D"; break;
-                case 4: coord_str = "E"; break;
-                case 5: coord_str = "F"; break;
-                case 6: coord_str = "G"; break;
-                case 7: coord_str = "H"; break;
-                case 8: coord_str = "I"; break;
-                case 9: coord_str = "J"; break;
-            }
-            std::cout << coord_str << value[i].second << " ";
-        }
-        std::cout << std::endl;
-    }
+    std::cout << setColor(CColor::Reset);
 }
