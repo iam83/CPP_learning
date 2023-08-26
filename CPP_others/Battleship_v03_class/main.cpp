@@ -27,43 +27,7 @@ class Field{
         //it stores name, length, vec of coords, direction and maybe some other attributes of a shiop
     };
 
-
 private:
-
-    void sleepThread(int time){
-        std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
-    }
-
-    int getRandomNumber(int min, int max) {
-        static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
-        return static_cast<int>(rand() * fraction * (max - min + 1) + min);
-    }
-
-    bool inField(int row, int col)
-    {
-        if (row < 0 || row > 9) return false;
-        if (col < 0 || col > 9) return false;
-        return true;
-    }
-
-
- public:
-
-    Field_t field{}; //store user main field
-    Map_t map{}; //store user ships coords
-
-    std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
-    std::vector<std::string> pc_moves{}; //store pc moves
-    std::vector<std::string> demo_moves{}; //store demo mode moves
-
-    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2",
-                                          "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
-
-    struct States_b{
-        bool isPcHit {false};    //use to check if a move is hit or miss.
-        bool isHit {false};      //use to check if a hit happened in getCoord and CheckMap
-    };
-
 
     struct PlayerShipHit{
 
@@ -81,6 +45,101 @@ private:
             }
         };   
 
+    struct States_b{
+        bool isPcHit {false};    //use to check if a move is hit or miss.
+        bool isHit {false};      //use to check if a hit happened in getCoord and CheckMap
+    };
+
+
+
+    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2",
+                                          "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
+
+
+    void sleepThread(int time){
+        std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
+    }
+
+    int getRandomNumber(int min, int max) {
+        static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
+        return static_cast<int>(rand() * fraction * (max - min + 1) + min);
+    }
+
+    bool inField(int row, int col)
+    {
+        if (row < 0 || row > 9) return false;
+        if (col < 0 || col > 9) return false;
+        return true;
+    }
+
+     void encodeCoords(std::string &coord_str, int row, int col) {
+
+        switch (row) {
+            case 0: coord_str = "A"; break;
+            case 1: coord_str = "B"; break;
+            case 2: coord_str = "C"; break;
+            case 3: coord_str = "D"; break;
+            case 4: coord_str = "E"; break;
+            case 5: coord_str = "F"; break;
+            case 6: coord_str = "G"; break;
+            case 7: coord_str = "H"; break;
+            case 8: coord_str = "I"; break;
+            case 9: coord_str = "J"; break;
+        }
+
+        switch (col) {
+            case 0: coord_str += "0"; break;
+            case 1: coord_str += "1"; break;
+            case 2: coord_str += "2"; break;
+            case 3: coord_str += "3"; break;
+            case 4: coord_str += "4"; break;
+            case 5: coord_str += "5"; break;
+            case 6: coord_str += "6"; break;
+            case 7: coord_str += "7"; break;
+            case 8: coord_str += "8"; break;
+            case 9: coord_str += "9"; break;
+        }
+
+    }
+
+    void decodeCoords(const std::string coord_str, int &row, int &col) {
+
+        switch (coord_str[0]) {
+            case 'A': row = 0; break;
+            case 'B': row = 1; break;
+            case 'C': row = 2; break;
+            case 'D': row = 3; break;
+            case 'E': row = 4; break;
+            case 'F': row = 5; break;
+            case 'G': row = 6; break;
+            case 'H': row = 7; break;
+            case 'I': row = 8; break;
+            case 'J': row = 9; break;
+        }
+        switch (coord_str[1]) {
+            case '0': col = 0; break;
+            case '1': col = 1; break;
+            case '2': col = 2; break;
+            case '3': col = 3; break;
+            case '4': col = 4; break;
+            case '5': col = 5; break;
+            case '6': col = 6; break;
+            case '7': col = 7; break;
+            case '8': col = 8; break;
+            case '9': col = 9; break;
+        }
+    }
+
+
+ public:
+
+    Field_t field{}; //store user main field
+    Map_t map{}; //store user ships coords
+
+    std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
+    std::vector<std::string> pc_moves{}; //store pc moves
+    std::vector<std::string> demo_moves{}; //store demo mode moves
+
     int row{ 0 }, col{ 0 };
     int dir{ 0 };
 
@@ -91,9 +150,13 @@ private:
     std::string message_user = "";
     std::string message_pc = "";
 
+
     //PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
 
-
+    Field(){
+        createField();
+        createGameField();
+    }
 
     void createField() {
         field.fill({0});
@@ -259,63 +322,7 @@ private:
         checkField();
     }
 
-    void encodeCoords(std::string &coord_str, int row, int col) {
-
-        switch (row) {
-            case 0: coord_str = "A"; break;
-            case 1: coord_str = "B"; break;
-            case 2: coord_str = "C"; break;
-            case 3: coord_str = "D"; break;
-            case 4: coord_str = "E"; break;
-            case 5: coord_str = "F"; break;
-            case 6: coord_str = "G"; break;
-            case 7: coord_str = "H"; break;
-            case 8: coord_str = "I"; break;
-            case 9: coord_str = "J"; break;
-        }
-
-        switch (col) {
-            case 0: coord_str += "0"; break;
-            case 1: coord_str += "1"; break;
-            case 2: coord_str += "2"; break;
-            case 3: coord_str += "3"; break;
-            case 4: coord_str += "4"; break;
-            case 5: coord_str += "5"; break;
-            case 6: coord_str += "6"; break;
-            case 7: coord_str += "7"; break;
-            case 8: coord_str += "8"; break;
-            case 9: coord_str += "9"; break;
-        }
-
-    }
-
-    void decodeCoords(const std::string coord_str, int &row, int &col) {
-
-        switch (coord_str[0]) {
-            case 'A': row = 0; break;
-            case 'B': row = 1; break;
-            case 'C': row = 2; break;
-            case 'D': row = 3; break;
-            case 'E': row = 4; break;
-            case 'F': row = 5; break;
-            case 'G': row = 6; break;
-            case 'H': row = 7; break;
-            case 'I': row = 8; break;
-            case 'J': row = 9; break;
-        }
-        switch (coord_str[1]) {
-            case '0': col = 0; break;
-            case '1': col = 1; break;
-            case '2': col = 2; break;
-            case '3': col = 3; break;
-            case '4': col = 4; break;
-            case '5': col = 5; break;
-            case '6': col = 6; break;
-            case '7': col = 7; break;
-            case '8': col = 8; break;
-            case '9': col = 9; break;
-        }
-    }
+   
 
     //remove PC moves around destroyed ship
     void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
@@ -761,14 +768,9 @@ int main(){
     srand(static_cast<unsigned int>(time(0)));
 
     Game game;
+
     Field field_user;
     Field field_pc;
-
-    field_user.createField();
-    field_pc.createField();
-
-    field_pc.createGameField();
-    field_user.createGameField();
 
     game.printFields(field_pc, field_user, ShipView::Visible);
 
