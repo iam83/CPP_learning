@@ -15,7 +15,6 @@ public:
     void changeCell(int row, int col, int value){
             field[row][col] = value;
     }
-
 };
 
 // Function to print two objects of MyClass simultaneously
