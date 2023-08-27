@@ -445,16 +445,16 @@ void getPossibles(Field_t const &field,
     bool isInputValid(Field_t &field_pc, std::string &coord_str) { //check if user makes correct input
 
         if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
-            coord_str[0] == 'C' || coord_str[0] == 'D' ||
-            coord_str[0] == 'E' || coord_str[0] == 'F' ||
-            coord_str[0] == 'G' || coord_str[0] == 'H' ||
-            coord_str[0] == 'I' || coord_str[0] == 'J')
+             coord_str[0] == 'C' || coord_str[0] == 'D' ||
+             coord_str[0] == 'E' || coord_str[0] == 'F' ||
+             coord_str[0] == 'G' || coord_str[0] == 'H' ||
+             coord_str[0] == 'I' || coord_str[0] == 'J')
             &&
             (coord_str[1] == '0' || coord_str[1] == '1' ||
-            coord_str[1] == '2' || coord_str[1] == '3' ||
-            coord_str[1] == '4' || coord_str[1] == '5' ||
-            coord_str[1] == '6' || coord_str[1] == '7' ||
-            coord_str[1] == '8' || coord_str[1] == '9')
+             coord_str[1] == '2' || coord_str[1] == '3' ||
+             coord_str[1] == '4' || coord_str[1] == '5' ||
+             coord_str[1] == '6' || coord_str[1] == '7' ||
+             coord_str[1] == '8' || coord_str[1] == '9')
             && coord_str.size() == 2) {
 
             checkField();
@@ -594,7 +594,7 @@ void getPossibles(Field_t const &field,
 
                     int x{};
                     if (temp_moves.size() > 1)
-                        x = rand() % temp_moves.size(); //then randomly from choose from the temp vector a possible move
+                        x = rand() % temp_moves.size(); //then randomly choose from the temp vector a possible move
                     else
                         x = 0;
 
@@ -825,6 +825,7 @@ int main(){
 
     bool demo {false};
     
+    /*
     //game loop
     do {
 
@@ -951,7 +952,7 @@ int main(){
             //system(CLS);//COMMENT FOR DEBUG
         }
     } while (game.playAgain());
-
+    */
 
     return 0;
 }
