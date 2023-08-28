@@ -588,7 +588,8 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                 std::cout << ((player.player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << std::endl;
                 #endif
 
-                if (map[player.str_keyShipHit].size() != 2) { //use search for possible coords only for the first time
+                
+                if (map[player.str_keyShipHit].size() != 1 && player.str_keyShipHit != "ship4") { //use search for possible coords only for the first time
 
                     for (int i = 0; i < 8; ++i) { // looking around cell
                         if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
@@ -604,7 +605,24 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                     }
                 }
 
-                // then if ship is hit twice then use its exact coordinates to prevent hitting wrong cells
+
+                if (map[player.str_keyShipHit].size() != 2 && player.str_keyShipHit == "ship4") { //use search for possible coords only for the first time
+
+                    for (int i = 0; i < 8; ++i) { // looking around cell
+                        if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
+                            if (field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Hit &&
+                                field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Miss &&
+                                field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::BorderHit){
+
+                                    temp_moves.push_back({(player.temp_row + y[i]), (player.temp_col + x[i])}); // if moves are found add them into temp vector
+
+                                }
+                        }
+
+                    }
+                }
+
+                //then if ship is hit twice so use its exact coordinates to prevent hitting wrong cells otherwise it's dumb.
                 //      . . . . x x X. . 
                 //
                 // for example if a ship is longer than 2 cells then add other possible moves from its coordinates.
