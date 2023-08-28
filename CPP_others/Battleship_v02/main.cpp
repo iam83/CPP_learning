@@ -52,11 +52,13 @@
 #define CLS "clear"
 #endif
 
+#define __DEBG true //set to true to enable DEBUG messages or false to disable
+
 using Map_t = std::map<std::string, std::vector<std::pair<int, int>>>;
 using Field_t = std::array<std::array<int, 10>, 10>;
 
 std::string g_VERSION = "1.55";
-int g_TIME = 0; //TIME factor for sleep::thread. for demo mode it will x2. for debug put 0
+int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
 
 
 void sleepThread(int time){
@@ -120,6 +122,7 @@ struct Ship{
 
 
  //DEBUGGING ONLY
+ #if __DEBG
 void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
                 const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
                 const std::vector<std::string> &pc_moves, const States_b states,
@@ -139,6 +142,7 @@ void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &m
         std::cout << "isPartlyHit pc = " << pc.isPartlyHit << "\n";
 
 }
+#endif
 ////
 
 
@@ -561,13 +565,13 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
             
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
-            sleepThread(150);
-        }
 
-        //(map[keyShipHit.pc].size() == 0 && map[keyShipHit.user].size() == 0) ||
+            #if !(__DEBG)
+            sleepThread(150);
+            #endif
+        }        
         
-        
-        // if (!states.isHit || !player.isPartlyHit)
+        // if the previous hit wasn't successful then choose random coord
         if (!player.isPartlyHit) {
 
             move = rand() % moves.size();
@@ -579,12 +583,13 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
         else {  
 
                 // DEBUGGING
+                #if __DEBG
                 std::cout << "  temp_row: " << player.temp_row << " temp_col: " << player.temp_col << "\n";
+                std::cout << ((player.player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << std::endl;
+                #endif
 
-                if (map[player.str_keyShipHit].size() != 1 && map[player.str_keyShipHit].size() != 2) { //use search for possible coords only for the first time
+                if (map[player.str_keyShipHit].size() != 2) { //use search for possible coords only for the first time
 
-                // if field cell is marked as hit ship then go and check around for possible moves
-                // if (field.at(row).at(col) == FieldCellStates::Hit)
                     for (int i = 0; i < 8; ++i) { // looking around cell
                         if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
                             if (field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Hit &&
@@ -608,9 +613,7 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                     }
 
                 //DEBUGGING
-                //std::sort( temp_moves.begin(), temp_moves.end() );
-                //temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
-
+                #if __DEBG
                 std::cout << "moves before sort ";
                     for (auto const &move : temp_moves){
                         encodeCoords(temp_pcMove, move.first, move.second);
@@ -618,11 +621,13 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                     }
                     std::cout << std::endl;
                 //
+                #endif
                 
                 //removes duplicates that are added from above
                 std::sort( temp_moves.begin(), temp_moves.end() );
                 temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
 
+                #if __DEBG
                 std::cout << "moves ";
                     for (auto const &move : temp_moves){
                         encodeCoords(temp_pcMove, move.first, move.second);
@@ -630,6 +635,7 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                     }
                     std::cout << std::endl;
                     system("pause");
+                #endif
 
                 int x{};
                 if (temp_moves.size() > 1)
@@ -660,10 +666,12 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
         moves.erase(moves.begin() + move);
 
         //DEBUGGING
+        #if __DEBG
             if (player.player == Player::Pc) std::cout << "pc ";
             else std::cout << "user ";
             std::cout << player.str_keyShipHit << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << "\n";
             system("pause");
+        #endif
         //
 
         if (map[player.str_keyShipHit].size() == 0){
@@ -671,7 +679,9 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
         }
 
     }
+    #if !(__DEBG)
     sleepThread(300); //600 ms
+    #endif
 }
 
 void createMoveTable(std::vector<std::string> &moves) {
@@ -1040,22 +1050,27 @@ int main() {
         PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
         PlayerShipHit pcKeyShipHit(Player::Pc, "", false);
 
-        //DEBUGGING
         // if demo mode true
         if(demo) createMoveTable(demo_moves);
         //
 
         while (1) {
+            
+            #if !(__DEBG)
+            system(CLS);//COMMENT FOR DEBUGGING
+            #endif
 
-            //system(CLS);//COMMENT FOR DEBUGGING
             checkField(field_pc);
             checkField(field_user);
 
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
             
+
+            #if __DEBG
             //DEBUGGING
             printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
+            #endif
 
             if (!states.isPcHit){
                 if(!demo){
@@ -1077,14 +1092,20 @@ int main() {
                     //if demo mode is chosen
                     getCoord(demo_moves, field_pc, map_pc, userLastMove, row, col, userKeyShipHit, states);
                 }
-
-                    //system(CLS);//COMMENT FOR DEBUG
+                    
+                    #if !(__DEBG)
+                    system(CLS); //COMMENT FOR DEBUG
+                    #endif
 
                     //user move
                     if(!states.isPcHit){//if the previous PC move was not positive then execute User move
                         if (isMove(field_pc, row, col)) {
                             if (checkMap(map_pc, row, col, field_pc, message_user, userKeyShipHit, demo_moves, states)) {
-                                //system(CLS); //COMMENT FOR DEBUG
+
+                                #if !(__DEBG)
+                                system(CLS); //COMMENT FOR DEBUG
+                                #endif
+
                                 printFields(field_pc, field_user, ShipView::Visible);
                                 printCongrats(Player::User);
                                 break;
@@ -1099,8 +1120,11 @@ int main() {
 
                         printFields(field_pc, field_user, ShipView::Invisible);
                         printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+
                         //DEBUGGING
+                        #if __DEBG
                         printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
+                        #endif
                     }
 
             }
@@ -1110,7 +1134,10 @@ int main() {
              getCoord(pc_moves, field_user, map_user, pcLastMove, pc_row, pc_col, pcKeyShipHit, states);
              if (isMove(field_user, pc_row, pc_col)) {
                  if (checkMap(map_user, pc_row, pc_col, field_user, message_pc, pcKeyShipHit, pc_moves, states)) {
-                     //system(CLS); //COMMENT FOR DEBUG
+                     #if !(__DEBG)
+                     system(CLS); //COMMENT FOR DEBUG
+                     #endif
+
                      printFields(field_pc, field_user, ShipView::Visible);
                      printCongrats(Player::Pc);
                      break;
@@ -1130,7 +1157,10 @@ int main() {
 
             printFields(field_pc, field_user, ShipView::Invisible);
             printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
-            //system(CLS);//COMMENT FOR DEBUG
+
+            #if !(__DEBG)
+            system(CLS);//COMMENT FOR DEBUG
+            #endif
         }
     } while (playAgain());
 
