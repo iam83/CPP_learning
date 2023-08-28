@@ -590,7 +590,7 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
 
         
 
-            if (map[player.str_keyShipHit].size() > 0 || !(map[player.str_keyShipHit].size() == 2 && player.str_keyShipHit == "ship4")) { //use search for possible coords only for the first time
+            if (map[player.str_keyShipHit].size() > 0) { //use search for possible coords only for the first time
 
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
