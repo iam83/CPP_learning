@@ -582,73 +582,73 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
 
         else {  
 
-                // DEBUGGING
-                #if __DEBG
-                std::cout << "  temp_row: " << player.temp_row << " temp_col: " << player.temp_col << "\n";
-                std::cout << ((player.player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << std::endl;
-                #endif
+            // DEBUGGING
+            #if __DEBG
+            std::cout << "  temp_row: " << player.temp_row << " temp_col: " << player.temp_col << "\n";
+            std::cout << ((player.player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << std::endl;
+            #endif
 
+        
+
+            if (map[player.str_keyShipHit].size() > 0) { //use search for possible coords only for the first time
+
+                for (int i = 0; i < 8; ++i) { // looking around cell
+                    if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
+                        if (field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Hit &&
+                            field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Miss &&
+                            field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::BorderHit){
+
+                                temp_moves.push_back({(player.temp_row + y[i]), (player.temp_col + x[i])}); // if moves are found add them into temp vector
+
+                            }
+                    }
+
+                }
+            }
+
+            //then if ship is hit twice so use its exact coordinates to prevent hitting wrong cells otherwise it's dumb.
+            //      . . . . x x X. . 
+            //
+            // for example if a ship is longer than 2 cells then add other possible moves from its coordinates.
+            for (size_t i{}; i < map[player.str_keyShipHit].size(); ++i){
+                    temp_moves.push_back({map[player.str_keyShipHit][i].first, map[player.str_keyShipHit][i].second}); 
+                }
+
+            //DEBUGGING
+            #if __DEBG
+            std::cout << "moves before sort ";
+                for (auto const &move : temp_moves){
+                    encodeCoords(temp_pcMove, move.first, move.second);
+                    std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
+                }
+                std::cout << std::endl;
+            //
+            #endif
             
+            //removes duplicates that are added from above
+            std::sort( temp_moves.begin(), temp_moves.end() );
+            temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
 
-                if (map[player.str_keyShipHit].size() > 0) { //use search for possible coords only for the first time
-
-                    for (int i = 0; i < 8; ++i) { // looking around cell
-                        if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
-                            if (field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Hit &&
-                                field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::Miss &&
-                                field.at(player.temp_row + y[i]).at(player.temp_col + x[i]) != FieldCellStates::BorderHit){
-
-                                    temp_moves.push_back({(player.temp_row + y[i]), (player.temp_col + x[i])}); // if moves are found add them into temp vector
-
-                                }
-                        }
-
-                    }
+            #if __DEBG
+            std::cout << "moves ";
+                for (auto const &move : temp_moves){
+                    encodeCoords(temp_pcMove, move.first, move.second);
+                    std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
                 }
+                std::cout << std::endl;
+                system("pause");
+            #endif
 
-                //then if ship is hit twice so use its exact coordinates to prevent hitting wrong cells otherwise it's dumb.
-                //      . . . . x x X. . 
-                //
-                // for example if a ship is longer than 2 cells then add other possible moves from its coordinates.
-                for (size_t i{}; i < map[player.str_keyShipHit].size(); ++i){
-                     temp_moves.push_back({map[player.str_keyShipHit][i].first, map[player.str_keyShipHit][i].second}); 
-                    }
+            int x{};
+            if (temp_moves.size() > 1)
+                x = rand() % temp_moves.size(); //then randomly from choose from the temp vector a possible move
+            else
+                x = 0;
 
-                //DEBUGGING
-                #if __DEBG
-                std::cout << "moves before sort ";
-                    for (auto const &move : temp_moves){
-                        encodeCoords(temp_pcMove, move.first, move.second);
-                        std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
-                    }
-                    std::cout << std::endl;
-                //
-                #endif
-                
-                //removes duplicates that are added from above
-                std::sort( temp_moves.begin(), temp_moves.end() );
-                temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
-
-                #if __DEBG
-                std::cout << "moves ";
-                    for (auto const &move : temp_moves){
-                        encodeCoords(temp_pcMove, move.first, move.second);
-                        std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
-                    }
-                    std::cout << std::endl;
-                    system("pause");
-                #endif
-
-                int x{};
-                if (temp_moves.size() > 1)
-                    x = rand() % temp_moves.size(); //then randomly from choose from the temp vector a possible move
-                else
-                    x = 0;
-
-                if (!temp_moves.empty()){
-                    row = temp_moves[x].first; // and apply
-                    col = temp_moves[x].second;// both it here
-                }
+            if (!temp_moves.empty()){
+                row = temp_moves[x].first; // and apply
+                col = temp_moves[x].second;// both it here
+            }
             
             // row = map[keyShipHit][0].first;
             // col = map[keyShipHit][0].second;
