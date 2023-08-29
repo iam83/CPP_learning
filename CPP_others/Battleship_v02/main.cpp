@@ -530,9 +530,9 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
 
     if (moves.size() > 0) {
         if(player.player == Player::Pc)
-            std::cout << "   PC is attacking";
+            std::cout << "    PC is attacking";
         else
-            std::cout << " User is attacking";
+            std::cout << "  User is attacking";
             
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";

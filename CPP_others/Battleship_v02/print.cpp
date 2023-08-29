@@ -255,7 +255,7 @@ void printUpdateMessage(const std::map<std::string, std::vector<std::pair<int, i
                         const std::string &userLastMove, const std::string &pcLastMove){
 
 
-    std::cout << "  Your ships left: ";
+    std::cout << "   Your ships left: ";
     if (map_user.size() <= 3)
         std::cout << setColor(CColor::LightRed); //set a color LightRed if ships left <= 3
     std::cout << map_user.size();
@@ -269,7 +269,7 @@ void printUpdateMessage(const std::map<std::string, std::vector<std::pair<int, i
     std::cout << "\t\t" << message_user << std::endl;
     std::cout << setColor(CColor::Reset);
 
-    std::cout << "    PC ships left: ";
+    std::cout << "     PC ships left: ";
     if (map_pc.size() <= 3)
         std::cout << setColor(CColor::LightRed);
     std::cout << map_pc.size();
@@ -282,8 +282,8 @@ void printUpdateMessage(const std::map<std::string, std::vector<std::pair<int, i
     std::cout << "\t\t" << message_pc << std::endl;
     std::cout << setColor(CColor::Reset);
 
-    std::cout << "   Your last move: " << userLastMove << std::endl;
-    std::cout << "     PC last move: " << pcLastMove << std::endl;
+    std::cout << "    Your last move: " << userLastMove << std::endl;
+    std::cout << "      PC last move: " << pcLastMove << std::endl;
     
     std::cout << std::endl;
 }
