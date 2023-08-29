@@ -1,4 +1,4 @@
-#use MingW32-make command if make doesn't work
+#in Windows use MingW32-make command if make doesn't work
 
 output: main.o
 	g++ -static -std=c++2a -static-libgcc -static-libstdc++ -lpthread -o "battlefield.exe" main.o print.o ccolor.o
