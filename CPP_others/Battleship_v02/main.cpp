@@ -974,10 +974,6 @@ bool manualSetup(Field_t &field_user, Field_t &field_pc, Map_t &map_user, std::v
     return true;
 }
 
-void clearMaps(Map_t &map_user, Map_t &map_pc){
-    map_user.clear();
-    map_pc.clear();
-}
 
 int main() {
 
