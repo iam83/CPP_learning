@@ -777,7 +777,7 @@ bool isAutomaticSetup(bool &demo){
             return true;
         }
             else if (exit == 'h' || exit == 'H') {
-            
+            //print about message
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
             demo = false;
