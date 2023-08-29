@@ -207,7 +207,7 @@ void printFields(std::array<std::array<int, 10>, 10> const& field_pc,
                 if (field_view == ShipView::Visible) // make ships visible when game has ended
                     std::cout << c_SHIP << " ";
                 else
-                    std::cout << c_SHIP << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
+                    std::cout << c_FIELD << " "; // use c_FIELD for game, use c_SHIP for DEBUGGING
                 std::cout << setColor(CColor::Reset);
             }
             //border around ship

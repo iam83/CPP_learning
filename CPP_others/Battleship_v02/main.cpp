@@ -744,7 +744,7 @@ bool isAutomaticSetup(bool &demo){
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
             demo = {true};
-            g_TIME *= 2;
+            g_TIME *= 3;
             return true;
         }
             else if (exit == 'h' || exit == 'H') {
@@ -756,6 +756,11 @@ bool isAutomaticSetup(bool &demo){
             std::cout << "      Demo      - means PC vs PC. It's just a demonstration of game play.\n\n";
             std::cout << "Written in C++ by AU as project-based learning in spare time. Thanks for playing.\n";
             std::cout << "Sources can be found on github.com/iam83\n\n";
+
+            #ifdef __APPLE__
+            std::cout << "Press Enter to go back...\n"; //this is for mac os x. otherwise it won't print anything.
+            #endif
+
             system(PAUSE);
             system(CLS);
 
