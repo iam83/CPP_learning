@@ -64,6 +64,11 @@ std::string g_VERSION = "1.9";
 int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
 
 
+
+/**
+ * Sleeps the current thread for a specified amount of time.
+ * @param time The duration to sleep in milliseconds.
+ */
 void sleepThread(int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
@@ -78,9 +83,8 @@ struct States_b{
 struct PlayerShipHit{
 
     Player player;
-    std::string str_keyShipHit{};
+    std::string str_keyShipHit{};   //store ship name which is got hit and use it in map for key
     int temp_row{0}, temp_col{0};
-    //bool firstHit{false};
 
     bool isPartlyHit{};             //use to mark if a ship was partly hit
 
@@ -130,6 +134,14 @@ void createField(Field_t& field) {
     field.fill({0});
 }
 
+/**
+ * Checks if the given row and column values are within the valid range.
+ *
+ * @param row the row value to check
+ * @param col the column value to check
+ *
+ * @return true if the row and column are within the valid range, false otherwise
+ */
 bool inField(int row, int col)
 {
     if (row < 0 || row > 9) return false;
@@ -137,7 +149,10 @@ bool inField(int row, int col)
     return true;
 }
 
-//checking field's cells and fill borders around ships
+/**
+ * Checks the field for any cells that are surrounded by ships and updates their state to Border.
+ * @param field The field to be checked.
+ */
 void checkField(Field_t &field) {
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
@@ -157,6 +172,10 @@ void checkField(Field_t &field) {
     }
 }
 
+/**
+ * Check for hits in the given field and mark neighboring cells as BorderHit if necessary.
+ * @param field The field to check for hits and update.
+ */
 void checkHitField(Field_t& field) {
 
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 };// 8 directions
@@ -181,8 +200,16 @@ void checkHitField(Field_t& field) {
 }
 
 //making a vector of possible coordinates where ships can be placed on the field
+/**
+ * Generates the possible positions for a ship on the game field.
+ *
+ * @param field the game field to search for positions on
+ * @param vec a vector to store the possible positions
+ * @param dir a reference to the direction variable to set the direction of the ship
+ * @param ship_size the length of the ship to find positions for
+ */
 void getPossibles(Field_t const &field,
-    std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
+    std::vector<std::pair<int, int>> &vec, int &dir, int const ship_size) {
 
     dir = getRandomNumber(0, 1);
 
@@ -199,10 +226,10 @@ void getPossibles(Field_t const &field,
                         temp_row = row;
                     }
                     count++;
-                    if (col == 9 && count < ship) {
+                    if (col == 9 && count < ship_size) {
                         count = 0;
                     }
-                    if (count == ship) {
+                    if (count == ship_size) {
                         vec.push_back(std::make_pair(temp_row, temp_col));
                         count = 0;
                     }
@@ -223,10 +250,10 @@ void getPossibles(Field_t const &field,
                         temp_row = row;
                     }
                     count++;
-                    if (row == 9 && count < ship) {
+                    if (row == 9 && count < ship_size) {
                         count = 0;
                     }
-                    if (count == ship) {
+                    if (count == ship_size) {
                         vec.push_back(std::make_pair(temp_row, temp_col));
                         count = 0;
                     }
@@ -239,7 +266,17 @@ void getPossibles(Field_t const &field,
     }
 }
 
-void generateFirstShip(Field_t &field, Map_t &map, int const ship, std::string const ship_name) {
+/**
+ * Generates the first ship on the field.
+ *
+ * @param field the field to generate the ship on
+ * @param map the map containing all the ships
+ * @param ship the size of the ship to generate
+ * @param ship_name the name of the ship
+ *
+ * @throws ErrorType if an error occurs during ship generation
+ */
+void generateFirstShip(Field_t &field, Map_t &map, int const ship_size, std::string const ship_name) {
 
     checkField(field);
     int row{ 0 }, col{ 0 }, dir{ 0 };
@@ -252,9 +289,9 @@ void generateFirstShip(Field_t &field, Map_t &map, int const ship, std::string c
 
     } while (!(field.at(row).at(col) != FieldCellStates::Ship && field.at(row).at(col) != FieldCellStates::Border && (row + 4) < 9 && (col + 4) < 9));
 
-    if ((col + ship) >= 9) col = 4;
+    if ((col + ship_size) >= 9) col = 4;
 
-    for (int i = 0; i < ship; ++i) {
+    for (int i = 0; i < ship_size; ++i) {
         if (dir == Direction::Horizontal) { //horizontal location
             field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
@@ -295,6 +332,13 @@ void setShips(Field_t& field, Map_t& map,
     checkField(field);
 }
 
+/**
+ * Encodes the given coordinates into a string representation.
+ *
+ * @param coord_str the string to store the encoded coordinates
+ * @param row the row coordinate to encode
+ * @param col the column coordinate to encode
+ */
 void encodeCoords(std::string &coord_str, int row, int col) {
 
     switch (row) {
@@ -325,6 +369,13 @@ void encodeCoords(std::string &coord_str, int row, int col) {
 
 }
 
+/**
+ * Decodes the given coordinate string and assigns the corresponding row and column values.
+ *
+ * @param coord_str the coordinate string to decode
+ * @param row the reference to the variable that will store the decoded row value
+ * @param col the reference to the variable that will store the decoded column value
+ */
 void decodeCoords(const std::string coord_str, int &row, int &col) {
 
     switch (coord_str[0]) {
@@ -441,6 +492,14 @@ bool checkMap(Map_t &map, int row, int col, Field_t &field, std::string &message
     return false;
 }
 
+/**
+ * Generates the game field with ships and initializes the map.
+ *
+ * @param field the game field to be created and populated with ships
+ * @param vec a vector of pairs representing the ship coordinates
+ * @param dir the direction of the ships (0 for horizontal, 1 for vertical)
+ * @param map the map to be initialized
+ */
 void createGameField(Field_t &field, std::vector<std::pair<int, int>> &vec, int &dir, Map_t &map) {
 
     createField(field);
@@ -511,6 +570,8 @@ bool isMove(Field_t &field, int row, int col) {
     return false;
 }
 
+
+// get possible coordinates for shooting
 void getCoord(std::vector<std::string> &moves, const Field_t &field,
               Map_t map, std::string &lastMove, int &row, int &col,
               PlayerShipHit &player, States_b &states) {
@@ -703,7 +764,7 @@ int playAgain() {
     std::cout << std::endl;
 }
 
-bool isAutomaticSetup(bool &demo){
+bool isAutomaticSetup(bool &isDemo){
 
     char exit;
 
@@ -724,14 +785,14 @@ bool isAutomaticSetup(bool &demo){
         if (exit == 'a' || exit == 'A') {
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
-            demo = false;
+            isDemo = false;
             return true;
             break;
         }
         else if (exit == 'm' || exit == 'M') {
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
-            demo = false;
+            isDemo = false;
             return false;
             break;
         }
@@ -743,7 +804,7 @@ bool isAutomaticSetup(bool &demo){
             //demo mode when pc vs pc
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
-            demo = {true};
+            isDemo = {true};
             g_TIME *= 3;
             return true;
         }
@@ -889,7 +950,7 @@ bool manualSetup(Field_t &field_user, Field_t &field_pc, Map_t &map_user, std::v
     std::string coord_str = "";
     std::string temp {};
     char dir_char = ' ';
-    int ship{0};
+    unsigned int ship{0};
     int row{0}; int col{0};
 
     checkField(field_user);
@@ -987,19 +1048,21 @@ int main() {
 
     std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
     std::vector<std::string> pc_moves{}; //store pc moves
-    std::vector<std::string> demo_moves{}; //store demo mode moves
+    std::vector<std::string> demo_moves{}; //store demo mode moves for user
 
-    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
+    // this is for map key. it's used to distinguish ships when they get hit.
+    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1",
+                                          "ship2_2", "ship2_3", "ship1_1", "ship1_2",
+                                          "ship1_3", "ship1_4"}; 
 
     States_b states; //holds boolean states: isHit, isPcHit, isPartlyHit
 
-    bool demo {false};
+    bool isDemo {false}; // used to track demo mode enabled/disabled
     
-    //game loop
-    do {
+    
+    do { //main game loop
 
         //game setup//
-
         system(CLS);
         
         map_user.clear();
@@ -1013,7 +1076,8 @@ int main() {
         createField(field_pc);
         
 
-        if (!isAutomaticSetup(demo)){
+        
+        if (!isAutomaticSetup(isDemo)){
             system(CLS);
             std::cout << "\tManual setup\n";
             if (!manualSetup(field_user, field_pc, map_user, ship_name)){
@@ -1037,17 +1101,16 @@ int main() {
         int pc_row{ 0 }, pc_col{ 0 };
 
         std::string coord_str = "";
-        std::string userLastMove = "";
-        std::string pcLastMove = "";
-        //std::string keyShipHit = ""; //store ship name of the hit ship. it's used in map container
-        std::string message_user = "";
+        std::string userLastMove = "";  // store user last move and then use it in message system
+        std::string pcLastMove = "";    // store PC last move and then use it in message system
+        std::string message_user = ""; 
         std::string message_pc = "";
 
         PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
         PlayerShipHit pcKeyShipHit(Player::Pc, "", false);
 
         // if demo mode true
-        if(demo) createMoveTable(demo_moves);
+        if(isDemo) createMoveTable(demo_moves);
         //
 
         while (1) {
@@ -1069,7 +1132,7 @@ int main() {
             #endif
 
             if (!states.isPcHit){
-                if(!demo){
+                if(!isDemo){
                     do {
                             std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
                             std::cin >> coord_str;
@@ -1146,17 +1209,6 @@ int main() {
                  states.isHit = false;
                  states.isPcHit = false;
             }
-
-
-            // #if !(__DEBG)
-            // system(CLS); //COMMENT FOR DEBUG
-            // #endif
-
-            // checkField(field_pc);
-            // checkField(field_user);
-
-            // printFields(field_pc, field_user, ShipView::Invisible);
-            // printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
         }
     } while (playAgain());
