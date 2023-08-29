@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*
-    Battleship game. AU. 09-2022.
+    Battleship game. AU. 09-2023.
     This is a personal challenge project.
     An attempt to recreate the Battleship classic game without looking at other examples.
     The code might look a bit too spaggetti, oh well but it works lol.
@@ -10,27 +10,37 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-    !!!! URGENT !!!! getCoord - make PC move when it hits the ship but with random coord chosen within possible range
 
 */
 /*  
     UPDATE:
+        29/08/2023 added new mode Help/about. Fixed the issue with choosing coordinates.
         17/08/2023 added Demo mode. PC vs PC. optimized some code
         11/08/2023 updated color output feature to make it cross-platform
 */
 /*
     BUGS:
-    01. PC stops moving. ??? it keeps getting moves. but in message there's always last move.
+    01. so far so good. no bugs.
 
 */
 /*
     TODO:
-        1. Adjust PC move to make it a bit more random when hitting User's ship.
+        1.g etCoord - make PC move when it hits the ship but with random coord chosen within possible range
         2. Wrap into a Class
     FEATURES:
-        1. Make TCP/IP client-server
+        1. As a challenge - try implement Make TCP/IP client-server
 */
 
+#define __DEBG false //set to true to enable DEBUG messages or false to disable
+
+#ifdef _WIN32
+#define CLS "cls"
+#define PAUSE "pause"
+#endif
+#ifdef __APPLE__
+#define PAUSE "read"
+#define CLS "clear"
+#endif
 
 #include <iostream>
 #include <string>
@@ -45,19 +55,12 @@
 #include "ccolor.h"
 #include "print.h"
 
-#ifdef _WIN32
-#define CLS "cls"
-#endif
-#ifdef __APPLE__
-#define CLS "clear"
-#endif
 
-#define __DEBG true //set to true to enable DEBUG messages or false to disable
 
 using Map_t = std::map<std::string, std::vector<std::pair<int, int>>>;
 using Field_t = std::array<std::array<int, 10>, 10>;
 
-std::string g_VERSION = "1.55";
+std::string g_VERSION = "1.9";
 int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
 
 
@@ -89,39 +92,7 @@ struct PlayerShipHit{
 };
 
 
-
-enum Row{
-    Row_A, Row_B, Row_C, Row_D, Row_E, Row_F, Row_G, Row_H, Row_I, Row_J
-};
-
-enum Col{
-    Col_0, Col_1, Col_2, Col_3, Col_4, Col_5, Col_6, Col_7, Col_8, Col_9
-};
-
-struct Coord{
-    Row row;
-    Col col;
-};
-
-
-
-struct Ship{
-
-    std::string name{};
-    ShipType ship_type;
-    Coord coord;
-    Direction dir;
-
-    Ship(std::string Name, ShipType ship_type, Coord Coord, Direction Dir){
-        name = Name;
-        coord = Coord;
-        dir = Dir;
-    }
-
-};
-
-
- //DEBUGGING ONLY
+//DEBUGGING ONLY
  #if __DEBG
 void printDebug(const std::map<std::string, std::vector<std::pair<int, int>>> &map_user,
                 const std::map<std::string, std::vector<std::pair<int, int>>> &map_pc,
@@ -744,7 +715,7 @@ bool isAutomaticSetup(bool &demo){
         std::cout << "         'a' for Automatic\n";
         std::cout << "         'm' for Manual\n";
         std::cout << "         'd' for Demo mode\n";
-        std::cout << "         'h' Help/About\n";
+        std::cout << "         'h' for Help/About\n";
         std::cout << "         'q' for Quit\n\n";
         std::cout << "          >: ";
         std::cin >> exit;
@@ -777,12 +748,19 @@ bool isAutomaticSetup(bool &demo){
             return true;
         }
             else if (exit == 'h' || exit == 'H') {
-            //print about message
+            //print about/help message
+            system(CLS);
+            std::cout << "Battleship (also known as Battleships or Sea Battle)\nis a strategy type guessing game for two players.\n\nIt is played on ruled grids (paper or board) on which each player\'s fleet of warships are marked.\nThe locations of the fleets are concealed from the other player.\nPlayers alternate turns calling \"shots\" at the other player\'s ships,\nand the objective of the game is to destroy the opposing player\'s fleet.\n\n";
+            std::cout << "      Automatic - means your ships will be placed automatically.\n";
+            std::cout << "      Manual    - means you can decide where and how your ships will be placed.\n";
+            std::cout << "      Demo      - means PC vs PC. It's just a demonstration of game play.\n\n";
+            std::cout << "Written in C++ by AU as project-based learning in spare time. Thanks for playing.\n";
+            std::cout << "Sources can be found on github.com/iam83\n\n";
+            system(PAUSE);
+            system(CLS);
+
             std::cin.clear(); // 
             std::cin.ignore(32767, '\n');
-            demo = false;
-            return false;
-            break;
         }
         else {
             system(CLS);

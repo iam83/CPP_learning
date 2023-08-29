@@ -328,10 +328,3 @@ void printWarning(Warning warning){
     }
     std::cout << setColor(CColor::Reset);
 }
-
-
-void printAbout(){
-
-    std::cout << "Battleship (also known as Battleships or Sea Battle[1])\nis a strategy type guessing game for two players.\n\nIt is played on ruled grids (paper or board) on which each player\'s fleet of warships are marked.\nThe locations of the fleets are concealed from the other player.\nPlayers alternate turns calling \"shots\" at the other player\'s ships,\nand the objective of the game is to destroy the opposing player\'s fleet.";
-
-}
