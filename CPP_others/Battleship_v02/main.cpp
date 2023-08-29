@@ -1,17 +1,19 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*
-    Battleship game. AU. 09-2023.
+    Battleship game. AU. started at 09-2022.
     This is a personal challenge project.
     An attempt to recreate the Battleship classic game without looking at other examples.
+    I didn't have to hurry up so it took time to completele get it done.
     The code might look a bit too spaggetti, oh well but it works lol.
 
-    this version meant to be a test site for optimizing the previous one
+    I write this note to myself to make me smile years later :).
+    Alright. It took me two weeks to make a working buggy prototype.
+    Then I had to put it off for about ~10 months and then finally got back to it
+    for fixing and optimizing. It finally works as I planned.
+
 */
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-
-*/
 /*  
     UPDATE:
         29/08/2023 added new mode Help/about. Fixed the issue with choosing coordinates.
@@ -24,14 +26,20 @@
 
 */
 /*
-    TODO:
-        1.g etCoord - make PC move when it hits the ship but with random coord chosen within possible range
+    This version is meant to be a test site for optimizing the previous one.
+    Next challenge is to wrap it into Classes and Objects.
+
+
+    TODO (but not so in a hurry):
+        1. getCoord - make PC move when it hits the ship but with random coord chosen within possible range
         2. Wrap into a Class
-    FEATURES:
+    FEATURES to implement:
         1. As a challenge - try implement Make TCP/IP client-server
 */
 
-#define __DEBG false //set to true to enable DEBUG messages or false to disable
+#define __DEBG false // set to true to enable DEBUG messages or false to disable.
+                     // I'm using this workaround for debugging.
+                     // I know it has got some special defines for NDEBUG but I made it simply.
 
 #ifdef _WIN32
 #define CLS "cls"
@@ -56,13 +64,11 @@
 #include "print.h"
 
 
-
 using Map_t = std::map<std::string, std::vector<std::pair<int, int>>>;
 using Field_t = std::array<std::array<int, 10>, 10>;
 
 std::string g_VERSION = "1.9";
 int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
-
 
 
 /**
