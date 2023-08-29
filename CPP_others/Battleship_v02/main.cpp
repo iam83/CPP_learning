@@ -659,7 +659,7 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
 
     }
     #if !(__DEBG)
-    sleepThread(300); //600 ms
+    sleepThread(450); //600 ms
     #endif
 }
 
@@ -1093,10 +1093,7 @@ int main() {
                     getCoord(demo_moves, field_pc, map_pc, userLastMove, row, col, userKeyShipHit, states);
                 }
                     
-                    #if !(__DEBG)
-                    system(CLS); //COMMENT FOR DEBUG
-                    #endif
-
+                    
                     //user move
                     if(!states.isPcHit){//if the previous PC move was not positive then execute User move
                         if (isMove(field_pc, row, col)) {
@@ -1118,6 +1115,9 @@ int main() {
                             states.isHit = false;
                         }
 
+                        #if !(__DEBG)
+                        system(CLS); //COMMENT FOR DEBUG
+                        #endif
                         printFields(field_pc, field_user, ShipView::Invisible);
                         printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
 
@@ -1152,15 +1152,16 @@ int main() {
             }
 
 
-            checkField(field_pc);
-            checkField(field_user);
+            // #if !(__DEBG)
+            // system(CLS); //COMMENT FOR DEBUG
+            // #endif
 
-            printFields(field_pc, field_user, ShipView::Invisible);
-            printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+            // checkField(field_pc);
+            // checkField(field_user);
 
-            #if !(__DEBG)
-            system(CLS);//COMMENT FOR DEBUG
-            #endif
+            // printFields(field_pc, field_user, ShipView::Invisible);
+            // printUpdateMessage(map_user, map_pc, message_user, message_pc, userLastMove, pcLastMove);
+
         }
     } while (playAgain());
 
