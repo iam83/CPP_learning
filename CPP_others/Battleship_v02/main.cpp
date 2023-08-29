@@ -1,9 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*
     Battleship game. AU. started at 09-2022.
-    This is a personal challenge project.
-    An attempt to recreate the Battleship classic game without looking at other examples.
-    I didn't have to hurry up so it took time to completele get it done.
+
+    This is a personal challenge project to learn C++,
+    an attempt to recreate the Battleship classic game without looking at other examples,
+    methods or ways to implement logic of the game.
+    I didn't have to hurry up, so it took awhile to completely get it done.
     The code might look a bit too spaggetti, oh well but it works lol.
 
     I write this note to myself to make me smile years later :).
