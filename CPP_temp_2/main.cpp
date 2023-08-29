@@ -69,6 +69,13 @@ void print(Ship &ship){
     std::cout << "Ship direction: " << (ship.dir == Ship::Direction::Horizontal ? "horizontal" : "vertical") << std::endl;
 }
 
+
+void printAbout(){
+
+    std::cout << "Battleship (also known as Battleships or Sea Battle[1])\nis a strategy type guessing game for two players.\nIt is played on ruled grids (paper or board) on which each player\'s fleet of warships are marked.\nThe locations of the fleets are concealed from the other player.\nPlayers alternate turns calling \"shots\" at the other player\'s ships,\nand the objective of the game is to destroy the opposing player\'s fleet.";
+
+}
+
 int main(){
 
     std::vector<Coord> coord;
@@ -86,5 +93,12 @@ int main(){
     std::cout << Ship::ShipType::Carrier << std::endl;
     
     print(sub);
+
+
+    //test .substr() function
+    std::string temp = "ship3_2";
+    std::cout << temp.substr(0, 5) << std::endl;
+
+    printAbout();
 
 }

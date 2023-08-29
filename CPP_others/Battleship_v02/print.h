@@ -21,6 +21,7 @@ void startMessage(std::string);
 void printWarning(Warning);
 void printMoveTable(std::vector<std::string> const&);
 void printMap(std::map<std::string, std::vector<std::pair<int, int>>> const&);
+void printAbout();
 
 
 #endif /* PRINT_H */

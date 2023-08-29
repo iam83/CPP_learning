@@ -588,9 +588,15 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
             std::cout << ((player.player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << std::endl;
             #endif
 
-        
+            bool isGoRandom{false};
 
-            if (map[player.str_keyShipHit].size() > 0) { //use search for possible coords only for the first time
+            // set isGoRandom to true if any ship of 4X-3X-2X gets hit for the first time
+            if (map[player.str_keyShipHit].size() == 3 && player.str_keyShipHit == "ship4") isGoRandom = true;              //for 4X ship
+            if (map[player.str_keyShipHit].size() == 2 && player.str_keyShipHit.substr(0, 5) == "ship3") isGoRandom = true; //for 3X ship
+            if (map[player.str_keyShipHit].size() == 1 && player.str_keyShipHit.substr(0, 5) == "ship2") isGoRandom = true; //for 2X ship
+
+
+            if (isGoRandom) { //use search for possible coords only for the first time
 
                 for (int i = 0; i < 8; ++i) { // looking around cell
                     if (inField(player.temp_row + y[i], player.temp_col + x[i])) {
@@ -606,7 +612,7 @@ void getCoord(std::vector<std::string> &moves, const Field_t &field,
                 }
             }
 
-            //then if ship is hit twice so use its exact coordinates to prevent hitting wrong cells otherwise it's dumb.
+            //then if ship is got hit twice so use its exact coordinates to prevent hitting wrong cells otherwise it's dumb.
             //      . . . . x x X. . 
             //
             // for example if a ship is longer than 2 cells then add other possible moves from its coordinates.
@@ -738,6 +744,7 @@ bool isAutomaticSetup(bool &demo){
         std::cout << "         'a' for Automatic\n";
         std::cout << "         'm' for Manual\n";
         std::cout << "         'd' for Demo mode\n";
+        std::cout << "         'h' Help/About\n";
         std::cout << "         'q' for Quit\n\n";
         std::cout << "          >: ";
         std::cin >> exit;
@@ -768,6 +775,14 @@ bool isAutomaticSetup(bool &demo){
             demo = {true};
             g_TIME *= 2;
             return true;
+        }
+            else if (exit == 'h' || exit == 'H') {
+            
+            std::cin.clear(); // 
+            std::cin.ignore(32767, '\n');
+            demo = false;
+            return false;
+            break;
         }
         else {
             system(CLS);
