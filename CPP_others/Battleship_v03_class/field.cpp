@@ -461,6 +461,8 @@ void Field::createGameField() {
     Field::setShips(field, map, vec, dir, ShipType::Submarine, "ship1_4");
 }
 
+
+
 //remove PC moves around destroyed ship
 void Field::removeMissedMoves() {
 
