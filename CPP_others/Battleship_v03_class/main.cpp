@@ -91,24 +91,24 @@ private:
 
         dir = getRandomNumber(0, 1);
 
-        int count{ 0 }, temp_row{ 0 }, temp_col{ 0 };
+        int count{ 0 }, local_row{ 0 }, local_col{ 0 };
         vec.clear();
 
         if (dir == Direction::Horizontal) {
             //horizontal check
-            for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-                for (int col = 0; col < static_cast<int>(field.size()); ++col) {
-                    if (field.at(row).at(col) != FieldCellStates::Ship && field.at(row).at(col) != FieldCellStates::Border) {
+            for (int _row = 0; _row < static_cast<int>(field.size()); ++_row) {
+                for (int _col = 0; _col < static_cast<int>(field.size()); ++_col) {
+                    if (field.at(_row).at(_col) != FieldCellStates::Ship && field.at(_row).at(_col) != FieldCellStates::Border) {
                         if (count == 0) {
-                            temp_col = col;
-                            temp_row = row;
+                            local_col = _col;
+                            local_row = _row;
                         }
                         count++;
-                        if (col == 9 && count < ship) {
+                        if (_col == 9 && count < ship) {
                             count = 0;
                         }
                         if (count == ship) {
-                            vec.push_back(std::make_pair(temp_row, temp_col));
+                            vec.push_back(std::make_pair(local_row, local_col));
                             count = 0;
                         }
                     }
@@ -120,19 +120,19 @@ private:
         }
         else {
             //vertical check
-            for (int col = 0; col < static_cast<int>(field.size()); ++col) {
-                for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-                    if (field.at(row).at(col) != FieldCellStates::Ship && field.at(row).at(col) != FieldCellStates::Border) {
+            for (int _col = 0; _col < static_cast<int>(field.size()); ++_col) {
+                for (int _row = 0; _row < static_cast<int>(field.size()); ++_row) {
+                    if (field.at(_row).at(_col) != FieldCellStates::Ship && field.at(_row).at(_col) != FieldCellStates::Border) {
                         if (count == 0) {
-                            temp_col = col;
-                            temp_row = row;
+                            local_col = _col;
+                            local_row = _row;
                         }
                         count++;
-                        if (row == 9 && count < ship) {
+                        if (_row == 9 && count < ship) {
                             count = 0;
                         }
                         if (count == ship) {
-                            vec.push_back(std::make_pair(temp_row, temp_col));
+                            vec.push_back(std::make_pair(local_row, local_col));
                             count = 0;
                         }
                     }
@@ -335,32 +335,32 @@ private:
             return true;
         return false;
     }
-    bool isValidToInstall(int row, int col){
+    bool isValidToInstall(int _row, int _col){
 
-        if(field.at(row).at(col) == FieldCellStates::Ship || field.at(row).at(col) == FieldCellStates::Border){
+        if(field.at(_row).at(_col) == FieldCellStates::Ship || field.at(_row).at(_col) == FieldCellStates::Border){
             printWarning(Warning::TryAgain);
             return false;
         }
         return true;
     }
 
-    bool isValidToInstall(int row, int col, char dir_char, int ship){
+    bool isValidToInstall(int _row, int _col, char dir_char, int ship_size){
         
-        if ((row + ship) > 10 && (col + ship) > 10){
+        if ((_row + ship_size) > 10 && (_col + ship_size) > 10){
             printWarning(Warning::TryAgain);
             return false;
         }
 
-        if((col + ship) < 11){
-            for (int i = 0; i < ship; ++i){
-                    if(field.at(row).at(col + i) == FieldCellStates::Border){
+        if((_col + ship_size) < 11){
+            for (int i = 0; i < ship_size; ++i){
+                    if(field.at(_row).at(_col + i) == FieldCellStates::Border){
                         continue;
                     }
             }
         }
-        else if((row + ship) < 11){
-            for (int i = 0; i < ship; ++i){
-                    if(field.at(row + i).at(col) == FieldCellStates::Border){
+        else if((_row + ship_size) < 11){
+            for (int i = 0; i < ship_size; ++i){
+                    if(field.at(_row + i).at(_col) == FieldCellStates::Border){
                         continue;
                     }
             }
@@ -371,9 +371,9 @@ private:
 
         //checking with directions
         if (dir_char == 'v'){
-            if ((row + ship) < 11){
-                    for (int i = 0; i < ship; ++i){
-                            if(field.at(row + i).at(col) == FieldCellStates::Border){
+            if ((_row + ship_size) < 11){
+                    for (int i = 0; i < ship_size; ++i){
+                            if(field.at(_row + i).at(_col) == FieldCellStates::Border){
                                 printWarning(Warning::TryAgainHorizontal);
                                 return false;
                             }
@@ -385,9 +385,9 @@ private:
         }
 
         if (dir_char == 'h'){
-            if((col + ship) < 11){
-                    for (int i = 0; i < ship; ++i){
-                            if(field.at(row).at(col + i) == FieldCellStates::Border){
+            if((_col + ship_size) < 11){
+                    for (int i = 0; i < ship_size; ++i){
+                            if(field.at(_row).at(_col + i) == FieldCellStates::Border){
                                 printWarning(Warning::TryAgainVertical);
                                 return false;
                             }
@@ -432,61 +432,61 @@ private:
     }
     
 
-         void encodeCoords(std::string &coord_str, int row, int col) {
+         void encodeCoords(std::string & _coord_str, int local_row, int local_col) {
 
-        switch (row) {
-            case 0: coord_str = "A"; break;
-            case 1: coord_str = "B"; break;
-            case 2: coord_str = "C"; break;
-            case 3: coord_str = "D"; break;
-            case 4: coord_str = "E"; break;
-            case 5: coord_str = "F"; break;
-            case 6: coord_str = "G"; break;
-            case 7: coord_str = "H"; break;
-            case 8: coord_str = "I"; break;
-            case 9: coord_str = "J"; break;
+        switch (local_row) {
+            case 0: _coord_str = "A"; break;
+            case 1: _coord_str = "B"; break;
+            case 2: _coord_str = "C"; break;
+            case 3: _coord_str = "D"; break;
+            case 4: _coord_str = "E"; break;
+            case 5: _coord_str = "F"; break;
+            case 6: _coord_str = "G"; break;
+            case 7: _coord_str = "H"; break;
+            case 8: _coord_str = "I"; break;
+            case 9: _coord_str = "J"; break;
         }
 
-        switch (col) {
-            case 0: coord_str += "0"; break;
-            case 1: coord_str += "1"; break;
-            case 2: coord_str += "2"; break;
-            case 3: coord_str += "3"; break;
-            case 4: coord_str += "4"; break;
-            case 5: coord_str += "5"; break;
-            case 6: coord_str += "6"; break;
-            case 7: coord_str += "7"; break;
-            case 8: coord_str += "8"; break;
-            case 9: coord_str += "9"; break;
+        switch (local_col) {
+            case 0: _coord_str += "0"; break;
+            case 1: _coord_str += "1"; break;
+            case 2: _coord_str += "2"; break;
+            case 3: _coord_str += "3"; break;
+            case 4: _coord_str += "4"; break;
+            case 5: _coord_str += "5"; break;
+            case 6: _coord_str += "6"; break;
+            case 7: _coord_str += "7"; break;
+            case 8: _coord_str += "8"; break;
+            case 9: _coord_str += "9"; break;
         }
 
     }
 
-    void decodeCoords(const std::string coord_str, const int input_row, const int input_col) {
+    void decodeCoords(const std::string coord_str, int &_row, int &_col) {
 
         switch (coord_str[0]) {
-            case 'A': row = 0; break;
-            case 'B': row = 1; break;
-            case 'C': row = 2; break;
-            case 'D': row = 3; break;
-            case 'E': row = 4; break;
-            case 'F': row = 5; break;
-            case 'G': row = 6; break;
-            case 'H': row = 7; break;
-            case 'I': row = 8; break;
-            case 'J': row = 9; break;
+            case 'A': row = 0; _row = 0; break;
+            case 'B': row = 1; _row = 1; break;
+            case 'C': row = 2; _row = 2; break;
+            case 'D': row = 3; _row = 3; break;
+            case 'E': row = 4; _row = 4; break;
+            case 'F': row = 5; _row = 5; break;
+            case 'G': row = 6; _row = 6; break;
+            case 'H': row = 7; _row = 7; break;
+            case 'I': row = 8; _row = 8; break;
+            case 'J': row = 9; _row = 9; break;
         }
         switch (coord_str[1]) {
-            case '0': col = 0; break;
-            case '1': col = 1; break;
-            case '2': col = 2; break;
-            case '3': col = 3; break;
-            case '4': col = 4; break;
-            case '5': col = 5; break;
-            case '6': col = 6; break;
-            case '7': col = 7; break;
-            case '8': col = 8; break;
-            case '9': col = 9; break;
+            case '0': col = 0; _col = 0; break;
+            case '1': col = 1; _col = 1; break;
+            case '2': col = 2; _col = 2; break;
+            case '3': col = 3; _col = 3; break;
+            case '4': col = 4; _col = 4; break;
+            case '5': col = 5; _col = 5; break;
+            case '6': col = 6; _col = 6; break;
+            case '7': col = 7; _col = 7; break;
+            case '8': col = 8; _col = 8; break;
+            case '9': col = 9; _col = 9; break;
         }
     }
     void checkField() {
@@ -534,7 +534,7 @@ private:
         setShips(field, map, vec, dir, ShipType::Submarine, "ship1_4");
     }
     //remove PC moves around destroyed ship
-    void removeMissedMoves(Field_t const &field, std::vector<std::string> &moves) {
+    void removeMissedMoves() {
 
         std::string temp_coord = "";
         std::vector<std::string>::iterator it;
@@ -574,7 +574,7 @@ private:
                         }
                         else {
                             std::string coord_str = "";
-                            encodeCoords(coord_str, value[i].first, value[i].second);
+                            encodeCoords(temp_key, value[i].first, value[i].second);
                             message = "  PC hit your ship at " + coord_str;
                             str_keyShipHit = key;
                             isPcHit = true;
@@ -591,12 +591,12 @@ private:
 
                     if (player == Player::User) {
                         message = "  Wow! You sank a ship!";
-                        removeMissedMoves(field, moves);
+                        removeMissedMoves();
                         checkHitField();
                     }
                     else {
                         message = "  Oops, PC sank your ship!";
-                        removeMissedMoves(field, moves);
+                        removeMissedMoves();
                         checkHitField();
                     }
 
@@ -621,7 +621,7 @@ private:
     }
 
 
-    bool isInputValid(std::string &coord_str) { //check if user makes correct input
+    bool isInputValid() { //check if user makes correct input
 
         if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
              coord_str[0] == 'C' || coord_str[0] == 'D' ||
@@ -829,11 +829,10 @@ private:
 
     bool manualSetup(){
 
-        std::string coord_str = "";
         std::string temp {};
         char dir_char = ' ';
-        unsigned int ship{0};
-        int row{0}; int col{0};
+        unsigned int ship_size{0};
+        int _row{0}; int _col{0};
 
         checkField();
         printUserField();
@@ -845,13 +844,13 @@ private:
 
         do {
             
-            ship = ship_bank[0];
+            ship_size = ship_bank[0];
 
             do {    
                     std::cout << setColor(CColor::Cyan);
                     std::cout << "  Enter start Row and Column for the ";
                     std::cout << setColor(CColor::Yellow);
-                    std::cout << ship << "X";
+                    std::cout << ship_size << "X";
                     std::cout << setColor(CColor::Cyan);
                     std::cout << " ship\n";
                     std::cout << setColor(CColor::Reset);
@@ -875,13 +874,12 @@ private:
                     }
 
                     coord_str[0] = std::toupper(coord_str[0]);
-                    
-                    decodeCoords(coord_str, row, col);
+                    decodeCoords(coord_str, _row, _col);
 
 
-                } while (!isInputValid(coord_str) || !(isValidToInstall(row, col, dir_char, ship) && isValidToInstall(row, col)));
+                } while (!isInputValid() || !(isValidToInstall(_row, _col, dir_char, ship_size) && isValidToInstall(_row, _col)));
 
-                field.at(row).at(col) = FieldCellStates::Ship;
+                field.at(_row).at(_col) = FieldCellStates::Ship;
                 system(CLS);
                 std::cout << "\tManual setup\n";
                 printUserField();
@@ -891,15 +889,15 @@ private:
                         break;
                     }
 
-                    if (ship == 1)
+                    if (ship_size == 1)
                         break;
                     std::cout << "  Type 'v' for vertical or 'h' for horizontal placement: ";
                     std::cin >> dir_char;
                     
-                } while (!isManualInputValid(dir_char) || !isValidToInstall(row, col, dir_char, ship));
+                } while (!isManualInputValid(dir_char) || !isValidToInstall(_row, _col, dir_char, ship_size));
 
             
-            setManualField(coord_str, dir_char, ship);
+            setManualField(coord_str, dir_char, ship_size);
             ship_bank.erase(ship_bank.begin());
             
             dir_char = ' ';
@@ -999,7 +997,7 @@ public:
     std::cout << std::endl;
 }
 
-    void printFields(const Field& field_pc, const Field& field_user,
+    void printFields(const Field& pc, const Field& user,
                     ShipView field_view) {
 
         std::cout << std::endl;
@@ -1026,37 +1024,37 @@ public:
 
         std::cout << std::endl;
 
-        for (int row = 0; row < static_cast<int>(field_user.field.size()); ++row) {
+        for (int row = 0; row < static_cast<int>(user.field.size()); ++row) {
             std::cout << "   " << letters[row] << "  "; //row number
 
             // user field
-            for (int col = 0; col < static_cast<int>(field_user.field.size()); ++col) {
-                if (field_user.field.at(row).at(col) == FieldCellStates::Ship) {
+            for (int col = 0; col < static_cast<int>(user.field.size()); ++col) {
+                if (user.field.at(row).at(col) == FieldCellStates::Ship) {
                     std::cout << setColor(CColor::Yellow);
                     std::cout << c_SHIP << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //border around ship
-                else if (field_user.field.at(row).at(col) == FieldCellStates::Border) {
+                else if (user.field.at(row).at(col) == FieldCellStates::Border) {
                     std::cout << setColor(CColor::DarkGrey);
                     std::cout << c_BORDER << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //ship is hit
-                else if (field_user.field.at(row).at(col) == FieldCellStates::Hit) {
+                else if (user.field.at(row).at(col) == FieldCellStates::Hit) {
                     std::cout << setColor(CColor::LightRed);
                     std::cout << setColor(CColor::Negative);
                     std::cout << c_HIT << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //border around hitted ship
-                else if (field_user.field.at(row).at(col) == FieldCellStates::BorderHit) {
+                else if (user.field.at(row).at(col) == FieldCellStates::BorderHit) {
                     std::cout << setColor(CColor::Blue);
                     std::cout << c_BORDERHIT << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //missed hit
-                else if (field_user.field.at(row).at(col) == FieldCellStates::Miss) {
+                else if (user.field.at(row).at(col) == FieldCellStates::Miss) {
                     std::cout << setColor(CColor::Blue);
                     std::cout << c_MISS << " ";
                     std::cout << setColor(CColor::Reset);
@@ -1073,8 +1071,8 @@ public:
             std::cout << letters[row] << "  ";
 
             // pc field
-            for (int col = 0; col < static_cast<int>(field_pc.field.size()); ++col) {
-                if (field_pc.field.at(row).at(col) == FieldCellStates::Ship) {
+            for (int col = 0; col < static_cast<int>(pc.field.size()); ++col) {
+                if (pc.field.at(row).at(col) == FieldCellStates::Ship) {
                     std::cout << setColor(CColor::DarkGrey);
                     if (field_view == ShipView::Visible) // make ships visible when game has ended
                         std::cout << c_SHIP << " ";
@@ -1083,26 +1081,26 @@ public:
                     std::cout << setColor(CColor::Reset);
                 }
                 //border around ship
-                else if (field_pc.field.at(row).at(col) == FieldCellStates::Border) {
+                else if (pc.field.at(row).at(col) == FieldCellStates::Border) {
                     std::cout << setColor(CColor::DarkGrey);
                     std::cout << c_BORDER << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //ship is hit
-                else if (field_pc.field.at(row).at(col) == FieldCellStates::Hit) {
+                else if (pc.field.at(row).at(col) == FieldCellStates::Hit) {
                     std::cout << setColor(CColor::Green);
                     std::cout << setColor(CColor::Negative);
                     std::cout << c_HIT << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //border around hitted ship
-                else if (field_pc.field.at(row).at(col) == FieldCellStates::BorderHit) {
+                else if (pc.field.at(row).at(col) == FieldCellStates::BorderHit) {
                     std::cout << setColor(CColor::LightRed);
                     std::cout << c_BORDERHIT << " ";
                     std::cout << setColor(CColor::Reset);
                 }
                 //missed hit
-                else if (field_pc.field.at(row).at(col) == FieldCellStates::Miss) {
+                else if (pc.field.at(row).at(col) == FieldCellStates::Miss) {
                     std::cout << setColor(CColor::LightRed);
                     std::cout << c_MISS << " ";
                     std::cout << setColor(CColor::Reset);
@@ -1197,38 +1195,38 @@ public:
     }
 
 
-    void printUpdateMessage(const Field &field_pc, const Field & field_user){
+    void printUpdateMessage(const Field &pc, const Field & user){
 
 
         std::cout << "   Your ships left: ";
-        if (field_user.map.size() <= 3)
+        if (user.map.size() <= 3)
             std::cout << setColor(CColor::LightRed); //set a color LightRed if ships left <= 3
-        std::cout << field_user.map.size();
+        std::cout << user.map.size();
         std::cout << setColor(CColor::Reset);
 
-        if (field_user.message[2] == 'W') //if you sank a ship setColor Green
+        if (user.message[2] == 'W') //if you sank a ship setColor Green
             std::cout << setColor(CColor::Green);
-        if(field_user.message[6] == 'h') //if you hit a ship setColor Cyan
+        if(user.message[6] == 'h') //if you hit a ship setColor Cyan
             std::cout << setColor(CColor::Cyan);
 
-        std::cout << "\t\t" << field_user.message << std::endl;
+        std::cout << "\t\t" << user.message << std::endl;
         std::cout << setColor(CColor::Reset);
 
         std::cout << "     PC ships left: ";
-        if (field_pc.map.size() <= 3)
+        if (pc.map.size() <= 3)
             std::cout << setColor(CColor::LightRed);
-        std::cout << field_pc.map.size();
+        std::cout << pc.map.size();
         std::cout << setColor(CColor::Reset);
 
-        if(field_pc.message[2] == 'O')
+        if(pc.message[2] == 'O')
             std::cout << setColor(CColor::Red);
-        if(field_pc.message[5] == 'h')
+        if(pc.message[5] == 'h')
             std::cout << setColor(CColor::Yellow);
-        std::cout << "\t\t" << field_pc.message << std::endl;
+        std::cout << "\t\t" << pc.message << std::endl;
         std::cout << setColor(CColor::Reset);
 
-        std::cout << "    Your last move: " << field_user.lastMove << std::endl;
-        std::cout << "      PC last move: " << field_pc.lastMove << std::endl;
+        std::cout << "    Your last move: " << user.lastMove << std::endl;
+        std::cout << "      PC last move: " << pc.lastMove << std::endl;
         
         std::cout << std::endl;
     }
@@ -1256,14 +1254,11 @@ public:
 int main(){
 
     srand(static_cast<unsigned int>(time(0)));
-    std::string coord_str{};
-
-    int input_row{0}, input_col{0};
 
     Game game;
 
-    Field field_user;
-    Field field_pc;
+    Field user;
+    Field pc;
 
     //game.printFields(field_pc, field_user, ShipView::Visible);
 
@@ -1276,19 +1271,19 @@ int main(){
 
         system(CLS);
 
-        field_pc.clearAll();
-        field_user.clearAll();
+        pc.clearAll();
+        user.clearAll();
         
 
         if (!game.isAutomaticSetup(demo)){
             system(CLS);
             std::cout << "\tManual setup\n";
-            if (!field_user.manualSetup()){
-                field_user.createGameField();
+            if (!user.manualSetup()){
+                user.createGameField();
             }
         }else{
             std::cout << "\tAutomatic setup\n";
-            field_user.createGameField();
+            user.createGameField();
         }
 
         system(CLS);
@@ -1298,60 +1293,61 @@ int main(){
 
         //DEBUGGING
         // if demo mode true
-        if(demo) field_user.createMoveTable();
+        if(demo) user.createMoveTable();
         //
 
         while (1) {
 
             //system(CLS);//COMMENT FOR DEBUGGING
-            field_pc.checkField();
-            field_user.checkField();
+            pc.checkField();
+            user.checkField();
 
-            game.printFields(field_pc, field_user, ShipView::Invisible);
-            game.printUpdateMessage(field_pc, field_user);
+            game.printFields(pc, user, ShipView::Visible);
+            game.printUpdateMessage(pc, user);
             
             //DEBUGGING
             //printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
 
-            if (!field_pc.isPcHit){
+            if (!pc.isPcHit){
                 if(!demo){
                     do {
-                            std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
-                            std::cin >> coord_str;
-                            coord_str[0] = std::toupper(coord_str[0]);
-                            if (coord_str == "Q") {
-                                std::cout << "  See you, bye!\n\n";
-                                return 0;
-                            }
+                        std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
+                        std::cin >> user.coord_str;
+                        user.coord_str[0] = std::toupper(user.coord_str[0]);
+                        if (user.coord_str == "Q") {
+                            std::cout << "  See you, bye!\n\n";
+                            return 0;
+                        }
 
-                    } while (!field_user.isInputValid(coord_str));
+                    } while (!user.isInputValid());
 
                 }else{
+
                     //if demo mode is chosen
-                    field_user.getCoord(Player::User);
+                    user.getCoord(Player::User);
                 }
 
                     //system(CLS);//COMMENT FOR DEBUG
 
                     //user move
-                    if(!field_pc.isPcHit){//if the previous PC move was not positive then execute User move
-                        if (field_user.isMove()) {
-                            if (field_user.checkMap(Player::User)) {
+                    if(!pc.isPcHit){//if the previous PC move was not positive then execute User move
+                        if (pc.isMove()) {
+                            if (pc.checkMap(Player::User)) {
                                 //system(CLS); //COMMENT FOR DEBUG
-                                game.printFields(field_pc, field_user, ShipView::Visible);
+                                game.printFields(pc, user, ShipView::Visible);
                                 game.printCongrats(Player::User);
                                 break;
                             }
-                            field_pc.message = "";
+                            pc.message = "";
                             continue; // continue to next iteration bc User hit positive and move was true
                         }
                         else {
-                            field_user.message = "  You missed at " + field_user.lastMove;
-                            field_user.isHit = false;
+                            user.message = "  You missed at " + user.lastMove;
+                            user.isHit = false;
                         }
 
-                        game.printFields(field_pc, field_user, ShipView::Invisible);
-                        game.printUpdateMessage(field_pc, field_user);
+                        game.printFields(pc, user, ShipView::Invisible);
+                        game.printUpdateMessage(pc, user);
                         //DEBUGGING
                         //printDebug(map_user, map_pc, pc_moves, states, userKeyShipHit, pcKeyShipHit);
                     }
@@ -1360,21 +1356,21 @@ int main(){
 
 
              //pc move
-             field_pc.getCoord(Player::Pc);
-             if (field_pc.isMove()) {
-                 if (field_pc.checkMap(Player::Pc)) {
+             pc.getCoord(Player::Pc);
+             if (user.isMove()) {
+                 if (user.checkMap(Player::Pc)) {
                      //system(CLS); //COMMENT FOR DEBUG
-                     game.printFields(field_pc, field_user, ShipView::Visible);
+                     game.printFields(pc, user, ShipView::Visible);
                      game.printCongrats(Player::Pc);
                      break;
                  }
-                 field_user.message = "";
-                 field_pc.isPcHit = true;
+                 user.message = "";
+                 pc.isPcHit = true;
             }
              else {
-                 field_pc.message = "   PC missed at " + field_pc.message;
-                 field_pc.isHit = false;
-                 field_pc.isPcHit = false;
+                 pc.message = "   PC missed at " + pc.lastMove;
+                 pc.isHit = false;
+                 pc.isPcHit = false;
             }
 
             //system(CLS);//COMMENT FOR DEBUG
