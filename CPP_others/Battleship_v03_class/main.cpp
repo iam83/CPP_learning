@@ -18,7 +18,7 @@
 
 
 std::string g_VERSION = "1.9";
-int g_TIME = 0; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
+int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
 
 
 int main(){
@@ -62,7 +62,6 @@ int main(){
         if(demo) user.createMoveTable();
         //
 
-
         while (1) {
 
             #if !(__DEBG)
@@ -72,14 +71,14 @@ int main(){
             pc.checkField();
             user.checkField();
 
-            game.printFields(pc, user, ShipView::Visible);
+            game.printFields(pc, user, ShipView::Invisible);
             game.printUpdateMessage(pc, user);
             
             #if __DEBG
                 //printDebug();
             #endif
 
-            if (!pc.isPcHit){
+            if (!pc.isHit){
                 if(!demo){
                     do {
                         std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
@@ -93,7 +92,6 @@ int main(){
                     } while (!pc.isInputValid());
 
                 }else{
-
                     //if demo mode is chosen
                     pc.getCoord(Player::User);
                 }
@@ -102,19 +100,22 @@ int main(){
                     #endif
 
                     //user move
-                    if(!pc.isPcHit){//if the previous PC move was not positive then execute User move
+                    if(!pc.isHit){//if the previous PC move was not positive then execute User move
                         if (pc.isMove()) {
                             if (pc.checkMap(Player::User)) {
-                                //system(CLS); //COMMENT FOR DEBUG
+                                #if !(__DEBG)
+                                system(CLS); //COMMENT FOR DEBUG
+                                #endif
                                 game.printFields(pc, user, ShipView::Visible);
                                 game.printCongrats(Player::User);
                                 break;
                             }
-                            pc.message = "";
+                            //pc.message = "";
+                            user.isHit = true;
                             continue; // continue to next iteration bc User hit positive and move was true
                         }
                         else {
-                            user.message = "  You missed at " + user.lastMove;
+                            user.message = "  You missed at " + pc.lastMove;
                             user.isHit = false;
                         }
 
@@ -139,13 +140,12 @@ int main(){
                      game.printCongrats(Player::Pc);
                      break;
                  }
-                 user.message = "";
-                 pc.isPcHit = true;
+                 //user.message = "";
+                 pc.isHit = true;
             }
              else {
-                 pc.message = "   PC missed at " + pc.lastMove;
+                 pc.message = "   PC missed at " + user.lastMove;
                  pc.isHit = false;
-                 pc.isPcHit = false;
             }
             #if !(__DEBG)
             system(CLS);//COMMENT FOR DEBUG

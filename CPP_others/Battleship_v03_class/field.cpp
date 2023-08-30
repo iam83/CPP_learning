@@ -425,9 +425,9 @@ void Field::encodeCoords(std::string & _coord_str, int local_row, int local_col)
 
 }
 
-void Field::decodeCoords(const std::string coord_str, int &_row, int &_col) {
+void Field::decodeCoords(const std::string _coord_str, int &_row, int &_col) {
 
-    switch (coord_str[0]) {
+    switch (_coord_str[0]) {
         case 'A': row = 0; _row = 0; break;
         case 'B': row = 1; _row = 1; break;
         case 'C': row = 2; _row = 2; break;
@@ -439,7 +439,7 @@ void Field::decodeCoords(const std::string coord_str, int &_row, int &_col) {
         case 'I': row = 8; _row = 8; break;
         case 'J': row = 9; _row = 9; break;
     }
-    switch (coord_str[1]) {
+    switch (_coord_str[1]) {
         case '0': col = 0; _col = 0; break;
         case '1': col = 1; _col = 1; break;
         case '2': col = 2; _col = 2; break;
@@ -478,6 +478,7 @@ void Field::createGameField() {
     Field::setShips(field, map, vec, dir, ShipType::Submarine, "ship1_3");
     Field::setShips(field, map, vec, dir, ShipType::Submarine, "ship1_4");
 }
+
 //remove PC moves around destroyed ship
 void Field::removeMissedMoves() {
 
@@ -502,7 +503,9 @@ void Field::removeMissedMoves() {
 //checking which ship is got hit
 bool Field::checkMap(Player player) {
 
-    std::string temp_key = "";
+    Field::checkField();
+    
+    std::string temp_coord = "";
 
     for (auto& [key, value] : map) {
 
@@ -510,19 +513,18 @@ bool Field::checkMap(Player player) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User){
-                        message = "  You hit a ship!";
+                        message = "  You hit a ship at " + coord_str;
                         str_keyShipHit = key;
+                        lastMove = coord_str;
                         isHit = true;
                         isPartlyHit = true;
                         temp_row = row;
                         temp_col = col;
                     }
                     else {
-                        std::string coord_str = "";
-                        Field::encodeCoords(temp_key, value[i].first, value[i].second);
-                        message = "  PC hit your ship at " + coord_str;
+                        Field::encodeCoords(temp_coord, value[i].first, value[i].second);
+                        message = "  PC hit your ship at " + temp_coord;
                         str_keyShipHit = key;
-                        isPcHit = true;
                         isHit = true;
                         isPartlyHit = true;
                         temp_row = row;
@@ -547,13 +549,13 @@ bool Field::checkMap(Player player) {
 
                 isPartlyHit = false;
                 isHit = true;
-                temp_key = key;
+                temp_coord = key;
             }
         }
     }
     
-    if (!temp_key.empty())
-        map.erase(temp_key);
+    if (!temp_coord.empty())
+        map.erase(temp_coord);
 
     if (map.empty()) {
         isHit = false;
@@ -564,61 +566,6 @@ bool Field::checkMap(Player player) {
     Field::checkField();
     return false;
 }
-
-bool Field::isInputValid() { //check if user makes correct input
-
-    if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
-            coord_str[0] == 'C' || coord_str[0] == 'D' ||
-            coord_str[0] == 'E' || coord_str[0] == 'F' ||
-            coord_str[0] == 'G' || coord_str[0] == 'H' ||
-            coord_str[0] == 'I' || coord_str[0] == 'J')
-        &&
-        (coord_str[1] == '0' || coord_str[1] == '1' ||
-            coord_str[1] == '2' || coord_str[1] == '3' ||
-            coord_str[1] == '4' || coord_str[1] == '5' ||
-            coord_str[1] == '6' || coord_str[1] == '7' ||
-            coord_str[1] == '8' || coord_str[1] == '9')
-        && coord_str.size() == 2) {
-
-        Field::checkField();
-        Field::decodeCoords(coord_str, row, col);
-
-        if (field.at(row).at(col) == FieldCellStates::Miss ||
-            field.at(row).at(col) == FieldCellStates::BorderHit ||
-            field.at(row).at(col) == FieldCellStates::Hit) {
-            Field::printWarning(Warning::TryAgainHitThere);
-            return false;
-        }
-
-        return true;
-    }
-    else {
-        Field::printWarning(Warning::TryAgainWrongCoord);
-        return false;
-    }
-    return false;
-}
-
-bool Field::isMove() {
-
-    if (field.at(row).at(col) == FieldCellStates::Ship) {
-
-        field.at(row).at(col) = FieldCellStates::Hit;
-        return true;
-    }
-
-    else {
-        if (field.at(row).at(col) != FieldCellStates::Hit &&
-            field.at(row).at(col) != FieldCellStates::Miss) {
-
-            field.at(row).at(col) = FieldCellStates::Miss;
-            return false;
-        }
-        return false;
-    }
-    return false;
-}
-
 
 void Field::getCoord(Player player) {
 
@@ -771,6 +718,61 @@ void Field::getCoord(Player player) {
     #endif
 }
 
+bool Field::isInputValid() { //check if user makes correct input
+
+    if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
+            coord_str[0] == 'C' || coord_str[0] == 'D' ||
+            coord_str[0] == 'E' || coord_str[0] == 'F' ||
+            coord_str[0] == 'G' || coord_str[0] == 'H' ||
+            coord_str[0] == 'I' || coord_str[0] == 'J')
+        &&
+        (coord_str[1] == '0' || coord_str[1] == '1' ||
+            coord_str[1] == '2' || coord_str[1] == '3' ||
+            coord_str[1] == '4' || coord_str[1] == '5' ||
+            coord_str[1] == '6' || coord_str[1] == '7' ||
+            coord_str[1] == '8' || coord_str[1] == '9')
+        && coord_str.size() == 2) {
+
+        Field::checkField();
+        Field::decodeCoords(coord_str, row, col);
+
+        if (field.at(row).at(col) == FieldCellStates::Miss ||
+            field.at(row).at(col) == FieldCellStates::BorderHit ||
+            field.at(row).at(col) == FieldCellStates::Hit) {
+            Field::printWarning(Warning::TryAgainHitThere);
+            return false;
+        }
+
+        return true;
+    }
+    else {
+        Field::printWarning(Warning::TryAgainWrongCoord);
+        return false;
+    }
+    return false;
+}
+
+bool Field::isMove() {
+
+    if (field.at(row).at(col) == FieldCellStates::Ship) {
+
+        field.at(row).at(col) = FieldCellStates::Hit;
+        return true;
+    }
+
+    else {
+        if (field.at(row).at(col) != FieldCellStates::Hit &&
+            field.at(row).at(col) != FieldCellStates::Miss) {
+
+            field.at(row).at(col) = FieldCellStates::Miss;
+            return false;
+        }
+        return false;
+    }
+    return false;
+}
+
+
 bool Field::manualSetup(){
 
     std::string temp {};
@@ -830,14 +832,15 @@ bool Field::manualSetup(){
             Field::printUserField();
 
         do {
-                if(switchToAuto){
-                    break;
-                }
+            if(switchToAuto){
+                break;
+            }
 
-                if (ship_size == 1)
-                    break;
-                std::cout << "  Type 'v' for vertical or 'h' for horizontal placement: ";
-                std::cin >> dir_char;
+            if (ship_size == 1)
+                break;
+
+            std::cout << "  Type 'v' for vertical or 'h' for horizontal placement: ";
+            std::cin >> dir_char;
                 
             } while (!Field::isManualInputValid(dir_char) || !Field::isValidToInstall(_row, _col, dir_char, ship_size));
 
