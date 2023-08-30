@@ -10,7 +10,7 @@
 
     I write this note to myself to make me smile years later :).
     Alright. It took me two weeks to make a working buggy prototype.
-    Then I had to put it off for about ~10 months and then finally got back to it
+    Then I had to put it off for about ~6 months and then finally got back to it
     for fixing and optimizing. It finally works as I planned.
 
 */

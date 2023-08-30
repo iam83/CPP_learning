@@ -736,6 +736,10 @@ void Field::getCoord(Player player) {
 
             Field::encodeCoords(temp_pcMove, row, col);
 
+            
+
+            //std::remove_if(pc_moves.begin(), pc_moves.end(), [temp_pcMove](const auto m){ return m == temp_pcMove; }); //using lambda
+
             it = std::find(moves.begin(), moves.end(), temp_pcMove);
 
             if (it != moves.end()) {
@@ -801,7 +805,7 @@ bool Field::manualSetup(){
             for(auto letter : coord_str){
                 temp += std::tolower(letter); //converting string to lowercase
             } 
-            
+
             coord_str = temp; temp = "";
             
             if(coord_str[0] == 'q'){
