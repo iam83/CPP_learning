@@ -37,9 +37,11 @@ int main(){
 
         system(CLS);
 
-        pc.clearAll_and_Setup();
-        user.clearAll_and_Setup();
-        
+        pc.clearAll();
+        pc.createGameField();
+        pc.createMoveTable();
+
+        user.clearAll();
 
         if (!game.isAutomaticSetup(demo)){
             system(CLS);
@@ -77,6 +79,7 @@ int main(){
             #if __DEBG
                 //printDebug();
             #endif
+
 
             if (!pc.isHit){
                 if(!demo){

@@ -12,10 +12,6 @@
 extern int g_TIME;
 extern std::string g_VERSION;
 
-
-std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2",
-                                        "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
-
 void Field::sleepThread(int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
@@ -25,13 +21,16 @@ int Field::getRandomNumber(int min, int max) {
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
 
-bool Field::inField(int row, int col)
-{
-    if (row < 0 || row > 9) return false;
-    if (col < 0 || col > 9) return false;
-    return true;
+void Field::createField() {
+    field.fill({});
 }
 
+bool Field::inField(const int _row, const int _col)
+{
+    if (_row < 0 || _row > 9) return false;
+    if (_col < 0 || _col > 9) return false;
+    return true;
+}
 
 void Field::getPossibles(Field_t const &field,
     std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
@@ -147,6 +146,24 @@ void Field::setShips(Field_t& field, Map_t& map,
     Field::checkField();
 }
 
+void Field::checkField() {
+
+    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
+    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
+    //check in boundary
+    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+            if (field.at(row).at(col) == FieldCellStates::EmptyField) {
+                for (int i = 0; i < 8; ++i) { // looking around cell
+                    if (Field::inField(row + y[i], col + x[i])) {
+                        if (field.at(row + y[i]).at(col + x[i]) == FieldCellStates::Ship)
+                            field.at(row).at(col) = FieldCellStates::Border;
+                    }
+                }
+            }
+        }
+    }
+}
 
 void Field::checkHitField() {
 
@@ -154,7 +171,6 @@ void Field::checkHitField() {
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
 
     //check in boundary
-
     for (int row = 0; row < static_cast<int>(field.size()); ++row) {
         for (int col = 0; col <static_cast<int>(field.size()); ++col) {
 
@@ -169,10 +185,6 @@ void Field::checkHitField() {
             }
         }
     }
-}
-
-void Field::createField() {
-    field.fill({});
 }
 
 void Field::printUserField() {
@@ -243,29 +255,42 @@ void Field::printUserField() {
         std::cout << std::endl;
 }
 
-void Field::setManualField(std::string coord_str, char dir_char, int ship_size){
+void Field::setManualField(std::string _coord_str, char dir_char, int ship_size){
 
-    std::vector<std::pair<int, int>> temp_vec;
-    int row{0}; int col{0};
-    int dir{0};
 
-    Field::decodeCoords(coord_str, row, col);
+    std::vector<std::pair<int, int>> temp_vec{};
+    int _row{0}; int _col{0};
+    int _dir{0};
+
+    Field::decodeCoords(_coord_str, _row, _col);
 
     if (dir_char == 'h')
-        dir = Direction::Horizontal;
+        _dir = Direction::Horizontal;
     else if (dir_char == 'v')
-        dir = Direction::Vertical;
+        _dir = Direction::Vertical;
 
     for (int i = 0; i < ship_size; ++i) {
-        if (dir == Direction::Horizontal) {
-            field.at(row).at(col + i) = FieldCellStates::Ship;
-            temp_vec.emplace_back(row, col + i);
+        if (_dir == Direction::Horizontal) {
+            field.at(_row).at(_col + i) = FieldCellStates::Ship;
+            temp_vec.emplace_back(_row, _col + i);
         }
         else {
-            field.at(row + i).at(col) = FieldCellStates::Ship;
-            temp_vec.emplace_back(row + i, col);
+            field.at(_row + i).at(_col) = FieldCellStates::Ship;
+            temp_vec.emplace_back(_row + i, _col);
         }
     }
+
+
+    //
+    for (const auto & v : temp_vec){
+        std::cout << v.first << v.second << " / ";
+    }
+
+    if (ship_name.empty()) std::cout << "after ship_name is empty\n";
+
+    std::cout << "ship_name[0] = " << ship_name[0] << "\n";
+    
+    //
 
     map.emplace(ship_name[0], temp_vec);
     ship_name.erase(ship_name.begin());
@@ -277,7 +302,7 @@ void Field::setManualField(std::string coord_str, char dir_char, int ship_size){
 
 }
 
-bool Field::isManualInputValid(char dir_char){
+bool Field::isManualInputValid(const char dir_char){
     if (dir_char == 'v' || dir_char == 'h') 
         return true;
     return false;
@@ -347,54 +372,11 @@ bool Field::isValidToInstall(int _row, int _col, char dir_char, int ship_size){
     return true;
 }
 
-
-Field_t field{}; //store user main field
-Map_t map{}; //store user ships coords
-
-std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
-std::vector<std::string> moves{}; //store pc moves
-
-int row{ 0 }, col{ 0 };
-size_t temp_row{0}, temp_col{0};
-int dir{ 0 };
-
-std::string coord_str = "";
-std::string lastMove = "";
-std::string message = "";
-std::string str_keyShipHit = "";
-
-bool isHit{false};
-bool isPartlyHit{false};
-bool isPcHit{false};
-
-
-//PlayerShipHit userKeyShipHit(Player::User, "", false); //store ship name of the hit ship. it's used in map container
-
 //constructor without parameters
 Field::Field(){
     createField();
-    createGameField();
-    createMoveTable();
 }
 
-void Field::checkField() {
-
-    const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
-    const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
-    //check in boundary
-    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
-            if (field.at(row).at(col) == FieldCellStates::EmptyField) {
-                for (int i = 0; i < 8; ++i) { // looking around cell
-                    if (Field::inField(row + y[i], col + x[i])) {
-                        if (field.at(row + y[i]).at(col + x[i]) == FieldCellStates::Ship)
-                            field.at(row).at(col) = FieldCellStates::Border;
-                    }
-                }
-            }
-        }
-    }
-}
 void Field::encodeCoords(std::string & _coord_str, int local_row, int local_col) {
 
     switch (local_row) {
@@ -523,7 +505,7 @@ bool Field::checkMap(Player player) {
                     }
                     else {
                         Field::encodeCoords(temp_coord, value[i].first, value[i].second);
-                        message = "  PC hit your ship at " + temp_coord;
+                        message = "  PC hit your ship at " + coord_str;
                         str_keyShipHit = key;
                         isHit = true;
                         isPartlyHit = true;
@@ -775,7 +757,9 @@ bool Field::isMove() {
 
 bool Field::manualSetup(){
 
-    std::string temp {};
+    field.fill({});
+
+    std::string _temp {};
     char dir_char = ' ';
     unsigned int ship_size{0};
     int _row{0}; int _col{0};
@@ -805,10 +789,10 @@ bool Field::manualSetup(){
 
 
             for(auto letter : coord_str){
-                temp += std::tolower(letter); //converting string to lowercase
+                _temp += std::tolower(letter); //converting string to lowercase
             } 
 
-            coord_str = temp; temp = "";
+            coord_str = _temp; _temp = "";
             
             if(coord_str[0] == 'q'){
                 std::cout << "See you! Bye.\n\n";
@@ -821,8 +805,7 @@ bool Field::manualSetup(){
             }
 
             coord_str[0] = std::toupper(coord_str[0]);
-            Field::decodeCoords(coord_str, _row, _col);
-
+            Field::decodeCoords(coord_str, _row, _col); //decode coordinates into _row and _col
 
             } while (!Field::isInputValid() || !(Field::isValidToInstall(_row, _col, dir_char, ship_size) && Field::isValidToInstall(_row, _col)));
 
@@ -844,8 +827,10 @@ bool Field::manualSetup(){
                 
             } while (!Field::isManualInputValid(dir_char) || !Field::isValidToInstall(_row, _col, dir_char, ship_size));
 
+
         
         Field::setManualField(coord_str, dir_char, ship_size);
+        
         ship_bank.erase(ship_bank.begin());
         
         dir_char = ' ';
@@ -863,13 +848,10 @@ bool Field::manualSetup(){
     return true;
 }
 
-void Field::clearAll_and_Setup(){
+void Field::clearAll(){
     map.clear();
     moves.clear();
     vec.clear();
-    Field::createField();
-    Field::createGameField();
-    Field::createMoveTable();
 }
 
 void Field::printWarning(Warning warning){
