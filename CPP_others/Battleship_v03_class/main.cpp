@@ -620,7 +620,6 @@ private:
         return false;
     }
 
-
     bool isInputValid() { //check if user makes correct input
 
         if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
@@ -718,8 +717,8 @@ private:
 
                 // DEBUGGING
                 #if __DEBG
-                std::cout << "  temp_row: " << player.temp_row << " temp_col: " << player.temp_col << "\n";
-                std::cout << ((player.player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << std::endl;
+                std::cout << "  temp_row: " << temp_row << " temp_col: " << temp_col << "\n";
+                std::cout << ((player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[str_keyShipHit].size() << std::endl;
                 #endif
 
                 bool isGoRandom{false};
@@ -789,9 +788,6 @@ private:
                     row = temp_moves[x].first; // and apply
                     col = temp_moves[x].second;// both it here
                 }
-                
-                // row = map[keyShipHit][0].first;
-                // col = map[keyShipHit][0].second;
 
                 encodeCoords(temp_pcMove, row, col);
 
@@ -809,9 +805,9 @@ private:
 
             //DEBUGGING
             #if __DEBG
-                if (player.player == Player::Pc) std::cout << "pc ";
+                if (player == Player::Pc) std::cout << "pc ";
                 else std::cout << "user ";
-                std::cout << player.str_keyShipHit << " map[player.str_keyShipHit].size() = " << map[player.str_keyShipHit].size() << "\n";
+                std::cout << str_keyShipHit << " map[player.str_keyShipHit].size() = " << map[str_keyShipHit].size() << "\n";
                 system("pause");
             #endif
             //
@@ -919,6 +915,9 @@ private:
         map.clear();
         moves.clear();
         vec.clear();
+        createField();
+        createGameField();
+        createMoveTable();
     }
 
     void printWarning(Warning warning){
@@ -1312,19 +1311,19 @@ int main(){
                 if(!demo){
                     do {
                         std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
-                        std::cin >> user.coord_str;
-                        user.coord_str[0] = std::toupper(user.coord_str[0]);
-                        if (user.coord_str == "Q") {
+                        std::cin >> pc.coord_str;
+                        pc.coord_str[0] = std::toupper(pc.coord_str[0]);
+                        if (pc.coord_str == "Q") {
                             std::cout << "  See you, bye!\n\n";
                             return 0;
                         }
 
-                    } while (!user.isInputValid());
+                    } while (!pc.isInputValid());
 
                 }else{
 
                     //if demo mode is chosen
-                    user.getCoord(Player::User);
+                    pc.getCoord(Player::User);
                 }
 
                     //system(CLS);//COMMENT FOR DEBUG
@@ -1356,7 +1355,7 @@ int main(){
 
 
              //pc move
-             pc.getCoord(Player::Pc);
+             user.getCoord(Player::Pc);
              if (user.isMove()) {
                  if (user.checkMap(Player::Pc)) {
                      //system(CLS); //COMMENT FOR DEBUG
