@@ -30,14 +30,10 @@ int main(){
     Field user;
     Field pc;
 
-    //game.printFields(field_pc, field_user, ShipView::Visible);
-
     bool demo {false};
     
     //game loop
     do {
-
-        //game setup//
 
         system(CLS);
 
