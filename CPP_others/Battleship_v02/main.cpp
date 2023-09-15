@@ -991,6 +991,7 @@ bool manualSetup(Field_t &field_user, Field_t &field_pc, Map_t &map_user, std::v
 
                 if(coord_str == "auto"){
                     switchToAuto = true;
+                    coord_str = "";
                     break;
                 }
 
