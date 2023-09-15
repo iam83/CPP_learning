@@ -984,12 +984,6 @@ bool manualSetup(Field_t &field_user, Field_t &field_pc, Map_t &map_user, std::v
                 std::cout << "  (eg. a0, or type 'auto', 'q' for quit): ";
                 std::cin >> coord_str;
 
-
-                for(auto letter : coord_str){
-                    temp += std::tolower(letter); //converting string to lowercase
-                } 
-                coord_str = temp; temp = "";
-                
                 if(coord_str[0] == 'q'){
                     std::cout << "See you! Bye.\n\n";
                     exit(0);
@@ -999,6 +993,12 @@ bool manualSetup(Field_t &field_user, Field_t &field_pc, Map_t &map_user, std::v
                     switchToAuto = true;
                     break;
                 }
+
+                for(auto letter : coord_str){
+                    temp += std::tolower(letter); //converting string to lowercase
+                } 
+                coord_str = temp; temp = "";
+    
 
                 coord_str[0] = std::toupper(coord_str[0]);
                 
