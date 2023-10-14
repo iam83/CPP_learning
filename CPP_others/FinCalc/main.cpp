@@ -64,9 +64,9 @@ int main(){
     // double interest = EnterValues("At what interest %?> ");
 
     //for test purpose
-    double const interest {15.0};
-    double start_amount {1'000'000.0};
-    double month_amount {12.0};
+    double const interest {20.0};
+    double start_amount {5'000'000.0};
+    double month_amount {120.0};
 
 
     std::cout << std::fixed << std::setprecision(2);
