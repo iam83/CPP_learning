@@ -200,8 +200,6 @@ void swapTwoNumbers(int &x, int &y){
 int main(){
 
     int x{4}, y{5};
-
-    for(int i = 0; i < )
     
     // выводим перемененные в консоль до вызова функции "поменять местами"
     printTwoNumbers(x, y);
