@@ -321,7 +321,7 @@ void setShips(Field_t& field, Map_t& map,
     getPossibles(field, vec, dir, ship);
     std::vector<std::pair<int, int>> temp_vec;
 
-    int i = rand() % vec.size(); //choose random ship position where it can be definitely installed
+    int i = rand() % vec.size(); //random ship position where it can be definitely installed
     int row = vec[i].first;
     int col = vec[i].second;
 
