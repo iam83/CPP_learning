@@ -46,7 +46,8 @@ void printResult(double overall_income, double month_income, int count){
     std::cout << std::showbase << "Month "
               << std::right << std::setw(2) << count+1 << ":   "
               << setColor(CColor::Green) << std::put_money(overall_income * FACTOR) << setColor(CColor::Reset)
-              << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * FACTOR) << setColor(CColor::Reset) << "\n";
+              << "    profit per month:  " << setColor(CColor::Cyan) << std::put_money(month_income * FACTOR) << setColor(CColor::Reset)
+              << "\n";
 }
 
 int main(){
@@ -62,6 +63,7 @@ int main(){
     double start_amount = EnterValues("Enter your deposit:> ");
     double month_amount = EnterValues("How many month(s)?> ");
     double interest = EnterValues("At what interest %?> ");
+    //double add_pay = EnterValues("How much do you want to add every month?> ");
 
     //for test purpose
     //double const interest {15.0};
@@ -90,7 +92,7 @@ int main(){
         }
 
         //calculate for the rest of months
-        month_income += ((month_income * (interest / 12.0))) / 100.0;
+        month_income += (((month_income) * (interest / 12.0))) / 100.0;
         overall_income += month_income;
         printResult(overall_income, month_income, i);
         
@@ -112,7 +114,7 @@ int main(){
               << setColor(CColor::Reset);
     std::cout << "\n\n";
 
-    //system("pause");
+    system("pause");
     return 0;
 
 }
