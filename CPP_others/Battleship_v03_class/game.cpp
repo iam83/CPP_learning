@@ -31,7 +31,7 @@ void Game::printMoveTable(const Field object) {
     std::cout << std::endl;
 }
 
-int Game::playAgain() {
+bool Game::playAgain() {
 
 char exit;
 
@@ -41,12 +41,12 @@ do {
 
     if (exit == 'y' || exit == 'Y') {
         g_TIME = 1; //reset g_TIME to 1. otherwise it would accumulate the value from the previous runtime
-        return 1;
+        return true;
         break;
     }
     else if (exit == 'n' || exit == 'N') {
         std::cout << "  Thank you for playing. See you!" << std::endl;
-        return 0;
+        return false;
         break;
     }
     else {

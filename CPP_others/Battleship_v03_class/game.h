@@ -13,7 +13,7 @@ private:
 
 public:
     bool isDemo;
-    int playAgain();
+    bool playAgain();
     void printMoveTable(const Field);
     void printFields(const Field &, const Field&, ShipView);
     bool isAutomaticSetup(bool &);
