@@ -632,7 +632,6 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/initializer_list \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/ios \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/iosfwd \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/istream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/iterator \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/limits \
@@ -831,32 +830,14 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
   /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/highgui.hpp \
   /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/imgcodecs.hpp \
   /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/imgproc.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/aruco_board.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/aruco_detector.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/aruco_dictionary.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/barcode.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/charuco_detector.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/face.hpp \
-  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/graphical_code_detector.hpp \
   /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/opencv_modules.hpp \
+  /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/video/background_segm.hpp \
   /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/videoio.hpp
 
 
 /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/videoio.hpp:
 
 /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/opencv_modules.hpp:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/face.hpp:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/charuco_detector.hpp:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/barcode.hpp:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/aruco_board.hpp:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect.hpp:
 
 /opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/imgcodecs.hpp:
 
@@ -898,9 +879,9 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
 
 /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h:
 
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/ranges_move.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/iostream:
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/limits.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/xlocale/_time.h:
 
@@ -1013,8 +994,6 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/sys/_types/_blksize_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/sys/_pthread/_pthread_types.h:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/aruco_detector.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/sys/_types/_u_int64_t.h:
 
@@ -1471,6 +1450,8 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__iterator/segmented_iterator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__ranges/enable_view.h:
+
+/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/video/background_segm.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/sys/_pthread/_pthread_once_t.h:
 
@@ -2182,8 +2163,6 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/ranges_rotate.h:
 
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/graphical_code_detector.hpp:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/arm/endian.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/ranges_next_permutation.h:
@@ -2199,10 +2178,6 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/ranges_move_backward.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/move_backward.h:
-
-/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/limits.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/ranges_move.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/xlocale/_stdlib.h:
 
@@ -2431,8 +2406,6 @@ CMakeFiles/MyProject.dir/tutorial.cpp.o: /Users/anton/CPP_learning/opencv-setup/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/_xlocale.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/__algorithm/stable_sort.h:
-
-/opt/homebrew/Cellar/opencv/4.9.0_3/include/opencv4/opencv2/objdetect/aruco_dictionary.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/c++/v1/cwctype:
 
