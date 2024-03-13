@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 
     if (!cap.isOpened())
     {
-        cerr << "Camera open failed!" << endl;
+        cerr << "Camera open failed!!" << endl;
         return -1;
     }
 
