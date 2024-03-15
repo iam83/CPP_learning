@@ -1,3 +1,13 @@
+/*
+
+
+
+    ISSUES:
+        01. "You missed at" shows nothing in Automatic Mode
+
+
+*/
+
 
 #define __DEBG true // set to true to enable DEBUG messages or false to disable.
                      // I'm using this workaround for debugging.
