@@ -17,6 +17,7 @@
 #define CLS "cls"
 #define PAUSE "pause"
 #endif
+
 #ifdef __APPLE__
 #define PAUSE "read"
 #define CLS "clear"
@@ -28,7 +29,25 @@
 
 
 std::string g_VERSION = "1.9";
+
+
 int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode it will decrease speed for x2) for debug put 0
+
+
+//DEBUGGING ONLY
+#if __DEBG
+void printDebug(const Field& pc, const Field& user){
+
+        std::cout << "isPcHit pc = " << pc.isPcHit << "\n";
+        std::cout << "isPcHit user = " << user.isPcHit << "\n";
+        std::cout << "isHit pc = " << pc.isHit << "\n";
+        std::cout << "isHit user = " << user.isHit << "\n";
+        std::cout << "isPartlyHit pc = " << pc.isPartlyHit << "\n";
+        std::cout << "isPartlyHit user = " << user.isPartlyHit << "\n";
+        
+}
+#endif
+////
 
 
 int main(){
@@ -83,11 +102,16 @@ int main(){
             pc.checkField();
             user.checkField();
 
-            game.printFields(pc, user, ShipView::Invisible);
+            #if !(__DEBG)
+                game.printFields(pc, user, ShipView::Invisible);
+            #else
+                game.printFields(pc, user, ShipView::Visible);
+            #endif
+
             game.printUpdateMessage(pc, user);
             
             #if __DEBG
-                //printDebug();
+                printDebug(pc, user);
             #endif
 
 
@@ -116,10 +140,14 @@ int main(){
                     if(!pc.isHit){//if the previous PC move was not positive then execute User move
                         if (pc.isMove()) {
                             if (pc.checkMap(Player::User)) {
+
                                 #if !(__DEBG)
-                                system(CLS); //COMMENT FOR DEBUG
+                                    game.printFields(pc, user, ShipView::Invisible);
+                                    system(CLS); //COMMENT FOR DEBUG
+                                #else
+                                    game.printFields(pc, user, ShipView::Visible);
                                 #endif
-                                game.printFields(pc, user, ShipView::Visible);
+
                                 game.printCongrats(Player::User);
                                 break;
                             }
@@ -132,12 +160,16 @@ int main(){
                             user.isHit = false;
                         }
 
-                        game.printFields(pc, user, ShipView::Invisible);
+                        #if !(__DEBG)
+                            game.printFields(pc, user, ShipView::Invisible);
+                        #else
+                            game.printFields(pc, user, ShipView::Visible);
+                        #endif
                         game.printUpdateMessage(pc, user);
 
                         //DEBUGGING
                         #if __DEBG
-                            //printDebug();
+                            printDebug(pc, user);
                         #endif
                     }
 
@@ -148,8 +180,12 @@ int main(){
              user.getCoord(Player::Pc);
              if (user.isMove()) {
                  if (user.checkMap(Player::Pc)) {
-                     //system(CLS); //COMMENT FOR DEBUG
-                     game.printFields(pc, user, ShipView::Visible);
+                     #if !(__DEBG)
+                        //system(CLS); //COMMENT FOR DEBUG
+                        game.printFields(pc, user, ShipView::Invisible);
+                    #else
+                        game.printFields(pc, user, ShipView::Visible);
+                    #endif
                      game.printCongrats(Player::Pc);
                      break;
                  }
