@@ -46,10 +46,11 @@ public:
     }
 
     void print(){
-        std::cout << "r=" << static_cast<int>(m_red)
-                  << " g=" << static_cast<int>(m_green)
-                  << " b=" << static_cast<int>(m_blue)
-                  << " a=" << static_cast<int>(m_alpha)
+        std::cout << "\n"
+                  << " R = " << static_cast<int>(m_red)   << "\n"
+                  << " G = " << static_cast<int>(m_green) << "\n"
+                  << " B = " << static_cast<int>(m_blue)  << "\n"
+                  << " A = " << static_cast<int>(m_alpha) << "\n"
                   << std::endl;
     }
 };
