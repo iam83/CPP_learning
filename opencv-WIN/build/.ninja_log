@@ -1,5 +1,3 @@
 # ninja log v5
-2	561	7320331283513528	CMakeFiles/MyProject.dir/tutorial.cpp.obj	853ba036a186d378
-563	647	7320331284353447	MyProject.exe	cd5aa5c52f5043d3
-5	570	7320332099564247	CMakeFiles/MyProject.dir/tutorial.cpp.obj	853ba036a186d378
 571	656	7320332100397673	MyProject.exe	cd5aa5c52f5043d3
+5	570	7320332099564247	CMakeFiles/MyProject.dir/tutorial.cpp.obj	853ba036a186d378
