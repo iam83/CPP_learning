@@ -114,7 +114,7 @@ int main(){
             #endif
 
 
-            if (!pc.isHit){ // if a PC ship is not got hit
+            if (!pc.isHit){ // if a PC's ship is not got hit then it's User's turn
                 if(!demo){  // if demo mode is not chosen
                     do {
                         std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
