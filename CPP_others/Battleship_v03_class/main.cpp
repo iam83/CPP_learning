@@ -39,8 +39,6 @@ int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode 
 void printDebug(const Field& pc, const Field& user){
         std::cout << "PC last move: " << pc.lastMove << "\n";
         std::cout << "User last move: " << user.lastMove << "\n";
-        std::cout << "isPcHit pc = " << pc.isPcHit << "\n";
-        std::cout << "isPcHit user = " << user.isPcHit << "\n";
         std::cout << "isHit pc = " << pc.isHit << "\n";
         std::cout << "isHit user = " << user.isHit << "\n";
         std::cout << "isPartlyHit pc = " << pc.isPartlyHit << "\n";
