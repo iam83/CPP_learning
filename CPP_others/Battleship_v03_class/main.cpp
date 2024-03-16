@@ -110,6 +110,7 @@ int main(){
             game.printUpdateMessage(pc, user);
             
             #if __DEBG
+                std::cout << "BEFORE moves\n";
                 printDebug(pc, user);
             #endif
 
@@ -168,6 +169,7 @@ int main(){
 
                         //DEBUGGING
                         #if __DEBG
+                            std::cout << "AFTER user move\n";
                             printDebug(pc, user);
                         #endif
                     }
@@ -197,6 +199,12 @@ int main(){
             }
             #if !(__DEBG)
             system(CLS);//COMMENT FOR DEBUG
+            #endif
+
+              //DEBUGGING
+            #if __DEBG
+                std::cout << "AFTER PC move\n";
+                printDebug(pc, user);
             #endif
 
         }
