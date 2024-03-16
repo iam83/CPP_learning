@@ -43,10 +43,7 @@ public:
     std::vector<std::pair<int, int>> vec{}; //store coords of where ships can be installed
     std::vector<std::string> moves{}; //store pc moves
 
-    std::vector<std::string> ship_name = {"ship4",
-                                          "ship3_1", "ship3_2",
-                                          "ship2_1", "ship2_2", "ship2_3",
-                                          "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
+    std::vector<std::string> ship_name = {"ship4", "ship3_1", "ship3_2", "ship2_1", "ship2_2", "ship2_3", "ship1_1", "ship1_2", "ship1_3", "ship1_4"};
 
     int row{}, col{};
     size_t temp_row{}, temp_col{};
