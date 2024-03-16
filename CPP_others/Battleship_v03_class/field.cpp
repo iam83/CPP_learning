@@ -563,6 +563,7 @@ void Field::getCoord(Player player) {
     // +1, 0 right
     // 0, +1 up
     // 0, -1 down
+    
     const int y[] = { -1, 1, 0,  0 };// 4 directions
     const int x[] = {  0, 0, 1, -1 };// for checking
 

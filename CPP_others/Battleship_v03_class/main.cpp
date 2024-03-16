@@ -37,7 +37,8 @@ int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode 
 //DEBUGGING ONLY
 #if __DEBG
 void printDebug(const Field& pc, const Field& user){
-
+        std::cout << "PC last move: " << pc.lastMove << "\n";
+        std::cout << "User last move: " << user.lastMove << "\n";
         std::cout << "isPcHit pc = " << pc.isPcHit << "\n";
         std::cout << "isPcHit user = " << user.isPcHit << "\n";
         std::cout << "isHit pc = " << pc.isHit << "\n";
@@ -115,8 +116,8 @@ int main(){
             #endif
 
 
-            if (!pc.isHit){
-                if(!demo){
+            if (!pc.isHit){ // if a PC ship is not got hit
+                if(!demo){  // if demo mode is not chosen
                     do {
                         std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
                         std::cin >> pc.coord_str;
@@ -129,7 +130,7 @@ int main(){
                     } while (!pc.isInputValid());
 
                 }else{
-                    //if demo mode is chosen
+                    // if demo mode is chosen
                     pc.getCoord(Player::User);
                 }
                     #if !(__DEBG)
