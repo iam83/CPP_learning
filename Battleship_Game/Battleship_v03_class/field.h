@@ -49,10 +49,10 @@ public:
     size_t temp_row{}, temp_col{};
     int dir{};
 
-    std::string coord_str;
-    std::string lastMove;
-    std::string message;
-    std::string str_keyShipHit;
+    std::string coord_str = "";
+    std::string lastMove = "";
+    std::string message = "";
+    std::string str_keyShipHit = "";
 
     bool isHit{};
     bool isPartlyHit{};

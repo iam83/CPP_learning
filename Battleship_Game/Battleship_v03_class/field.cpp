@@ -491,30 +491,27 @@ bool Field::checkMap(Player player) {
     
     std::string temp_coord = "";
 
+    lastMove = coord_str;
+
     for (auto& [key, value] : map) {
 
         for (int i = 0; i < static_cast<int>(value.size()); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User){
-                        message = "  You hit a ship at " + coord_str;
-                        str_keyShipHit = key;
-                        lastMove = coord_str;
-                        isHit = true;
-                        isPartlyHit = true;
-                        temp_row = row;
-                        temp_col = col;
+                        message = "  You hit a ship at " + lastMove;
                     }
-                    else {
+                    if (player == Player::Pc) {
                         Field::encodeCoords(temp_coord, value[i].first, value[i].second);
-                        message = "  PC hit your ship at " + coord_str;
+                        message = "  PC hit your ship at " + lastMove;
+                    }
                         str_keyShipHit = key;
                         isHit = true;
                         isPartlyHit = true;
                         temp_row = row;
                         temp_col = col;
-                    }
                 }
+
                 value.erase(value.begin() + i);
             }
 
@@ -525,7 +522,8 @@ bool Field::checkMap(Player player) {
                     Field::removeMissedMoves();
                     Field::checkHitField();
                 }
-                else {
+
+                if (player == Player::Pc) {
                     message = "  Oops, PC sank your ship!";
                     Field::removeMissedMoves();
                     Field::checkHitField();
@@ -571,7 +569,7 @@ void Field::getCoord(Player player) {
         if(player == Player::Pc)
             std::cout << "    PC is attacking";
         else
-            std::cout << "  User is attacking";
+            std::cout << "  You are attacking";
             
         for (int c = 0; c < 3; ++c) {
             std::cout << ".";
@@ -585,7 +583,8 @@ void Field::getCoord(Player player) {
         if (!isPartlyHit) {
 
             move = rand() % moves.size();
-            lastMove = moves.at(move);
+            coord_str = moves.at(move);
+            lastMove = coord_str;
             Field::decodeCoords(lastMove, row, col);
 
         }
@@ -667,8 +666,6 @@ void Field::getCoord(Player player) {
             }
 
             Field::encodeCoords(temp_pcMove, row, col);
-
-            
 
             //std::remove_if(pc_moves.begin(), pc_moves.end(), [temp_pcMove](const auto m){ return m == temp_pcMove; }); //using lambda
 

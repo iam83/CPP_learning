@@ -4,6 +4,9 @@
 
     ISSUES:
         01. "You missed at" shows nothing in Automatic Mode
+        02. PC is not going
+
+        Need to revise isHit statuses.
 
 
 */
@@ -25,6 +28,7 @@
 
 #include "field.h"
 #include "game.h"
+#include "player.h"
 
 
 
@@ -37,6 +41,7 @@ int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode 
 //DEBUGGING ONLY
 #if __DEBG
 void printDebug(const Field& pc, const Field& user){
+        std::cout << "Coord_str pc field: " << pc.coord_str << "\n";
         std::cout << "PC last move: " << pc.lastMove << "\n";
         std::cout << "User last move: " << user.lastMove << "\n";
         std::cout << "isHit pc = " << pc.isHit << "\n";
@@ -55,8 +60,11 @@ int main(){
 
     Game game;
 
-    Field user;
-    Field pc;
+    C_player user;
+    C_player pc;
+
+    //Field user;
+    //Field pc;
 
     bool demo {false};
     
@@ -108,11 +116,6 @@ int main(){
             #endif
 
             game.printUpdateMessage(pc, user);
-            
-            #if __DEBG
-                std::cout << "BEFORE moves\n";
-                printDebug(pc, user);
-            #endif
 
 
             if (!pc.isHit){ // if a PC's ship is not got hit then it's User's turn
@@ -137,7 +140,7 @@ int main(){
                     #endif
 
                     //user move
-                    if(!pc.isHit){//if the previous PC move was not positive then execute User move
+                    if(!user.isHit){//if the previous PC move was not positive then execute User move
                         if (pc.isMove()) {
                             if (pc.checkMap(Player::User)) {
 
@@ -145,7 +148,7 @@ int main(){
                                     game.printFields(pc, user, ShipView::Invisible);
                                     system(CLS); //COMMENT FOR DEBUG
                                 #else
-                                    game.printFields(pc, user, ShipView::Visible);
+                                game.printFields(pc, user, ShipView::Visible);
                                 #endif
 
                                 game.printCongrats(Player::User);
@@ -166,12 +169,6 @@ int main(){
                             game.printFields(pc, user, ShipView::Visible);
                         #endif
                         game.printUpdateMessage(pc, user);
-
-                        //DEBUGGING
-                        #if __DEBG
-                            std::cout << "AFTER user move\n";
-                            printDebug(pc, user);
-                        #endif
                     }
 
             }
@@ -185,7 +182,7 @@ int main(){
                         //system(CLS); //COMMENT FOR DEBUG
                         game.printFields(pc, user, ShipView::Invisible);
                     #else
-                        game.printFields(pc, user, ShipView::Visible);
+                    game.printFields(pc, user, ShipView::Visible);
                     #endif
                      game.printCongrats(Player::Pc);
                      break;
