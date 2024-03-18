@@ -12,6 +12,24 @@
 extern int g_TIME;
 extern std::string g_VERSION;
 
+
+void Field::setLastMove(std::string _lastMove){
+    m_lastMove = _lastMove;
+}
+
+std::string Field::getLastMove() const{
+    return m_lastMove;
+}
+
+void Field::setMessage(std::string _message){
+    m_message = _message;
+}
+
+std::string Field::getMessage() const{
+    return m_message;
+}
+
+
 void Field::sleepThread(int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
@@ -446,6 +464,7 @@ void Field::createMoveTable() {
         }
     }
 }
+
 void Field::createGameField() {
 
     Field::createField();
@@ -491,7 +510,7 @@ bool Field::checkMap(Player player) {
     
     std::string temp_coord = "";
 
-    lastMove = coord_str;
+    setLastMove(m_coord_str);
 
     for (auto& [key, value] : map) {
 
@@ -499,13 +518,13 @@ bool Field::checkMap(Player player) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User){
-                        message = "  You hit a ship at " + lastMove;
+                        setMessage("  You hit a ship at " + getLastMove());
                     }
                     if (player == Player::Pc) {
                         Field::encodeCoords(temp_coord, value[i].first, value[i].second);
-                        message = "  PC hit your ship at " + lastMove;
+                        setMessage("  PC hit your ship at " + getLastMove());
                     }
-                        str_keyShipHit = key;
+                        m_str_keyShipHit = key;
                         isHit = true;
                         isPartlyHit = true;
                         temp_row = row;
@@ -518,13 +537,13 @@ bool Field::checkMap(Player player) {
             if (value.empty()) { //if all cells from a ship were hit
 
                 if (player == Player::User) {
-                    message = "  Wow! You sank a ship!";
+                    setMessage("  Wow! You sank a ship!");
                     Field::removeMissedMoves();
                     Field::checkHitField();
                 }
 
                 if (player == Player::Pc) {
-                    message = "  Oops, PC sank your ship!";
+                    setMessage( "  Oops, PC sank your ship!");
                     Field::removeMissedMoves();
                     Field::checkHitField();
                 }
@@ -583,9 +602,9 @@ void Field::getCoord(Player player) {
         if (!isPartlyHit) {
 
             move = rand() % moves.size();
-            coord_str = moves.at(move);
-            lastMove = coord_str;
-            Field::decodeCoords(lastMove, row, col);
+            m_coord_str = moves.at(move);
+            m_lastMove = m_coord_str;
+            Field::decodeCoords(m_lastMove, row, col);
 
         }
 
@@ -600,9 +619,9 @@ void Field::getCoord(Player player) {
             bool isGoRandom{false};
 
             // set isGoRandom to true if any ship of 4X-3X-2X gets hit for the first time
-            if (map[str_keyShipHit].size() == 3 && str_keyShipHit == "ship4") isGoRandom = true;              //for 4X ship
-            if (map[str_keyShipHit].size() == 2 && str_keyShipHit.substr(0, 5) == "ship3") isGoRandom = true; //for 3X ship
-            if (map[str_keyShipHit].size() == 1 && str_keyShipHit.substr(0, 5) == "ship2") isGoRandom = true; //for 2X ship
+            if (map[m_str_keyShipHit].size() == 3 && m_str_keyShipHit == "ship4") isGoRandom = true;              //for 4X ship
+            if (map[m_str_keyShipHit].size() == 2 && m_str_keyShipHit.substr(0, 5) == "ship3") isGoRandom = true; //for 3X ship
+            if (map[m_str_keyShipHit].size() == 1 && m_str_keyShipHit.substr(0, 5) == "ship2") isGoRandom = true; //for 2X ship
 
 
             if (isGoRandom) { //use search for possible coords only for the first time
@@ -625,8 +644,8 @@ void Field::getCoord(Player player) {
             //      . . . . x x X. . 
             //
             // for example if a ship is longer than 2 cells then add other possible moves from its coordinates.
-            for (size_t i{}; i < map[str_keyShipHit].size(); ++i){
-                    temp_moves.push_back({map[str_keyShipHit][i].first, map[str_keyShipHit][i].second}); 
+            for (size_t i{}; i < map[m_str_keyShipHit].size(); ++i){
+                    temp_moves.push_back({map[m_str_keyShipHit][i].first, map[m_str_keyShipHit][i].second}); 
                 }
 
             //DEBUGGING
@@ -673,7 +692,7 @@ void Field::getCoord(Player player) {
 
             if (it != moves.end()) {
                 move = it - moves.begin();
-                lastMove = moves.at(move);
+                setLastMove(moves.at(move));
             }
 
         }
@@ -690,7 +709,7 @@ void Field::getCoord(Player player) {
         #endif
         //
 
-        if (map[str_keyShipHit].size() == 0){
+        if (map[m_str_keyShipHit].size() == 0){
             isPartlyHit = false;
         }
 
@@ -702,21 +721,21 @@ void Field::getCoord(Player player) {
 
 bool Field::isInputValid() { //check if user makes correct input
 
-    if ((coord_str[0] == 'A' || coord_str[0] == 'B' ||
-            coord_str[0] == 'C' || coord_str[0] == 'D' ||
-            coord_str[0] == 'E' || coord_str[0] == 'F' ||
-            coord_str[0] == 'G' || coord_str[0] == 'H' ||
-            coord_str[0] == 'I' || coord_str[0] == 'J')
+    if ((m_coord_str[0] == 'A' || m_coord_str[0] == 'B' ||
+            m_coord_str[0] == 'C' || m_coord_str[0] == 'D' ||
+            m_coord_str[0] == 'E' || m_coord_str[0] == 'F' ||
+            m_coord_str[0] == 'G' || m_coord_str[0] == 'H' ||
+            m_coord_str[0] == 'I' || m_coord_str[0] == 'J')
         &&
-        (coord_str[1] == '0' || coord_str[1] == '1' ||
-            coord_str[1] == '2' || coord_str[1] == '3' ||
-            coord_str[1] == '4' || coord_str[1] == '5' ||
-            coord_str[1] == '6' || coord_str[1] == '7' ||
-            coord_str[1] == '8' || coord_str[1] == '9')
-        && coord_str.size() == 2) {
+        (m_coord_str[1] == '0' || m_coord_str[1] == '1' ||
+            m_coord_str[1] == '2' || m_coord_str[1] == '3' ||
+            m_coord_str[1] == '4' || m_coord_str[1] == '5' ||
+            m_coord_str[1] == '6' || m_coord_str[1] == '7' ||
+            m_coord_str[1] == '8' || m_coord_str[1] == '9')
+        && m_coord_str.size() == 2) {
 
         Field::checkField();
-        Field::decodeCoords(coord_str, row, col);
+        Field::decodeCoords(m_coord_str, row, col);
 
         if (field.at(row).at(col) == FieldCellStates::Miss ||
             field.at(row).at(col) == FieldCellStates::BorderHit ||
@@ -775,6 +794,7 @@ bool Field::manualSetup(){
     do {
         
         ship_size = ship_bank[0];
+        
 
         do {    
             std::cout << setColor(CColor::Cyan);
@@ -785,27 +805,27 @@ bool Field::manualSetup(){
             std::cout << " ship\n";
             std::cout << setColor(CColor::Reset);
             std::cout << "  (eg. a0, or type 'auto', 'q' for quit): ";
-            std::cin >> coord_str;
+            std::cin >> m_coord_str;
 
 
-            for(auto letter : coord_str){
+            for(auto letter : m_coord_str){
                 _temp += std::tolower(letter); //converting string to lowercase
             } 
 
-            coord_str = _temp; _temp = "";
+            m_coord_str = _temp; _temp = "";
             
-            if(coord_str[0] == 'q'){
+            if(m_coord_str[0] == 'q'){
                 std::cout << "See you! Bye.\n\n";
                 exit(0);
             }
 
-            if(coord_str == "auto"){
+            if(m_coord_str == "auto"){
                 switchToAuto = true;
                 break;
             }
 
-            coord_str[0] = std::toupper(coord_str[0]);
-            Field::decodeCoords(coord_str, _row, _col); //decode coordinates into _row and _col
+            m_coord_str[0] = std::toupper(m_coord_str[0]);
+            Field::decodeCoords(m_coord_str, _row, _col); //decode coordinates into _row and _col
 
             } while (!Field::isInputValid() || !(Field::isValidToInstall(_row, _col, dir_char, ship_size) && Field::isValidToInstall(_row, _col)));
 
@@ -829,7 +849,7 @@ bool Field::manualSetup(){
 
 
         
-        Field::setManualField(coord_str, dir_char, ship_size);
+        Field::setManualField(m_coord_str, dir_char, ship_size);
         
         ship_bank.erase(ship_bank.begin());
         

@@ -3,7 +3,6 @@
 
 C_player::C_player()
 {
-    Field player();
-    std::cout << "Field created\n";
+    Field player;
     
 }

@@ -183,6 +183,10 @@ void Game::printFields(const Field& pc, const Field& user,
 
 bool Game::isAutomaticSetup(bool &isDemo){
 
+    //DEBUG
+    return true;
+    //
+
     char exit;
 
     do {
@@ -266,12 +270,12 @@ void Game::printUpdateMessage(const Field &pc, const Field & user){
     std::cout << user.map.size();
     std::cout << setColor(CColor::Reset);
 
-    if (user.message[2] == 'W') //if you sank a ship setColor Green
+    if (user.getMessage()[2] == 'W') //if you sank a ship setColor Green
         std::cout << setColor(CColor::Green);
-    if(user.message[6] == 'h') //if you hit a ship setColor Cyan
+    if(user.getMessage()[6] == 'h') //if you hit a ship setColor Cyan
         std::cout << setColor(CColor::Cyan);
 
-    std::cout << "\t\t" << user.message << std::endl;
+    std::cout << "\t\t" << user.getMessage() << std::endl;
     std::cout << setColor(CColor::Reset);
 
     std::cout << "     PC ships left: ";
@@ -280,15 +284,15 @@ void Game::printUpdateMessage(const Field &pc, const Field & user){
     std::cout << pc.map.size();
     std::cout << setColor(CColor::Reset);
 
-    if(pc.message[2] == 'O')
+    if(pc.getMessage()[2] == 'O')
         std::cout << setColor(CColor::Red);
-    if(pc.message[5] == 'h')
+    if(pc.getMessage()[5] == 'h')
         std::cout << setColor(CColor::Yellow);
-    std::cout << "\t\t" << pc.message << std::endl;
+    std::cout << "\t\t" << pc.getMessage() << std::endl;
     std::cout << setColor(CColor::Reset);
 
-    std::cout << "    Your last move: " << user.lastMove << std::endl;
-    std::cout << "      PC last move: " << pc.lastMove << std::endl;
+    std::cout << "    Your last move: " << user.getLastMove() << std::endl;
+    std::cout << "      PC last move: " << pc.getLastMove() << std::endl;
     
     std::cout << std::endl;
 }

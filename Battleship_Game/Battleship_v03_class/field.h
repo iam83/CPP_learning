@@ -34,6 +34,11 @@ private:
     bool isValidToInstall(int _row, int _col);
     bool isValidToInstall(int _row, int _col, char dir_char, int ship_size);
 
+    
+    std::string m_lastMove = "";
+    std::string m_message = "";
+    std::string m_str_keyShipHit = "";
+
 
 public:
 
@@ -49,13 +54,15 @@ public:
     size_t temp_row{}, temp_col{};
     int dir{};
 
-    std::string coord_str = "";
-    std::string lastMove = "";
-    std::string message = "";
-    std::string str_keyShipHit = "";
+    std::string m_coord_str = "";
 
     bool isHit{};
     bool isPartlyHit{};
+
+    void setLastMove(std::string);
+    std::string getLastMove() const;
+    void setMessage(std::string _message);
+    std::string getMessage() const;
 
     Field();
 

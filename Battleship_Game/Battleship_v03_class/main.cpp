@@ -41,9 +41,9 @@ int g_TIME = 1; //TIME factor for sleep::thread. Normal is 1 (but for demo mode 
 //DEBUGGING ONLY
 #if __DEBG
 void printDebug(const Field& pc, const Field& user){
-        std::cout << "Coord_str pc field: " << pc.coord_str << "\n";
-        std::cout << "PC last move: " << pc.lastMove << "\n";
-        std::cout << "User last move: " << user.lastMove << "\n";
+        std::cout << "Coord_str pc field: " << pc.m_coord_str << "\n";
+        std::cout << "PC last move: " << pc.getLastMove() << "\n";
+        std::cout << "User last move: " << user.getLastMove() << "\n";
         std::cout << "isHit pc = " << pc.isHit << "\n";
         std::cout << "isHit user = " << user.isHit << "\n";
         std::cout << "isPartlyHit pc = " << pc.isPartlyHit << "\n";
@@ -75,7 +75,7 @@ int main(){
 
         pc.clearAll();
         pc.createGameField();
-        pc.createMoveTable();
+        
 
         user.clearAll();
 
@@ -88,6 +88,7 @@ int main(){
         }else{
             std::cout << "\tAutomatic setup\n";
             user.createGameField();
+            user.createMoveTable();
         }
 
         system(CLS);
@@ -119,12 +120,13 @@ int main(){
 
 
             if (!pc.isHit){ // if a PC's ship is not got hit then it's User's turn
+
                 if(!demo){  // if demo mode is not chosen
                     do {
                         std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
-                        std::cin >> pc.coord_str;
-                        pc.coord_str[0] = std::toupper(pc.coord_str[0]);
-                        if (pc.coord_str == "Q") {
+                        std::cin >> pc.m_coord_str;
+                        pc.m_coord_str[0] = std::toupper(pc.m_coord_str[0]);
+                        if (pc.m_coord_str == "Q") {
                             std::cout << "  See you, bye!\n\n";
                             return 0;
                         }
@@ -150,7 +152,6 @@ int main(){
                                 #else
                                 game.printFields(pc, user, ShipView::Visible);
                                 #endif
-
                                 game.printCongrats(Player::User);
                                 break;
                             }
@@ -159,7 +160,7 @@ int main(){
                             continue; // continue to next iteration bc User hit positive and move was true
                         }
                         else {
-                            user.message = "  You missed at " + pc.lastMove;
+                            user.setMessage("  You missed at " + pc.getLastMove());
                             user.isHit = false;
                         }
 
@@ -191,7 +192,7 @@ int main(){
                  pc.isHit = true;
             }
              else {
-                 pc.message = "   PC missed at " + user.lastMove;
+                 pc.setMessage("   PC missed at " + user.getLastMove());
                  pc.isHit = false;
             }
             #if !(__DEBG)
