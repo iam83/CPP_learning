@@ -261,7 +261,7 @@ bool Game::isAutomaticSetup(bool &isDemo){
 }
 
 
-void Game::printUpdateMessage(const Field &pc, const Field & user){
+void Game::printUpdateMessage(const Field &pc, const Field &user){
 
 
     std::cout << "   Your ships left: ";
@@ -291,8 +291,8 @@ void Game::printUpdateMessage(const Field &pc, const Field & user){
     std::cout << "\t\t" << pc.getMessage() << std::endl;
     std::cout << setColor(CColor::Reset);
 
-    std::cout << "    Your last move: " << user.getLastMove() << std::endl;
-    std::cout << "      PC last move: " << pc.getLastMove() << std::endl;
+    std::cout << "    Your last move: " << pc.getLastMove() << std::endl;
+    std::cout << "      PC last move: " << user.getLastMove() << std::endl;
     
     std::cout << std::endl;
 }

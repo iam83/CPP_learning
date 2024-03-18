@@ -75,7 +75,6 @@ int main(){
 
         pc.clearAll();
         pc.createGameField();
-        
 
         user.clearAll();
 
@@ -98,7 +97,7 @@ int main(){
 
 
         // if demo mode true
-        if(demo) user.createMoveTable();
+        if(demo) pc.createMoveTable();
         //
 
         while (1) {
@@ -119,7 +118,7 @@ int main(){
             game.printUpdateMessage(pc, user);
 
 
-            if (!pc.isHit){ // if a PC's ship is not got hit then it's User's turn
+            if (!user.isHit){ // if PC doesn't hit user's ship then it's user's turn.
 
                 if(!demo){  // if demo mode is not chosen
                     do {
@@ -130,6 +129,8 @@ int main(){
                             std::cout << "  See you, bye!\n\n";
                             return 0;
                         }
+
+                        //pc.setLastMove(pc.m_coord_str);
 
                     } while (!pc.isInputValid());
 
@@ -156,12 +157,12 @@ int main(){
                                 break;
                             }
                             //pc.message = "";
-                            user.isHit = true;
+                            pc.isHit = true;
                             continue; // continue to next iteration bc User hit positive and move was true
                         }
                         else {
                             user.setMessage("  You missed at " + pc.getLastMove());
-                            user.isHit = false;
+                            pc.isHit = false;
                         }
 
                         #if !(__DEBG)
@@ -189,11 +190,11 @@ int main(){
                      break;
                  }
                  //user.message = "";
-                 pc.isHit = true;
+                 user.isHit = true;
             }
              else {
                  pc.setMessage("   PC missed at " + user.getLastMove());
-                 pc.isHit = false;
+                 user.isHit = false;
             }
             #if !(__DEBG)
             system(CLS);//COMMENT FOR DEBUG
