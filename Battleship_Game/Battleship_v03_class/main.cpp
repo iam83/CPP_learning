@@ -125,12 +125,13 @@ int main(){
                         std::cout << "  Enter Row and Column (eg. A0 or a0, or 'q' to quit):> ";
                         std::cin >> pc.m_coord_str;
                         pc.m_coord_str[0] = std::toupper(pc.m_coord_str[0]);
+
                         if (pc.m_coord_str == "Q") {
                             std::cout << "  See you, bye!\n\n";
                             return 0;
                         }
 
-                        //pc.setLastMove(pc.m_coord_str);
+                        pc.setLastMove(pc.m_coord_str);
 
                     } while (!pc.isInputValid());
 
@@ -161,6 +162,7 @@ int main(){
                             continue; // continue to next iteration bc User hit positive and move was true
                         }
                         else {
+                            //pc.setLastMove(pc.m_coord_str);
                             user.setMessage("  You missed at " + pc.getLastMove());
                             pc.isHit = false;
                         }
