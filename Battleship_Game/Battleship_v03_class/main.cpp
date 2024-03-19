@@ -3,10 +3,11 @@
 
 
     ISSUES:
-        01. "You missed at" shows nothing in Automatic Mode
-        02. PC is not going
+        FIXED 01. "You missed at" shows nothing in Automatic Mode
+        FIXED 02. PC is not going
+        FIXED 03. Need to revise isHit statuses.
 
-        Need to revise isHit statuses.
+        04. revise message status 
 
 
 */
