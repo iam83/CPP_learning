@@ -157,7 +157,7 @@ int main(){
                                 game.printCongrats(Player::User);
                                 break;
                             }
-                            //pc.message = "";
+                            pc.setMessage("");
                             pc.isHit = true;
                             continue; // continue to next iteration bc User hit positive and move was true
                         }
@@ -191,11 +191,11 @@ int main(){
                      game.printCongrats(Player::Pc);
                      break;
                  }
-                 //user.message = "";
+                 user.setMessage("");
                  user.isHit = true;
             }
              else {
-                 pc.setMessage("   PC missed at " + user.getLastMove());
+                 pc.setMessage("  PC missed at " + user.getLastMove());
                  user.isHit = false;
             }
             #if !(__DEBG)
