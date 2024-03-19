@@ -135,6 +135,7 @@ int main(){
                         pc.setLastMove(pc.m_coord_str);
 
                     } while (!pc.isInputValid());
+                    
 
                 }else{
                     // if demo mode is chosen
