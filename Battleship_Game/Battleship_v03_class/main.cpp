@@ -61,11 +61,8 @@ int main(){
 
     Game game;
 
-    C_player user;
-    C_player pc;
-
-    //Field user;
-    //Field pc;
+    Field user;
+    Field pc;
 
     bool demo {false};
     
