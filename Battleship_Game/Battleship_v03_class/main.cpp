@@ -6,6 +6,7 @@
         FIXED 01. "You missed at" shows nothing in Automatic Mode
         FIXED 02. PC is not going
         FIXED 03. Need to revise isHit statuses.
+        FIXED 04. Empty element was weirdly adding into std::map in Field::getCoord() in field.cpp
 
         04. revise message status 
 
