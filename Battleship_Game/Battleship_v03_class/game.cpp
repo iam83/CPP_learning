@@ -184,7 +184,7 @@ void Game::printFields(const Field& pc, const Field& user,
 bool Game::isAutomaticSetup(bool &isDemo){
 
     //DEBUG
-    return true;
+    //return true;
     //
 
     char exit;

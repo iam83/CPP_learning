@@ -555,6 +555,7 @@ bool Field::checkMap(Player player) {
         }
     }
     
+
     if (!temp_coord.empty())
         map.erase(temp_coord);
 
@@ -563,6 +564,10 @@ bool Field::checkMap(Player player) {
         Field::checkField();
         return true;
     }
+
+    // if (map[m_str_keyShipHit].size() == 0){
+    //     isPartlyHit = false;
+    // }
 
     Field::checkField();
     return false;
@@ -709,9 +714,6 @@ void Field::getCoord(Player player) {
         #endif
         //
 
-        if (map[m_str_keyShipHit].size() == 0){
-            isPartlyHit = false;
-        }
 
     }
     #if !(__DEBG)

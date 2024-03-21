@@ -37,7 +37,7 @@ private:
     
     std::string m_lastMove = "";
     std::string m_message = "";
-    std::string m_str_keyShipHit = "";
+    std::string m_str_keyShipHit;
 
 
 public:

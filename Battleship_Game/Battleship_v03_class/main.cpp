@@ -13,7 +13,7 @@
 */
 
 
-#define __DEBG true // set to true to enable DEBUG messages or false to disable.
+#define __DEBG false // set to true to enable DEBUG messages or false to disable.
                      // I'm using this workaround for debugging.
                      // I know it has got some special defines for NDEBUG but I made it simply.
 
