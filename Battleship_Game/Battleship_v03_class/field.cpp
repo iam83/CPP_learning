@@ -504,7 +504,7 @@ void Field::removeMissedMoves() {
 }
 
 //checking which ship is got hit
-bool Field::checkMap(Player player) {
+bool Field::checkMap(const Player player) {
 
     Field::checkField();
     
@@ -518,11 +518,11 @@ bool Field::checkMap(Player player) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User){
-                        setMessage("  You hit a ship at " + getLastMove());
+                        setMessage("   You hit a ship at " + getLastMove());
                     }
                     if (player == Player::Pc) {
                         Field::encodeCoords(temp_coord, value[i].first, value[i].second);
-                        setMessage("  PC hit your ship at " + getLastMove());
+                        setMessage("   PC hit your ship at " + getLastMove());
                     }
                         m_str_keyShipHit = key;
                         isHit = true;
@@ -537,7 +537,7 @@ bool Field::checkMap(Player player) {
             if (value.empty()) { //if all cells from a ship were hit
 
                 if (player == Player::User) {
-                    setMessage("  Wow! You sank a ship!");
+                    setMessage("   Wow! You sank a ship!");
                     Field::removeMissedMoves();
                     Field::checkHitField();
                 }
@@ -573,7 +573,7 @@ bool Field::checkMap(Player player) {
     return false;
 }
 
-void Field::getCoord(Player player) {
+void Field::getCoord(const Player player) {
 
     int move{ 0 };
     std::string temp_pcMove = "";
@@ -599,7 +599,7 @@ void Field::getCoord(Player player) {
             std::cout << ".";
 
             #if !(__DEBG)
-            Field::sleepThread(150);
+            Field::sleepThread(300);
             #endif
         }        
         
@@ -876,7 +876,7 @@ void Field::clearAll(){
     vec.clear();
 }
 
-void Field::printWarning(Warning warning){
+void Field::printWarning(const Warning warning){
 
     std::cout << setColor(CColor::LightRed);
 

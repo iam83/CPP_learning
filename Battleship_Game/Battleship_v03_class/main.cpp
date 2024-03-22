@@ -7,8 +7,7 @@
         FIXED 02. PC is not going
         FIXED 03. Need to revise isHit statuses.
         FIXED 04. Empty element was weirdly adding into std::map in Field::getCoord() in field.cpp
-
-        04. revise message status 
+        FIXED 05. revise message status 
 
 
 */
@@ -100,10 +99,6 @@ int main(){
 
         while (1) {
 
-            #if !(__DEBG)
-            system(CLS);
-            #endif
-
             pc.checkField();
             user.checkField();
 
@@ -162,7 +157,7 @@ int main(){
                         }
                         else {
                             //pc.setLastMove(pc.m_coord_str);
-                            pc.setMessage("  You missed at " + pc.getLastMove());
+                            pc.setMessage("    You missed at " + pc.getLastMove());
                             pc.isHit = false;
                         }
 
@@ -194,7 +189,7 @@ int main(){
                  user.isHit = true;
             }
              else {
-                 user.setMessage("   PC missed at " + user.getLastMove());
+                 user.setMessage("     PC missed at " + user.getLastMove());
                  user.isHit = false;
             }
             #if !(__DEBG)

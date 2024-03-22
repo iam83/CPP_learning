@@ -270,9 +270,9 @@ void Game::printUpdateMessage(const Field &pc, const Field &user){
     std::cout << user.map.size();
     std::cout << setColor(CColor::Reset);
 
-    if (user.getMessage()[2] == 'W') //if you sank a ship setColor Green
+    if (pc.getMessage()[3] == 'W') //if you sank a ship setColor Green
         std::cout << setColor(CColor::Green);
-    if(user.getMessage()[6] == 'h') //if you hit a ship setColor Cyan
+    if(pc.getMessage()[7] == 'h') //if you hit a ship setColor Cyan
         std::cout << setColor(CColor::Cyan);
 
 
@@ -286,9 +286,9 @@ void Game::printUpdateMessage(const Field &pc, const Field &user){
     std::cout << pc.map.size();
     std::cout << setColor(CColor::Reset);
 
-    if(pc.getMessage()[2] == 'O')
+    if(user.getMessage()[2] == 'O')
         std::cout << setColor(CColor::Red);
-    if(pc.getMessage()[5] == 'h')
+    if(user.getMessage()[6] == 'h')
         std::cout << setColor(CColor::Yellow);
 
     //"PC missed at .. "
