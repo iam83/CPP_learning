@@ -615,12 +615,6 @@ void Field::getCoord(const Player player) {
 
         else {  
 
-            // DEBUGGING
-            #if __DEBG
-            std::cout << "  temp_row: " << temp_row << " temp_col: " << temp_col << "\n";
-            std::cout << ((player == Player::Pc) ? "PC" : "user ") << " map[player.str_keyShipHit].size() = " << map[str_keyShipHit].size() << std::endl;
-            #endif
-
             bool isGoRandom{false};
 
             // set isGoRandom to true if any ship of 4X-3X-2X gets hit for the first time
@@ -652,35 +646,15 @@ void Field::getCoord(const Player player) {
             for (size_t i{}; i < map[m_str_keyShipHit].size(); ++i){
                     temp_moves.push_back({map[m_str_keyShipHit][i].first, map[m_str_keyShipHit][i].second}); 
                 }
-
-            //DEBUGGING
-            #if __DEBG
-            std::cout << "moves before sort ";
-                for (auto const &move : temp_moves){
-                    encodeCoords(temp_pcMove, move.first, move.second);
-                    std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
-                }
-                std::cout << std::endl;
-            //
-            #endif
+            
             
             //removes duplicates that are added from above
             std::sort( temp_moves.begin(), temp_moves.end() );
             temp_moves.erase(std::unique( temp_moves.begin(), temp_moves.end() ), temp_moves.end() );
 
-            #if __DEBG
-            std::cout << "moves ";
-                for (auto const &move : temp_moves){
-                    encodeCoords(temp_pcMove, move.first, move.second);
-                    std::cout << temp_pcMove[0] << temp_pcMove[1] << " / ";
-                }
-                std::cout << std::endl;
-                system("pause");
-            #endif
-
             int x{};
             if (temp_moves.size() > 1)
-                x = rand() % temp_moves.size(); //then randomly from choose from the temp vector a possible move
+                x = rand() % temp_moves.size(); //then randomly choose from the temp vector a possible move
             else
                 x = 0;
 
@@ -691,13 +665,14 @@ void Field::getCoord(const Player player) {
 
             Field::encodeCoords(temp_pcMove, row, col);
 
+            setLastMove(temp_pcMove);
+
             //std::remove_if(pc_moves.begin(), pc_moves.end(), [temp_pcMove](const auto m){ return m == temp_pcMove; }); //using lambda
 
             it = std::find(moves.begin(), moves.end(), temp_pcMove);
 
             if (it != moves.end()) {
                 move = it - moves.begin();
-                setLastMove(moves.at(move));
             }
 
         }

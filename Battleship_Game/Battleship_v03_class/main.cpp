@@ -9,6 +9,8 @@
         FIXED 04. Empty element was weirdly adding into std::map in Field::getCoord() in field.cpp
         FIXED 05. revise message status 
 
+        06. While PC destroys a user's ship the message shows the same coordinate.
+
     TODO:
         01. Colorize messages.
 
