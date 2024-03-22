@@ -59,8 +59,7 @@ do {
 std::cout << std::endl;
 }
 
-void Game::printFields(const Field& pc, const Field& user,
-                ShipView field_view) {
+void Game::printFields(const Field& pc, const Field& user, const ShipView field_view) {
 
     std::cout << std::endl;
     const std::string letters = "ABCDEFGHIJ";
@@ -270,6 +269,8 @@ void Game::printUpdateMessage(const Field &pc, const Field &user){
     std::cout << user.map.size();
     std::cout << setColor(CColor::Reset);
 
+
+    //need to make coloring in a more clever way
     if (pc.getMessage()[3] == 'W') //if you sank a ship setColor Green
         std::cout << setColor(CColor::Green);
     if(pc.getMessage()[7] == 'h') //if you hit a ship setColor Cyan
@@ -301,7 +302,7 @@ void Game::printUpdateMessage(const Field &pc, const Field &user){
     std::cout << std::endl;
 }
 
-void Game::printCongrats(Player player) {
+void Game::printCongrats(const Player player) {
 
     std::string message_congrats = "";
 

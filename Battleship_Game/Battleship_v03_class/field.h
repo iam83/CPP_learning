@@ -18,21 +18,21 @@ class Field{
 
 private:
 
-    void sleepThread(int time);
-    int getRandomNumber(int min, int max);
+    void sleepThread(const int time);
+    int getRandomNumber(const int min, const int max);
 
-    bool inField(int row, int col);
-    void getPossibles(Field_t const &field, std::vector<std::pair<int, int>> &vec, int &dir, int ship);
-    void generateFirstShip(Field_t &field, Map_t &map, int const ship, std::string const ship_name);
-    void setShips(Field_t& field, Map_t& map, std::vector<std::pair<int, int>> &vec, int& dir, int ship, std::string ship_name);
+    bool inField(const int row, const int col);
+    void getPossibles(const Field_t &field, std::vector<std::pair<int, int>> &vec, int &dir, const int ship);
+    void generateFirstShip(Field_t &field, Map_t &map, const int ship, const std::string ship_name);
+    void setShips(Field_t& field, Map_t& map, std::vector<std::pair<int, int>> &vec, int& dir, const int ship, const std::string ship_name);
     void checkHitField();
     void createField();
     void printUserField();
-    void setManualField(std::string coord_str, char dir_char, int ship_size);
+    void setManualField(std::string coord_str, const char dir_char, const int ship_size);
 
     bool isManualInputValid(const char dir_char);
-    bool isValidToInstall(int _row, int _col);
-    bool isValidToInstall(int _row, int _col, char dir_char, int ship_size);
+    bool isValidToInstall(const int _row, const int _col);
+    bool isValidToInstall(const int _row, const int _col, const char dir_char, const int ship_size);
 
     
     std::string m_lastMove = "";
@@ -66,7 +66,7 @@ public:
 
     Field();
 
-    void encodeCoords(std::string & _coord_str, int local_row, int local_col);
+    void encodeCoords(std::string & _coord_str, const int local_row, const int local_col);
     void decodeCoords(const std::string coord_str, int &_row, int &_col);
     void checkField();
     void createMoveTable();

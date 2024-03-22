@@ -1,3 +1,6 @@
+/*
+    Contains enumuration lists
+*/
 #pragma once
 
 enum Player {

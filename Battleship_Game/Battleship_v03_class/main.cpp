@@ -9,6 +9,9 @@
         FIXED 04. Empty element was weirdly adding into std::map in Field::getCoord() in field.cpp
         FIXED 05. revise message status 
 
+    TODO:
+        01. Colorize messages.
+
 
 */
 

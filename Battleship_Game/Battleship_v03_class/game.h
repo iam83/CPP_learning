@@ -15,9 +15,9 @@ public:
     bool isDemo;
     bool playAgain();
     void printMoveTable(const Field);
-    void printFields(const Field &, const Field&, ShipView);
+    void printFields(const Field &, const Field &, const ShipView);
     bool isAutomaticSetup(bool &);
     void printUpdateMessage(const Field &, const Field &);
-    void printCongrats(Player);
+    void printCongrats(const Player);
 
 };

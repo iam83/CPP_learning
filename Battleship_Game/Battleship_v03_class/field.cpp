@@ -34,7 +34,7 @@ void Field::sleepThread(const int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
 
-int Field::getRandomNumber(int min, int max) {
+int Field::getRandomNumber(const int min, const int max) {
     static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
@@ -139,7 +139,7 @@ void Field::generateFirstShip(Field_t &field, Map_t &map, const int ship, const 
 }
 
 void Field::setShips(Field_t& field, Map_t& map,
-            std::vector<std::pair<int, int>> &vec, int& dir, int ship, const std::string ship_name) {
+            std::vector<std::pair<int, int>> &vec, int& dir, const int ship, const std::string ship_name) {
 
     Field::checkField();
     Field::getPossibles(field, vec, dir, ship);
