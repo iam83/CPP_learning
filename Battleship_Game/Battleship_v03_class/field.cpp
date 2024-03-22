@@ -30,7 +30,7 @@ std::string Field::getMessage() const{
 }
 
 
-void Field::sleepThread(int time){
+void Field::sleepThread(const int time){
     std::this_thread::sleep_for(std::chrono::milliseconds(time * g_TIME));  
 }
 
@@ -51,7 +51,7 @@ bool Field::inField(const int _row, const int _col)
 }
 
 void Field::getPossibles(Field_t const &field,
-    std::vector<std::pair<int, int>> &vec, int &dir, int ship) {
+    std::vector<std::pair<int, int>> &vec, int &dir, const int ship) {
 
     dir = getRandomNumber(0, 1);
 
@@ -108,7 +108,7 @@ void Field::getPossibles(Field_t const &field,
     }
 }
 
-void Field::generateFirstShip(Field_t &field, Map_t &map, int const ship, std::string const ship_name) {
+void Field::generateFirstShip(Field_t &field, Map_t &map, const int ship, const std::string ship_name) {
 
     Field::checkField();
     int row{ 0 }, col{ 0 }, dir{ 0 };
@@ -139,7 +139,7 @@ void Field::generateFirstShip(Field_t &field, Map_t &map, int const ship, std::s
 }
 
 void Field::setShips(Field_t& field, Map_t& map,
-            std::vector<std::pair<int, int>> &vec, int& dir, int ship, std::string ship_name) {
+            std::vector<std::pair<int, int>> &vec, int& dir, int ship, const std::string ship_name) {
 
     Field::checkField();
     Field::getPossibles(field, vec, dir, ship);
@@ -273,7 +273,7 @@ void Field::printUserField() {
         std::cout << std::endl;
 }
 
-void Field::setManualField(std::string _coord_str, char dir_char, int ship_size){
+void Field::setManualField(std::string _coord_str, const char dir_char, const int ship_size){
 
 
     std::vector<std::pair<int, int>> temp_vec{};
@@ -325,7 +325,7 @@ bool Field::isManualInputValid(const char dir_char){
         return true;
     return false;
 }
-bool Field::isValidToInstall(int _row, int _col){
+bool Field::isValidToInstall(const int _row, const int _col){
 
     if(field.at(_row).at(_col) == FieldCellStates::Ship || field.at(_row).at(_col) == FieldCellStates::Border){
         printWarning(Warning::TryAgain);
@@ -334,7 +334,7 @@ bool Field::isValidToInstall(int _row, int _col){
     return true;
 }
 
-bool Field::isValidToInstall(int _row, int _col, char dir_char, int ship_size){
+bool Field::isValidToInstall(const int _row, const int _col, const char dir_char, const int ship_size){
     
     if ((_row + ship_size) > 10 && (_col + ship_size) > 10){
         Field::printWarning(Warning::TryAgain);
@@ -395,7 +395,7 @@ Field::Field(){
     createField();
 }
 
-void Field::encodeCoords(std::string & _coord_str, int local_row, int local_col) {
+void Field::encodeCoords(std::string & _coord_str, const int local_row, const int local_col) {
 
     switch (local_row) {
         case 0: _coord_str = "A"; break;

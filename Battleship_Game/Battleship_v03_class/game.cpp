@@ -275,7 +275,9 @@ void Game::printUpdateMessage(const Field &pc, const Field &user){
     if(user.getMessage()[6] == 'h') //if you hit a ship setColor Cyan
         std::cout << setColor(CColor::Cyan);
 
-    std::cout << "\t\t" << user.getMessage() << std::endl;
+
+    //"User missed at .. "
+    std::cout << "\t\t" << pc.getMessage() << std::endl;
     std::cout << setColor(CColor::Reset);
 
     std::cout << "     PC ships left: ";
@@ -288,7 +290,9 @@ void Game::printUpdateMessage(const Field &pc, const Field &user){
         std::cout << setColor(CColor::Red);
     if(pc.getMessage()[5] == 'h')
         std::cout << setColor(CColor::Yellow);
-    std::cout << "\t\t" << pc.getMessage() << std::endl;
+
+    //"PC missed at .. "
+    std::cout << "\t\t" << user.getMessage() << std::endl;
     std::cout << setColor(CColor::Reset);
 
     std::cout << "    Your last move: " << pc.getLastMove() << std::endl;
