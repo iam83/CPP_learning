@@ -60,7 +60,7 @@ void Field::getPossibles(Field_t const &field,
 
     if (dir == Direction::Horizontal) {
         //horizontal check
-        for (int _row = 0; _row < static_cast<int>(field.size()); ++_row) {
+        for (size_t _row = 0; _row < static_cast<int>(field.size()); ++_row) {
             for (int _col = 0; _col < static_cast<int>(field.size()); ++_col) {
                 if (field.at(_row).at(_col) != FieldCellStates::Ship && field.at(_row).at(_col) != FieldCellStates::Border) {
                     if (count == 0) {
@@ -84,8 +84,8 @@ void Field::getPossibles(Field_t const &field,
     }
     else {
         //vertical check
-        for (int _col = 0; _col < static_cast<int>(field.size()); ++_col) {
-            for (int _row = 0; _row < static_cast<int>(field.size()); ++_row) {
+        for (size_t _col = 0; _col < static_cast<int>(field.size()); ++_col) {
+            for (size_t _row = 0; _row < static_cast<int>(field.size()); ++_row) {
                 if (field.at(_row).at(_col) != FieldCellStates::Ship && field.at(_row).at(_col) != FieldCellStates::Border) {
                     if (count == 0) {
                         local_col = _col;
@@ -123,7 +123,7 @@ void Field::generateFirstShip(Field_t &field, Map_t &map, const int ship, const 
 
     if ((col + ship) >= 9) col = 4;
 
-    for (int i = 0; i < ship; ++i) {
+    for (size_t i = 0; i < ship; ++i) {
         if (dir == Direction::Horizontal) { //horizontal location
             field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
@@ -149,7 +149,7 @@ void Field::setShips(Field_t& field, Map_t& map,
     int row = vec[i].first;
     int col = vec[i].second;
 
-    for (int i = 0; i < ship; ++i) {
+    for (size_t i = 0; i < ship; ++i) {
         if (dir == Direction::Horizontal) {
             field.at(row).at(col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(row, col + i);
@@ -169,10 +169,10 @@ void Field::checkField() {
     const int y[] = { -1, -1, -1, 1, 1, 1, 0, 0 }; // 8 directions
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 }; // for checking
     //check in boundary
-    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+    for (size_t row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (size_t col = 0; col < static_cast<int>(field.size()); ++col) {
             if (field.at(row).at(col) == FieldCellStates::EmptyField) {
-                for (int i = 0; i < 8; ++i) { // looking around cell
+                for (size_t i = 0; i < 8; ++i) { // looking around cell
                     if (Field::inField(row + y[i], col + x[i])) {
                         if (field.at(row + y[i]).at(col + x[i]) == FieldCellStates::Ship)
                             field.at(row).at(col) = FieldCellStates::Border;
@@ -189,12 +189,12 @@ void Field::checkHitField() {
     const int x[] = { -1, 0, 1, -1, 0, 1, -1, 1 };// for checking
 
     //check in boundary
-    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-        for (int col = 0; col <static_cast<int>(field.size()); ++col) {
+    for (size_t row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (size_t col = 0; col <static_cast<int>(field.size()); ++col) {
 
             if (field.at(row).at(col) == FieldCellStates::Hit) {
 
-                for (int i = 0; i < 8; ++i) { // looking around cell
+                for (size_t i = 0; i < 8; ++i) { // looking around cell
                     if (Field::inField(row + y[i], col + x[i])) {
                         if (field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Hit && field.at(row + y[i]).at(col + x[i]) != FieldCellStates::Ship)
                             field.at(row + y[i]).at(col + x[i]) = FieldCellStates::BorderHit;
@@ -225,11 +225,11 @@ void Field::printUserField() {
 
         std::cout << std::endl;
 
-        for (int row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (size_t row = 0; row < static_cast<int>(field.size()); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
 
         // user field
-        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+        for (size_t col = 0; col < static_cast<int>(field.size()); ++col) {
             if (field.at(row).at(col) == FieldCellStates::Ship) {
                 std::cout << setColor(CColor::Yellow);
                 std::cout << c_SHIP << " ";
@@ -287,7 +287,7 @@ void Field::setManualField(std::string _coord_str, const char dir_char, const in
     else if (dir_char == 'v')
         _dir = Direction::Vertical;
 
-    for (int i = 0; i < ship_size; ++i) {
+    for (size_t i = 0; i < ship_size; ++i) {
         if (_dir == Direction::Horizontal) {
             field.at(_row).at(_col + i) = FieldCellStates::Ship;
             temp_vec.emplace_back(_row, _col + i);
@@ -342,14 +342,14 @@ bool Field::isValidToInstall(const int _row, const int _col, const char dir_char
     }
 
     if((_col + ship_size) < 11){
-        for (int i = 0; i < ship_size; ++i){
+        for (size_t i = 0; i < ship_size; ++i){
                 if(field.at(_row).at(_col + i) == FieldCellStates::Border){
                     continue;
                 }
         }
     }
     else if((_row + ship_size) < 11){
-        for (int i = 0; i < ship_size; ++i){
+        for (size_t i = 0; i < ship_size; ++i){
                 if(field.at(_row + i).at(_col) == FieldCellStates::Border){
                     continue;
                 }
@@ -362,7 +362,7 @@ bool Field::isValidToInstall(const int _row, const int _col, const char dir_char
     //checking with directions
     if (dir_char == 'v'){
         if ((_row + ship_size) < 11){
-                for (int i = 0; i < ship_size; ++i){
+                for (size_t i = 0; i < ship_size; ++i){
                         if(field.at(_row + i).at(_col) == FieldCellStates::Border){
                             Field::printWarning(Warning::TryAgainHorizontal);
                             return false;
@@ -376,7 +376,7 @@ bool Field::isValidToInstall(const int _row, const int _col, const char dir_char
 
     if (dir_char == 'h'){
         if((_col + ship_size) < 11){
-                for (int i = 0; i < ship_size; ++i){
+                for (size_t i = 0; i < ship_size; ++i){
                         if(field.at(_row).at(_col + i) == FieldCellStates::Border){
                             Field::printWarning(Warning::TryAgainVertical);
                             return false;
@@ -458,8 +458,8 @@ void Field::createMoveTable() {
     moves.clear(); //clean before creating
 
     const std::string letters = "ABCDEFGHIJ";
-    for (int i = 0; i <= 9; ++i) {
-        for (int j = 0; j <= 9; ++j) {
+    for (size_t i = 0; i <= 9; ++i) {
+        for (size_t j = 0; j <= 9; ++j) {
             moves.push_back(letters[i] + std::to_string(j));
         }
     }
@@ -488,8 +488,8 @@ void Field::removeMissedMoves() {
     std::string temp_coord = "";
     std::vector<std::string>::iterator it;
 
-    for (int row = 0; row < static_cast<int>(field.size()); ++row) {
-        for (int col = 0; col < static_cast<int>(field.size()); ++col) {
+    for (size_t row = 0; row < static_cast<int>(field.size()); ++row) {
+        for (size_t col = 0; col < static_cast<int>(field.size()); ++col) {
             if (field.at(row).at(col) == FieldCellStates::BorderHit) {
 
                 Field::encodeCoords(temp_coord, row, col);
@@ -514,7 +514,7 @@ bool Field::checkMap(const Player player) {
 
     for (auto& [key, value] : map) {
 
-        for (int i = 0; i < static_cast<int>(value.size()); ++i) {
+        for (size_t i = 0; i < static_cast<int>(value.size()); ++i) {
             if (value[i].first == row && value[i].second == col) {
                 if (value.size() != 1) {
                     if (player == Player::User){

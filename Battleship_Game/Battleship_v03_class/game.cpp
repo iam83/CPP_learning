@@ -23,7 +23,7 @@ bool isDemo{false};
 //DEBUGGING 
 void Game::printMoveTable(const Field object) {
     int a{ 0 };
-    for (int i = 0; i < static_cast<int>(object.moves.size()); ++i) {
+    for (size_t i = 0; i < static_cast<int>(object.moves.size()); ++i) {
         std::cout << object.moves[i] << " ";
         ++a;
         if (a % 10 == 0) std::cout << std::endl;
@@ -73,23 +73,23 @@ void Game::printFields(const Field& pc, const Field& user, const ShipView field_
     const char c_BORDER = '.';
     const char c_BORDERHIT = '~';
 
-    for (int c = 0; c < 10; ++c) {
+    for (size_t c = 0; c < 10; ++c) {
         std::cout << c << " ";
     }
 
     std::cout << separator << "   ";
 
-    for (int c = 0; c < 10; ++c) {
+    for (size_t c = 0; c < 10; ++c) {
         std::cout << c << " ";
     }
 
     std::cout << std::endl;
 
-    for (int row = 0; row < static_cast<int>(user.field.size()); ++row) {
+    for (size_t row = 0; row < static_cast<int>(user.field.size()); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
 
         // user field
-        for (int col = 0; col < static_cast<int>(user.field.size()); ++col) {
+        for (size_t col = 0; col < static_cast<int>(user.field.size()); ++col) {
             if (user.field.at(row).at(col) == FieldCellStates::Ship) {
                 std::cout << setColor(CColor::Yellow);
                 std::cout << c_SHIP << " ";
@@ -132,7 +132,7 @@ void Game::printFields(const Field& pc, const Field& user, const ShipView field_
         std::cout << letters[row] << "  ";
 
         // pc field
-        for (int col = 0; col < static_cast<int>(pc.field.size()); ++col) {
+        for (size_t col = 0; col < static_cast<int>(pc.field.size()); ++col) {
             if (pc.field.at(row).at(col) == FieldCellStates::Ship) {
                 std::cout << setColor(CColor::DarkGrey);
                 if (field_view == ShipView::Visible) // make ships visible when game has ended
