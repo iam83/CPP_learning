@@ -1,11 +1,4 @@
-/*
-
-    DEBUGGER CHECK
-
-*/
-
 #include <iostream>
-
 
 int main(){
 
