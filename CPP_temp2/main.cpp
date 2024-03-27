@@ -5,6 +5,7 @@
 */
 
 #include <iostream>
+#include <memory>
 
 
 int main(){
@@ -12,11 +13,10 @@ int main(){
     int a = 8; // create on STACK
     int b = 7;
 
-    int *p = new int(10); //create on HEAP
-    // std::cout << "Enter b: ";
-    // std::cin >> b;
+    //int *p = new int(10); //create on HEAP
 
-    //std::cout << "a + b = " << a + b << std::endl;
+    
+    auto p = std::make_unique<int>(a + 2);
 
-    //return 0;
+    return 0;
 }
