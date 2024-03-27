@@ -85,7 +85,7 @@ void Game::printFields(const Field& pc, const Field& user, const ShipView field_
 
     std::cout << std::endl;
 
-    for (size_t row = 0; row < static_cast<int>(user.field.size()); ++row) {
+    for (size_t row = 0; row != static_cast<int>(user.field.size()); ++row) {
         std::cout << "   " << letters[row] << "  "; //row number
 
         // user field
@@ -132,7 +132,7 @@ void Game::printFields(const Field& pc, const Field& user, const ShipView field_
         std::cout << letters[row] << "  ";
 
         // pc field
-        for (size_t col = 0; col < static_cast<int>(pc.field.size()); ++col) {
+        for (size_t col = 0; col != static_cast<int>(pc.field.size()); ++col) {
             if (pc.field.at(row).at(col) == FieldCellStates::Ship) {
                 std::cout << setColor(CColor::DarkGrey);
                 if (field_view == ShipView::Visible) // make ships visible when game has ended
