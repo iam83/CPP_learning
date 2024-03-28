@@ -2,6 +2,11 @@
 #include <string>
 #include <math.h>
 
+/*
+
+    Class interface and ingeritted classes.
+
+*/
 
 struct point {
     float x;
@@ -21,7 +26,7 @@ public:
 
 };
 
-class Circle{
+class Circle : public Shape{
 
 private:
     point position;
@@ -62,12 +67,12 @@ private:
 
     point position;
 
-    double height;
     double width;
-
-    double const half_height = height * 0.5;
+    double height;
+    
     double const half_width = width * 0.5;
-
+    double const half_height = height * 0.5;
+    
     point top_left;
     point top_right;
     point bottom_left;
@@ -76,20 +81,34 @@ private:
  
 public:
 
-    Rectangle (point pos_ = {0,0}, double height_ = 1, double width_ = 1)
-                : position(pos_), height(height_), width(width_) {}
+    Rectangle (point pos_ = {0,0}, double width_ = 1, double height_ = 1)
+                : position(pos_), width(width_), height(height_) {}
 
 
     double getHeight(){ return height; }
     double getWidth() {return width; }
 
+
     void draw(){
 
         std::cout << "Rectangle is drawn at: " << std::endl << std::endl;
         std::cout << top_left.x << " , " << top_left.y;
-        std::cout << "\t\t\t" << top_right.x << " , " << top_right.y << std::endl;
+        std::cout << "\t\t\t" << top_right.x << " , " << top_right.y << std::endl << std::endl;
         std::cout << bottom_left.x << " , " << bottom_left.y;
         std::cout << "\t\t\t" << bottom_right.x << " , " << bottom_right.y << std::endl << std::endl;
+
+        for (size_t row{0}; row != height; ++row){
+
+            for (size_t col{0}; col != width; ++col){
+                if (row == 0 || row == height-1 || col == 0 || col == width - 1)
+                    std::cout << "#";
+                std::cout << " ";
+            }
+
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl;
 
 
     }
@@ -111,8 +130,13 @@ public:
         bottom_right.x = pos_.x + half_width;
         bottom_right.y = pos_.y - half_height;
 
-        std::cout << "Rectangle is placed at: " << position.x << " / " << position.y << std::endl << std::endl;
+        std::cout << "Rectangle is placed at: " << position.x << " / " << position.y << std::endl;
+        std::cout << "width: " << width << " | height: " << height << std::endl << std::endl;
         
+    }
+
+    double getSquare(){
+        return width * height;
     }
 
 };
@@ -122,25 +146,15 @@ public:
 int main(){
 
     system("cls");
-    // point p;
 
-    // std::cout << "default p\n";
-    // std::cout << "p.x = " << p.x << std::endl;
-    // std::cout << "p.y = " << p.y << std::endl;
+    Rectangle rect({0,0}, 7, 5);
 
-    // p.x = 7.3f;
-    // p.y = 5.6f;
-
-    // std::cout << "after p gets new values\n";
-    // std::cout << "p.x = " << p.x << std::endl;
-    // std::cout << "p.y = " << p.y << std::endl;
-
-    Rectangle rect({0,0}, 2, 3);
     Circle cir;
 
     
     rect.place({-2.2,3.5});
     rect.draw();
+    std::cout << "Square is " << rect.getSquare() << std::endl << std::endl;
 
     cir.place({1,1});
     cir.draw();
