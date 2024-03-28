@@ -4,7 +4,7 @@ struct vec2 {
 
  	float x, y;
 	vec2(float value) : x(value), y(value) {}
-	vec2(float _x, float _y) : x(_x), y(_y) {}
+	vec2(float x_, float y_) : x(x_), y(y_) {}
 
 	vec2 operator+(vec2 const& instance) {
         return vec2(x + instance.x, y + instance.y);
@@ -16,7 +16,6 @@ struct vec2 {
 };
 
 int main(){
-
 
     vec2 temp (50);
     vec2 pointOne (10.0, 5.0);
