@@ -22,7 +22,7 @@ class Shape {
 public:
     virtual void draw() const = 0;
     virtual void place(point const&) {};
-    virtual void rotate(point const&, double degree) {};
+    //virtual void rotate(point const&, double degree) {};
 
 };
 
