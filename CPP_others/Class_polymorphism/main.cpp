@@ -20,9 +20,9 @@ struct point {
 class Shape {
 
 public:
-    void draw() const;
-    void place(point const&);
-    void rotate(point const&, double degree);
+    virtual void draw() const {};
+    virtual void place(point const&) {};
+    virtual void rotate(point const&, double degree) {};
 
 };
 
@@ -39,13 +39,13 @@ public:
     void setRadius(float radius_) { radius = radius_; }
     float getRadius(){ return radius; }
 
-    void draw(){
+    void draw () const override {
 
         std::cout << "Circle is drawn at: " << std::endl;
         std::cout << position.x << " , " << position.y << " with radius of " << radius << std::endl << std::endl;
 
     }
-    void place (point const& pos_){
+    void place (point const& pos_) override{
         position.x = pos_.x;
         position.y = pos_.y;
         std::cout << "Circle is placed at: " << position.x << " , " << position.y << std::endl << std::endl;
@@ -89,7 +89,7 @@ public:
     double getWidth() {return width; }
 
 
-    void draw(){
+    void draw() const override {
 
         std::cout << "Rectangle is drawn at: " << std::endl << std::endl;
         std::cout << top_left.x << " , " << top_left.y;
@@ -115,7 +115,7 @@ public:
 
     }
     
-    void place (point const& pos_){
+    void place (point const& pos_) override{
 
         position.x = pos_.x;
         position.y = pos_.y;
@@ -147,7 +147,7 @@ public:
 
 int main(){
 
-    system("cls");
+    //system("cls");
 
     Rectangle rect({0,0}, 20, 5);
 
