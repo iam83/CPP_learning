@@ -20,7 +20,7 @@ struct point {
 class Shape {
 
 public:
-    virtual void draw() const {};
+    virtual void draw() const = 0;
     virtual void place(point const&) {};
     virtual void rotate(point const&, double degree) {};
 
@@ -147,7 +147,7 @@ public:
 
 int main(){
 
-    //system("cls");
+    system("cls");
 
     Rectangle rect({0,0}, 20, 5);
 
