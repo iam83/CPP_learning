@@ -100,9 +100,11 @@ public:
         for (size_t row{0}; row != height; ++row){
 
             for (size_t col{0}; col != width; ++col){
-                if (row == 0 || row == height-1 || col == 0 || col == width - 1)
-                    std::cout << "#";
-                std::cout << " ";
+                if (row == 0 || row == height-1 || col == 0 || col == width - 1){
+                    std::cout << "# ";
+                    continue;
+                }
+                std::cout << "  ";
             }
 
             std::cout << std::endl;
@@ -147,7 +149,7 @@ int main(){
 
     system("cls");
 
-    Rectangle rect({0,0}, 7, 5);
+    Rectangle rect({0,0}, 20, 5);
 
     Circle cir;
 
