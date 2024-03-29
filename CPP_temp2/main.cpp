@@ -11,12 +11,14 @@
 int main(){
 
     int a = 8; // create on STACK
-    int b = 7;
+    //int b = 7;
 
     //int *p = new int(10); //create on HEAP
 
     
     auto p = std::make_unique<int>(a + 2);
+
+    std::cout << "hello\n";
 
     return 0;
 }

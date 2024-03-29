@@ -1,0 +1,5 @@
+# ninja log v5
+8	904	7334140828218545	CMakeFiles/client.dir/client.cpp.obj	44c264d481ad1d8f
+2	951	7334140828730657	CMakeFiles/server.dir/server.cpp.obj	2d319b6c937d5186
+906	1000	7334140829202588	client.exe	aa3189f4abd2390d
+951	1034	7334140829548434	server.exe	da2b50e58250a56c
