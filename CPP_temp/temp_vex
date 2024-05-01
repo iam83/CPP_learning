@@ -1,0 +1,28 @@
+int pts[] = primpoints(0, @primnum);
+
+vector rest = point(0, "P", pts[0]);
+vector prevPoint = rest;
+
+for (int i = 0; i < len(pts); i++){
+
+
+    float u = (float)i/len(pts);
+    vector curPt = point(0, "P", pts[i]);
+    vector curPtZ = curPt - rest;
+
+    float offset = rand(@primnum) * chf("offset");
+    float pattern = sin(u*chf("freq") + offset) * chf(angle);
+    
+    vector a = normalize(point(0, "axis", pts[i]));
+    vector4 q = quaternion(pattern, a);
+
+    vector rotatedPt = qrotate(q, curPtZ);
+    vector newPt = rotatedPt + prevPoint;
+    rest = curPt;
+
+    prevPoint = newPt;
+
+    setpointattrib(0, "P", pts[i], newPt);
+
+
+}
