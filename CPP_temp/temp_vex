@@ -12,7 +12,10 @@ for (int i = 0; i < len(pts); i++){
 
     float offset = rand(@primnum) * chf("offset");
     float pattern = sin(u*chf("freq") + offset) * chf(angle);
-    
+    vector uuu = u;
+    float pattern2 = fit(noise(uuu * chf(freq) + offset), 0, 1, -1, 1) * chf("angle) * chramp("ramp", u);
+
+
     vector a = normalize(point(0, "axis", pts[i]));
     vector4 q = quaternion(pattern, a);
 
