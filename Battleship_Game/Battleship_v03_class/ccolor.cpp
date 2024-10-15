@@ -50,5 +50,3 @@ std::string setColor(CColor color){
         default: return "\033[0m";
     }
 }
-
-
